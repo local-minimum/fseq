@@ -97,11 +97,11 @@ class TestSeqReader(unittest.TestCase):
         with self.assertRaises(TypeError):
             s.seqEncoder = 1
         with self.assertRaises(TypeError):
-            s.seqEncoder = "daföjk"
+            s.seqEncoder = u"dafjk"
         with self.assertRaises(TypeError):
             s.seqEncoder = s
         with self.assertRaises(TypeError):
-            SeqReader(seqEncoder="asfs")
+            SeqReader(seqEncoder=u"asfs")
 
     def test_encoderReplace(self):
         e1 = SeqEncoder()
