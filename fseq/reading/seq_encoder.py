@@ -431,7 +431,7 @@ class FastaSingleline(FastaMultiline):
     def expects(self, line):
 
         prevStatus = self._prevHeader
-        test = super(Fasta, self).expects(line)
+        test = super(FastaSingleline, self).expects(line)
         if not prevStatus and not self._prevHeader:
             return False
         else:
@@ -469,6 +469,7 @@ class FastQ(SeqFormat):
 
         return True
 
+    @property
     def hasQuality(self):
 
         return True
@@ -523,6 +524,21 @@ class SeqFormatDetector(object):
         return self._itemSize
 
     @property
+    def hasQuality(self):
+
+        return self._hasQuality
+
+    @property
+    def hasSequence(self):
+
+        return self._hasSequence
+
+    @property
+    def format(self):
+
+        return self._format
+
+    @property
     def qualityEncoding(self):
         
         return self._qualityEncoding
@@ -543,7 +559,7 @@ class SeqFormatDetector(object):
 
     def compatible(self, encoder):
 
-        return ((not encoder.useSequence or self.hasSeqence) and
+        return ((not encoder.useSequence or self.hasSequence) and
                 (not encoder.useQuality or self.hasQuality))
 
     def feed(self, line):
@@ -558,12 +574,15 @@ class SeqFormatDetector(object):
         elif l == 1:
             f = self._possibleFormats[0]
             if self._safetyCheck is None:
-                self._safetyCheck = f.itemSize
+                if f.itemSize is None:
+                    self._safetyCheck = 0
+                else:
+                    self._safetyCheck = f.itemSize
             elif self._safetyCheck > 0:
                 self._safetyCheck -= 1
             elif self._testFormatInformative(f):
                 self._itemSize = f.itemSize
-                self._hasSequence = f.hasSeqence
+                self._hasSequence = f.hasSequence
                 self._hasQuality = f.hasQuality
                 self._qualityEncoding = f.qualityEncoding
                 self._format = f.name
