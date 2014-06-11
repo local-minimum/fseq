@@ -484,7 +484,7 @@ class SeqReader(object):
             If no more data-source exists.
         """
 
-        E = self.SeqEncoder
+        E = self.seqEncoder
 
         if E is None:
             raise ValueError("No encoder present")
