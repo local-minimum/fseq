@@ -131,12 +131,12 @@ class TestSeqReader(unittest.TestCase):
 
         s = SeqReader(reportBuilder=rb)
 
-        self.assertEqual(len(s.reportBuilders), 1)
+        self.assertEqual(len(tuple(s.reportBuilders)), 1)
         self.assertEqual(tuple(s.reportBuilders)[0], rb)
 
         s.addReportBuilder(rb2)
 
-        self.assertEqual(len(s.reportBuilders), 2)
+        self.assertEqual(len(tuple(s.reportBuilders)), 2)
 
     def test_reportBuilderRemoval(self):
 
@@ -147,17 +147,17 @@ class TestSeqReader(unittest.TestCase):
         s.addReportBuilder(rb2)
         s.removeReportBuilders(rb)
         
-        self.assertEqual(len(s.reportBuilders), 1)
+        self.assertEqual(len(tuple(s.reportBuilders)), 1)
         self.assertEqual(tuple(s.reportBuilders)[0], rb2)
 
         s.addReportBuilder(rb)
         s.removeReportBuilders(rb, rb2)
-        self.assertEqual(len(s.reportBuilders), 0)
+        self.assertEqual(len(tuple(s.reportBuilders)), 0)
 
         s.addReportBuilder(rb)
         s.addReportBuilder(rb2)
         s.removeReportBuilders()
-        self.assertEqual(len(s.reportBuilders), 0)
+        self.assertEqual(len(tuple(s.reportBuilders)), 0)
 
     def test_reportBulderFail(self):
 
@@ -179,7 +179,7 @@ class TestSeqReader(unittest.TestCase):
         self.assertEqual(s.popDataSources, False)
 
         s = SeqReader(popDataSources=False)
-        s.assertEqual(s.popDataSources, False)
+        self.assertEqual(s.popDataSources, False)
 
     def test_resetSeqEncoder(self):
 
