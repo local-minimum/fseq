@@ -75,7 +75,7 @@ class TestSeqReader(unittest.TestCase):
 
         self.assertEqual(len(s), len(self._mockSources))
 
-        source, targets = zip(*s.jobQueue)
+        sources, targets = zip(*s.jobQueue)
 
         self.assertEqual(sources, self._mockSources)
         self.assertEqual(targets, self._mockTargets)
