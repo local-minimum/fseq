@@ -228,7 +228,6 @@ class SeqReader(object):
                 "Encoder {0} is not a `fseq.SeqEncoder`".format(encoder))
         else:
 
-            print "blop", encoder
             self._seqEncoder = encoder
 
     @property
