@@ -29,7 +29,8 @@ Examples
 
 from reading.seq_reader import SeqReader
 
-from reading.seq_encoder import SeqEncoder, SeqFormatDetector
+from reading.seq_encoder import SeqEncoder, SeqFormatDetector, FormatError, \
+    SeqFormat, FastaMultiline, FastaSingleline, FastQ
 
 from reporting.report_builder import ReportBuilder
 
