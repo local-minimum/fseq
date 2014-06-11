@@ -406,6 +406,7 @@ class FastaMultiline(SeqFormat):
                         return False
                     return True
             elif re.match(self.MATCH_AA, line) or re.match(self.MATCH_NT, line):
+                self._prevHeader = False
                 return True
             else:
                 return False
