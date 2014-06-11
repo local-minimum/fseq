@@ -94,7 +94,7 @@ class SeqReader(object):
         self._idData = -1
         self._reportBuilders = []
         self._dataSourcePaths = []
-        self._dataTargetPaths = {}
+        self._dataTargetPaths = []
         self._seqEncoder = None
         self._reportTargetBase = ""
         self._results = []
@@ -326,7 +326,7 @@ class SeqReader(object):
         if targetPaths is None:
 
             targetPaths = [os.path.basename(s) + ".reports"
-                           for r in sourcePaths]
+                           for s in sourcePaths]
 
         self._dataSourcePaths += list(sourcePaths)
         self._dataTargetPaths += list(targetPaths)
