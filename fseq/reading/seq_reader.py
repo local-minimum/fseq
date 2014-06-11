@@ -4,8 +4,8 @@
 import os
 import numpy as np
 
-import fseq
-
+from fseq.reading.seq_encoder import SeqEncoder
+from fseq.reporting.report_builder import ReportBuilder
 
 
 class SeqReader(object):
@@ -222,7 +222,7 @@ class SeqReader(object):
     @seqEncoder.setter
     def seqEncoder(self, encoder):
 
-        if not isinstance(encoder, fseq.SeqEncoder):
+        if not isinstance(encoder, SeqEncoder):
 
             raise TypeError(
                 "Encoder {0} is not a `fseq.SeqEncoder`".format(encoder))
@@ -354,7 +354,7 @@ class SeqReader(object):
             If `reportBuilder` is not a valid `fseq.ReportBuilder`
         """
 
-        if not isinstance(reportBuilder, fseq.ReportBuilder):
+        if not isinstance(reportBuilder, ReportBuilder):
 
             raise TypeError(
                 "Report Builder {0} is not a `fseq.ReportBuilder`".format(
