@@ -411,7 +411,7 @@ class FastaMultiline(SeqFormat):
                 return False
 
 
-class Fasta(FastaMultiline):
+class FastaSingleline(FastaMultiline):
 
     @property
     def itemSize(self):
@@ -497,7 +497,7 @@ class FastQ(SeqFormat):
 
 class SeqFormatDetector(object):
 
-    FORMATS = [Fasta, FastaMultiline, FastQ]
+    FORMATS = [FastaSingleline, FastaMultiline, FastQ]
 
     def __init__(self, forceFormat=None):
 
