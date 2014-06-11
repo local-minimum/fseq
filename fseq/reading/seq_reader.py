@@ -87,7 +87,8 @@ class SeqReader(object):
 
         popEncodingResults: bool, optional
             If encoding results should be popped after they have been processed.
-            (Default: `True` is more than one source, else `False`)
+            (Default: `False` if initiated with exactly one source,
+            else `True`)
         """
 
         self._idData = -1
@@ -112,7 +113,7 @@ class SeqReader(object):
         self._seqEncoder = None
 
         if popEncodingResults is None:
-            self.popEncodingResults = len(self) > 1
+            self.popEncodingResults = len(self) != 1
         else:
             self.popEncodingResults = popEncodingResults
     
