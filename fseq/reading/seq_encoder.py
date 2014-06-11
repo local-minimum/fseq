@@ -2,6 +2,30 @@ import warnings
 import time
 import re
 
+from inspect import getmro
+
+
+def inheritDocFromSeqFormat(f):
+    """This decorator will copy the docstring from `SeqFormat` for the
+    matching function `f` if such exists and no docstring has been added
+    manually.
+    """
+    noDoc = [None, '']
+
+    if f.__doc__ in noDoc:
+
+        fname = f.__name__
+
+        for c in getmro(SeqFormat):
+            if hasattr(c, fname):
+                d = getattr(c, fname).__doc__
+                if d not in noDoc:
+                    f.__doc__ = d
+                    break
+
+    return f
+
+
 class SeqEncoder(object):
 
     def __init__(self, expectedInputFormat=None, useSequence=True,
@@ -436,16 +460,19 @@ class FastaMultiline(SeqFormat):
         return line.startswith(">")
     
     @property
+    @inheritDocFromSeqFormat
     def hasSequence(self):
 
         return True
 
     @property
+    @inheritDocFromSeqFormat
     def hasQuality(self):
 
         return False
 
     @property
+    @inheritDocFromSeqFormat
     def name(self):
 
         return "FASTA:MULTILINE"
@@ -502,11 +529,13 @@ class FastaSingleline(FastaMultiline):
     """
 
     @property
+    @inheritDocFromSeqFormat
     def itemSize(self):
 
         return 2
 
     @property
+    @inheritDocFromSeqFormat
     def name(self):
 
         return "FASTA:SINGLELINE"
@@ -568,21 +597,25 @@ class FastQ(SeqFormat):
         return True
 
     @property
+    @inheritDocFromSeqFormat
     def name(self):
 
         return "FASTQ"
 
     @property
+    @inheritDocFromSeqFormat
     def itemSize(self):
 
         return 4
 
     @property
+    @inheritDocFromSeqFormat
     def hasSequence(self):
 
         return True
 
     @property
+    @inheritDocFromSeqFormat
     def hasQuality(self):
 
         return True
