@@ -110,7 +110,6 @@ class SeqReader(object):
 
         self.popDataSources = popDataSources
         self.resetSeqEncoder = resetSeqEncoder
-        self._seqEncoder = None
 
         if popEncodingResults is None:
             self.popEncodingResults = len(self) != 1
@@ -229,6 +228,7 @@ class SeqReader(object):
                 "Encoder {0} is not a `fseq.SeqEncoder`".format(encoder))
         else:
 
+            print "blop", encoder
             self._seqEncoder = encoder
 
     @property
