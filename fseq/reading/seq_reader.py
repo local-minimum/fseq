@@ -1,8 +1,11 @@
+#!/usr/bin/env python
 """Module for reading sequence data"""
 
 import os
+import numpy as np
 
 import fseq
+
 
 
 class SeqReader(object):
@@ -19,6 +22,7 @@ class SeqReader(object):
     ----------
     popDataSources
     popEncodingResults
+    jobQueue
     reportBuilders
     reportDirectory
     SeqEncoder
@@ -44,7 +48,7 @@ class SeqReader(object):
 
     def __init__(
             self, seqEncoder=None, dataSourcePaths=None, dataTargetPaths=None,
-            reportBuilder=None, popDataSources=True, resetSeqEnconder=True,
+            reportBuilder=None, popDataSources=True, resetSeqEncoder=True,
             popEncodingResults=None):
         """
         Parameters
@@ -76,7 +80,7 @@ class SeqReader(object):
             If data sources should be removed from stack once encoded
             (Default: `True`)
 
-        resetSeqEnconder: bool, optional
+        resetSeqEncoder: bool, optional
             If sequence encoder should be reset between each source file or
             if the encoder should expect all sources to be the same format.
             (Default: `True`)
@@ -104,7 +108,7 @@ class SeqReader(object):
             self.addReportBuilder(reportBuilder)
 
         self.popDataSources = popDataSources
-        self.resetSeqEnconder = resetSeqEnconder
+        self.resetSeqEncoder = resetSeqEncoder
         self._seqEncoder = None
 
         if popEncodingResults is None:
@@ -158,6 +162,18 @@ class SeqReader(object):
         bool
         """
         return self._popEncodingResults
+
+    @property
+    def jobQueue(self):
+        """The data sources to be read and their respective targets.
+
+        Returns
+        -------
+
+        list of tuples
+            Each tuple representing a source - target pair.
+        """
+        return zip(self._dataSourcePaths, self._dataTargetPaths)
 
     @property
     def results(self):
@@ -347,6 +363,21 @@ class SeqReader(object):
         else:
 
             self._reportBuilders.append(reportBuilder)
+
+        return self
+
+    def clearJobQueue(self):
+        """Removes all jobs in the queue.
+
+        Returns
+        -------
+
+        fset.SeqReader
+            Returns `self`
+        """
+
+        self._dataSourcePaths = []
+        self._dataTargetPaths = []
 
         return self
 
