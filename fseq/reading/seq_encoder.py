@@ -556,6 +556,7 @@ class FastQ(SeqFormat):
 
         self._mod = 0
         self._giveup = 20
+        self._expectedQlenght = None
 
                 
     def _next(self):
@@ -602,10 +603,11 @@ class FastQ(SeqFormat):
         elif self._mod == 1:
             ret = bool(re.match(self.MATCH_AA, line) or
                        re.match(self.MATCH_NT, line))
+            self._expectedQlenght = len(line)
         elif self._mod == 2:
             ret = line.startswith("+")
         elif self._mod == 3:
-            ret = self._qualExpect(line)
+            ret = len(line) == self._expectedQlenght and self._qualExpect(line)
         self._next()
         return ret
     
