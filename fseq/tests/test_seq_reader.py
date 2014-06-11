@@ -46,7 +46,7 @@ class TestSeqReader(unittest.TestCase):
 
         self.assertEqual(len(s), len(self._mockSources))
 
-        self.assertEqual(zip(*s.jobQueue)[0], self._mockSources)
+        self.assertEqual(zip(*s.jobQueue)[0], tuple(self._mockSources))
 
         s = SeqReader(dataSourcePaths=self._mockSources[0])
 
@@ -60,7 +60,7 @@ class TestSeqReader(unittest.TestCase):
 
         self.assertEqual(len(s), len(self._mockSources))
 
-        self.assertEqual(zip(*s.jobQueue)[0], self._mockSources)
+        self.assertEqual(zip(*s.jobQueue)[0], tuple(self._mockSources))
 
         s = SeqReader()
 
@@ -77,8 +77,8 @@ class TestSeqReader(unittest.TestCase):
 
         sources, targets = zip(*s.jobQueue)
 
-        self.assertEqual(sources, self._mockSources)
-        self.assertEqual(targets, self._mockTargets)
+        self.assertEqual(sources, tuple(self._mockSources))
+        self.assertEqual(targets, tuple(self._mockTargets))
 
     def test_encoder(self): 
 
