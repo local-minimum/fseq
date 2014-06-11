@@ -317,7 +317,7 @@ class SeqEncoder(object):
         raise NotImplemented("`SeqEncoder.parse` should be overwritten")
 
 
-class FormatError(StandardError):
+class FormatError(Exception):
     """Sequence Format Error for exceptions relating to missmatches between
     encoders and sequence formats as well as lacking formattings in encoders
     and unknown sequence formats.
