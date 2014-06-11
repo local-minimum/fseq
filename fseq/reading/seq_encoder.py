@@ -326,37 +326,104 @@ class FormatError(Exception):
 
 
 class SeqFormat(object):
+    """Base Class for implementing data format detectors.
+
+    The attributes present in subclass should overwrite the
+    parent properties. All subclasses must also overwrite the
+    `SeqFormat.expects(line)`.
+
+    Attributes
+    ----------
+
+    name
+    itemSize
+    hasSequence
+    hasQuality
+    qualityEncoding
+    """
 
     MATCH_NT = re.compile(r'^[ATCG]+$', re.IGNORECASE)
     MATCH_AA = re.compile(r'^[A-Z]+$', re.IGNORECASE)
 
     @property
     def name(self):
+        """Human readable description of format: str"""
         return "UNKNOWN"
 
     @property
     def itemSize(self):
-
+        """The size (lines) of each entry: int"""
         return None
 
     @property
     def hasSequence(self):
+        """If format has sequence information: bool"""
         return None
 
     @property
     def hasQuality(self):
+        """If format quality information: bool"""
         return None
 
     @property
     def qualityEncoding(self):
+        """If format comes with a known encoding of quality.
+
+        See also
+        --------
+
+        SeqEncoder.qualityEncoding
+            Setter of encoder quality.
+        """
         return None
 
     def expects(self, line):
+        """Test for if line fits into required pattern for the format
+
+        Returns
+        -------
+
+        bool
+
+        Raises
+        ------
+        
+        fseq.FormatError
+            If `SeqFormat.expects` is not overwritten in used subclass.
+        """
 
         raise FormatError("This method should be overwritten")
 
 
 class FastaMultiline(SeqFormat):
+    """Detector of multi-line FASTA
+
+    ..note:: This format is not supported in the current implementation
+        as it has no predictable item-size.
+
+    Examples
+    --------
+
+    Valid format::
+
+        >Contig_1
+        ACAATACA
+        GATTACA
+        >Contig_2
+        ACCCACA
+        >Contig_3
+        ACCAAACA
+        CCAACACA
+        ACAACCAC
+
+    See also
+    --------
+
+    SeqFormat
+        Base class for detectors
+    FastaSingleline
+        Derived class, with more restricitons
+    """
 
     def __init__(self):
 
@@ -413,6 +480,26 @@ class FastaMultiline(SeqFormat):
 
 
 class FastaSingleline(FastaMultiline):
+    """Detector of single-line FASTA format.
+
+    Examples
+    --------
+
+    Valid format::
+
+        >Contig_1
+        AACAATACGA
+        >Contig_2
+        CCATTTACGA
+
+    See also
+    --------
+
+    SeqFormat
+        Base class for detectors
+    FastaMultiline
+        Parent class
+    """
 
     @property
     def itemSize(self):
@@ -439,6 +526,31 @@ class FastaSingleline(FastaMultiline):
 
 
 class FastQ(SeqFormat):
+    """Detector of FASTQ format
+
+    ..note:: This class can be subclassed to detect the different
+        quality-encoding schemes in the future.
+
+    Examples
+    --------
+
+    Valid format::
+
+        >Contig_1
+        AACAATACGA
+        +Contig_1
+        @+>AACADGH
+        >Contig_2
+        CCATTTACGA
+        +
+        >CCAGJDFGH
+
+    See also
+    --------
+
+    SeqFormat
+        Base class for detectors
+    """
 
     def __init__(self):
 
