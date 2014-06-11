@@ -486,11 +486,12 @@ class FastQ(SeqFormat):
                 return False
             ret = line.startswith(">")
         elif self._mod == 1:
-            ret = bool(re.match(self.MATCH_AA, line) or re.match(self.MATCH_NT))
+            ret = bool(re.match(self.MATCH_AA, line) or
+                       re.match(self.MATCH_NT, line))
         elif self._mod == 2:
             ret = line.startswith("+")
         elif self._mod == 3:
-            ret = self._qualExpect()
+            ret = self._qualExpect(line)
         self._next()
         return ret
     
