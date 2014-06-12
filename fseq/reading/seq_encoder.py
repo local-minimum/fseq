@@ -49,6 +49,10 @@ class SeqEncoder(object):
             Translation map from input to output
         """
 
+        self._sequenceLine = None
+        self._qualityLine = None
+        self._headerLine = None
+
         self._qualityEncoding = None
         self._sequenceEncoding = None
 
@@ -100,7 +104,13 @@ class SeqEncoder(object):
         else:
 
             self._format = val
+
             if not val.detecting:
+
+                self._sequenceLine = val.sequenceLine
+                self._qualityLine = val.qualityLine
+                self._headerLine = val.headerLine
+
                 enc = val.qualityEncoding
                 if enc is not None:
 
@@ -115,6 +125,12 @@ class SeqEncoder(object):
                                 self, self.qualityEncoding) +
                             " and not use {2} from {3}".format(
                                 enc, val))
+
+            else:
+
+                self._sequenceLine = None
+                self._qualityLine = None 
+                self._headerLine = None 
 
     @property
     def initiated(self):
@@ -214,7 +230,6 @@ class SeqEncoder(object):
 
             self._sequenceEncoding = val
 
-
     @property
     def useQuality(self):
         """If quality-line is to be used by the encoder.
@@ -296,6 +311,11 @@ class SeqEncoder(object):
             if len(self._detectFeed):
                 f.feed(self._detectFeed.pop(0))
                 if not f.detecting:
+
+                    self._sequenceLine = f.sequenceLine
+                    self._qualityLine = f.qualityLine
+                    self._headerLine = f.headerLine
+
                     break
 
             time.sleep(0.05)
@@ -389,7 +409,7 @@ class SeqEncoderGC(SeqEncoder):
 
         e = self.seqenceEncoding
 
-        out[outindex] = [e[char] for char in lines[self.seqLine]]
+        out[outindex] = [e[char] for char in lines[self._sequenceLine]]
 
 #####################################################################
 #
@@ -440,6 +460,10 @@ class SeqFormat(object):
     MATCH_AA = re.compile(r'^[A-Z]+[*]?$', re.IGNORECASE)
     MATCH_NT_S = re.compile(r'^[ATCG ]+$', re.IGNORECASE)
     MATCH_AA_S = re.compile(r'^[A-Z ]+[*]?$', re.IGNORECASE)
+
+    HEADER_LINE = 0
+    SEQUENCE_LINE = None
+    QUALITY_LINE = None
 
     def __init__(self):
 
@@ -547,6 +571,10 @@ class FastaMultiline(SeqFormat):
         Derived class, with more restricitons
     """
 
+    HEADER_LINE = 0
+    SEQUENCE_LINE = -1
+    QUALITY_LINE = None
+
     def __init__(self):
 
         self._firstLine = True
@@ -625,6 +653,10 @@ class FastaSingleline(FastaMultiline):
         Parent class
     """
 
+    HEADER_LINE = 0
+    SEQUENCE_LINE = 1
+    QUALITY_LINE = None
+
     @property
     @inheritDocFromSeqFormat
     def itemSize(self):
@@ -678,6 +710,10 @@ class FastQ(SeqFormat):
     SeqFormat
         Base class for detectors
     """
+
+    HEADER_LINE = 0
+    SEQUENCE_LINE = 1
+    QUALITY_LINE = 3
 
     def __init__(self):
 
@@ -753,6 +789,12 @@ class SeqFormatDetector(object):
     hasSequence
     hasQuality
     qualityEncoding
+    headerLine
+    sequenceLine
+    qualityLine
+    headerLine
+    sequenceLine
+    qualityLine
     """
     FORMATS = [FastaSingleline, FastaMultiline, FastQ]
 
@@ -780,6 +822,11 @@ class SeqFormatDetector(object):
         self._hasSequence = None
         self._hasQuality = None
         self._qualityEncoding = None
+
+        self._qualityLine = None
+        self._headerLine = None
+        self._sequenceLine = None
+
         if forceFormat:
             if not isinstance(forceFormat, SeqFormat):
                 raise TypeError("{0} not a `SeqFormat`".format(forceFormat))
@@ -821,6 +868,69 @@ class SeqFormatDetector(object):
     def qualityEncoding(self):
         
         return self._qualityEncoding
+
+    @property
+    def qualityLine(self):
+        """The line index in the item for the quality
+        
+        Returns
+        -------
+        
+        int
+        
+        Raises
+        ------
+        
+        FormatError
+            If attempting to use before format is detected
+        """
+
+        if self.detecting:
+            raise FormatError("Format is still ambiguious")
+
+        return self._qualityLine
+
+    @property
+    def headerLine(self):
+        """The line index in the item for the header
+        
+        Returns
+        -------
+        
+        int
+        
+        Raises
+        ------
+        
+        FormatError
+            If attempting to use before format is detected
+        """
+
+        if self.detecting:
+            raise FormatError("Format is still ambiguious")
+
+        return self._headerLine
+
+    @property
+    def sequenceLine(self):
+        """The line index in the item for the sequence
+        
+        Returns
+        -------
+        
+        int
+        
+        Raises
+        ------
+        
+        FormatError
+            If attempting to use before format is detected
+        """
+
+        if self.detecting:
+            raise FormatError("Format is still ambiguious")
+
+        return self._sequenceLine
 
     def _testFormatInformative(self, f):
 
@@ -897,6 +1007,9 @@ class SeqFormatDetector(object):
             elif self._safetyCheck > 0:
                 self._safetyCheck -= 1
             elif self._testFormatInformative(f):
+                self._headerLine = f.HEADER_LINE
+                self._qualityLine = f.QUALITY_LINE
+                self._sequenceLine = f.SEQUENCE_LINE
                 self._itemSize = f.itemSize
                 self._hasSequence = f.hasSequence
                 self._hasQuality = f.hasQuality
