@@ -346,6 +346,14 @@ class FormatError(Exception):
     encoders and sequence formats as well as lacking formattings in encoders
     and unknown sequence formats.
     """
+
+    pass
+
+
+class FormatImplementationError(FormatError):
+    """Error for exposing parts of interface that needs to be overwritten
+    in subclasses"""
+
     pass
 
 
@@ -412,11 +420,11 @@ class SeqFormat(object):
         Raises
         ------
         
-        fseq.FormatError
+        fseq.FormatImplementationError
             If `SeqFormat.expects` is not overwritten in used subclass.
         """
 
-        raise FormatError("This method should be overwritten")
+        raise FormatImplementationError("This method should be overwritten")
 
 
 class FastaMultiline(SeqFormat):

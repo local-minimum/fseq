@@ -29,7 +29,8 @@ Examples
 
 from fseq.reading.seq_reader import SeqReader
 
-from fseq.reading.seq_encoder import SeqEncoder, SeqFormatDetector, FormatError, \
+from fseq.reading.seq_encoder import SeqEncoder, SeqFormatDetector, \
+    FormatError, FormatImplementationError, \
     SeqFormat, FastaMultiline, FastaSingleline, FastQ
 
 from fseq.reporting.report_builder import ReportBuilder
