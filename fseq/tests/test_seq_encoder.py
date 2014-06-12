@@ -223,5 +223,148 @@ class TestSeqFormats(unittest.TestCase):
             self.assertIn(False, fMres)
             self.assertIn(False, fSres)
 
+
+class TestSeqFormatDetector(unittest.TestCase):
+
+
+    def setUp(self):
+        self._baseDir = os.path.abspath(os.path.dirname(__file__))
+
+    def test_startDetecting(self):
+
+        d = fseq.SeqFormatDetector()
+
+        self.assertTrue(d.detecting)
+
+    def test_startForcedDetecting(self):
+
+        fq = fseq.FastQ()
+
+        d = fseq.SeqFormatDetector()
+
+        self.assertTrue(d.detecting)
+
+    def test_ForcedFormat(self):
+
+        fq = fseq.FastQ()
+
+        d = fseq.SeqFormatDetector(forceFormat=fq)
+
+        try:
+            with open(os.path.join(self._baseDir, "data/NT.fastq")) as fs:
+
+                for line in fs:
+
+                    if not d.detecting:
+                        break
+
+                    d.feed(line)
+
+        except fseq.FormatUnknown:
+
+            self.fail("FastQ was not detected")
+
+        self.assertFalse(d.detecting)
+        self.assertEqual(d.format, fq.name)
+        self.assertEqual(d.itemSize, fq.itemSize)
+        self.assertEqual(d.hasQuality, fq.hasQuality)
+        self.assertEqual(d.hasSequence, fq.hasSequence)
+        self.assertEqual(d.qualityEncoding, fq.qualityEncoding)
+
+    def test_Format(self):
+
+        fq = fseq.FastQ()
+
+        d = fseq.SeqFormatDetector()
+
+        try:
+            with open(os.path.join(self._baseDir, "data/NT.fastq")) as fs:
+
+                for line in fs:
+
+                    if not d.detecting:
+                        break
+
+                    d.feed(line)
+
+        except fseq.FormatUnknown:
+
+            self.fail("FastQ was not detected")
+
+        self.assertFalse(d.detecting)
+        self.assertEqual(d.format, fq.name)
+
+    def test_FormatUnknown(self):
+
+        d = fseq.SeqFormatDetector()
+
+        self.assertRaises(fseq.FormatUnknown, d.feed, "14124daf")
+
+        fq = fseq.FastQ()
+        
+        d = fseq.SeqFormatDetector(forceFormat=fq)
+
+        self.assertRaises(fseq.FormatUnknown, d.feed, ">someFasta")
+
+    def test_compatible(self):
+
+        fq = fseq.FastQ()
+
+        d = fseq.SeqFormatDetector()
+
+        with open(os.path.join(self._baseDir, "data/NT.fastq")) as fs:
+
+            for line in fs:
+
+                if not d.detecting:
+                    break
+
+                d.feed(line)
+        
+        e = fseq.SeqEncoder()
+
+        self.assertTrue(d.compatible(e))
+
+        e.useQuality = True
+
+        self.assertTrue(d.compatible(e))
+
+    def test_compatibleException(self):
+
+        fq = fseq.FastQ()
+
+        d = fseq.SeqFormatDetector()
+
+        e = fseq.SeqEncoder()
+
+        self.assertRaises(fseq.FormatError, d.compatible, e)
+
+    def test_compatibleFasta(self):
+
+        f = fseq.FastaSingleline()
+
+        d = fseq.SeqFormatDetector()
+
+        with open(os.path.join(
+                self._baseDir, 'data/singlelineProt.fasta'), 'r') as fs:
+
+            for line in fs:
+
+                if not d.detecting:
+                    break
+
+                d.feed(line)
+
+        self.assertEqual(d.format, f.name) 
+
+        e = fseq.SeqEncoder()
+
+        self.assertTrue(d.compatible(e))
+
+        e.useQuality = True
+
+        self.assertFalse(d.compatible(e))
+
+    
 if __name__ == '__main__':
     unittest.main()
