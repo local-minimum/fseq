@@ -357,6 +357,11 @@ class FormatImplementationError(FormatError):
     pass
 
 
+class FormatUnknown(FormatError):
+    """Error for having no available detectors left"""
+    pass
+
+
 class SeqFormat(object):
     """Base Class for implementing data format detectors.
 
@@ -748,7 +753,8 @@ class SeqFormatDetector(object):
         l = len(self._possibleFormats)
 
         if l == 0:
-            raise FormatError("Unknown format, no known formats left")
+            raise FormatUnknown(
+                    "No known formats left, causing line\n{0}".format(line))
         elif l == 1:
             f = self._possibleFormats[0]
             if self._safetyCheck is None:
