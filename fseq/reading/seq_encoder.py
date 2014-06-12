@@ -361,6 +361,43 @@ class SeqEncoder(object):
         raise NotImplemented("`SeqEncoder.parse` should be overwritten")
 
 
+class SeqEncoderGC(SeqEncoder):
+
+    def __init__(self, expectedInputFormat=None, seqenceEncoding=None):
+        """
+        Parameters
+        ----------
+
+        expectedInputFormat: SeqFormatDetector or SeqFormat, optional
+            A seqence format expected in the input.
+            (Default: Letting encoder guess format from input)
+    
+        seqenceEncoding: dict or object implementing __getitem__, optional
+            (Default: Any G or C value 1; A and T get 0;
+            Unknown values such as N get 0.5)
+        """
+        if seqenceEncoding is None:
+            seqenceEncoding = {'G': 1.0, 'C': 1.0, 'A': 0, 'T': 0, ' ': 0.5,
+                    'N': 0.5}
+
+        super(SeqEncoderGC, self).__init__(
+            expectedInputFormat=expectedInputFormat, useSequence=True,
+            useQuality=False, seqenceEncoding=seqenceEncoding,
+            qualityEncoding=None)
+
+    def parse(self, lines, out, outindex):
+
+        e = self.seqenceEncoding
+
+        out[outindex] = [e[char] for char in lines[self.seqLine]]
+
+#####################################################################
+#
+# FORMATTERS
+#
+#
+#####################################################################
+
 class FormatError(Exception):
     """Sequence Format Error for exceptions relating to missmatches between
     encoders and sequence formats as well as lacking formattings in encoders
