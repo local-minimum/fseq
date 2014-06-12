@@ -414,7 +414,9 @@ class SeqEncoderGC(SeqEncoder):
 
         e = self.seqenceEncoding
 
-        out[outindex] = [e[char] for char in lines[self._sequenceLine]]
+        d = [e[char] for char in lines[self._sequenceLine]]
+
+        out[outindex][:len(d)] = d
 
 #####################################################################
 #
