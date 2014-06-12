@@ -10,16 +10,14 @@ def inheritDocFromSeqFormat(f):
     matching function `f` if such exists and no docstring has been added
     manually.
     """
-    noDoc = [None, '']
-
-    if f.__doc__ in noDoc:
+    if f.__doc__ is None:
 
         fname = f.__name__
 
         for c in getmro(SeqFormat):
             if hasattr(c, fname):
                 d = getattr(c, fname).__doc__
-                if d not in noDoc:
+                if d is not None:
                     f.__doc__ = d
                     break
 
