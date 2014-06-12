@@ -162,6 +162,12 @@ class SeqEncoder(object):
         -------
 
         Object with key-lookup (implementing __getitem__)
+
+        Raises
+        ------
+
+        TypeError
+            If attempting to set with object not having key-lookup
         """
         return self._qualityEncoding
 
@@ -185,6 +191,12 @@ class SeqEncoder(object):
         -------
 
         Object with key-lookup (implementing __getitem__)
+
+        Raises
+        ------
+
+        TypeError
+            If attempting to set with object not having key-lookup
         """
         return self._sequenceEncoding
 
@@ -261,6 +273,12 @@ class SeqEncoder(object):
 
         fseq.SeqEncoder
             Returns `self`
+
+        Raises
+        ------
+
+        FormatError
+            If data is not compatible with information requested
 
         See also
         --------
@@ -453,8 +471,8 @@ class SeqFormat(object):
         Raises
         ------
         
-        fseq.FormatImplementationError
-            If `SeqFormat.expects` is not overwritten in used subclass.
+        FormatImplementationError
+            If `SeqFormat.expects` (the base class method) is called.
         """
 
         raise FormatImplementationError("This method should be overwritten")
@@ -518,6 +536,7 @@ class FastaMultiline(SeqFormat):
 
         return "FASTA:MULTILINE"
 
+    @inheritDocFromSeqFormat
     def expects(self, line):
 
         h = self._isHeader(line)
@@ -583,6 +602,7 @@ class FastaSingleline(FastaMultiline):
 
         return self
 
+    @inheritDocFromSeqFormat
     def expects(self, line):
 
         prevStatus = self._prevHeader
@@ -660,6 +680,7 @@ class FastQ(SeqFormat):
 
         return True
 
+    @inheritDocFromSeqFormat
     def expects(self, line):
 
         ret = False
@@ -682,10 +703,36 @@ class FastQ(SeqFormat):
     
 
 class SeqFormatDetector(object):
+    """Detection of data-format manager
 
+    Attributes
+    ----------
+
+    detecting
+    format
+    itemSize
+    hasSequence
+    hasQuality
+    qualityEncoding
+    """
     FORMATS = [FastaSingleline, FastaMultiline, FastQ]
 
     def __init__(self, forceFormat=None):
+        """
+        Parameters
+        ----------
+        
+        forceFormat: SeqFormat, optional
+            A format explicitly required. Detection still has to be fed
+            lines and succeed.
+            
+        Raises
+        ------
+
+        TypeError
+            If `forceFormat` is submitted and not a class derived from
+            `SeqFormat`
+        """
 
         self._safetyCheck = None
 
@@ -701,30 +748,34 @@ class SeqFormatDetector(object):
 
     @property
     def detecting(self):
-
+        """If attempting to detect: bool"""
         return self._format is None
 
     @property
+    @inheritDocFromSeqFormat
     def itemSize(self):
 
         return self._itemSize
 
     @property
+    @inheritDocFromSeqFormat
     def hasQuality(self):
 
         return self._hasQuality
 
     @property
+    @inheritDocFromSeqFormat
     def hasSequence(self):
 
         return self._hasSequence
 
     @property
     def format(self):
-
+        """The format name of the detected format: str"""
         return self._format
 
     @property
+    @inheritDocFromSeqFormat
     def qualityEncoding(self):
         
         return self._qualityEncoding
@@ -744,6 +795,20 @@ class SeqFormatDetector(object):
         return True
 
     def compatible(self, encoder):
+        """Evaluates if encoder is compatible with the detected format
+
+        Returns
+        -------
+
+        bool
+            Compatibility
+
+        Raises
+        ------
+
+        FormatError
+            If attempting to test compatibility before format is detected
+        """
 
         if (self.detecting):
             raise FormatError("Format is still ambiguious")
@@ -752,7 +817,26 @@ class SeqFormatDetector(object):
                 (not encoder.useQuality or self.hasQuality))
 
     def feed(self, line):
+        """Supply a new line to format detector.
 
+        Parameters
+        ----------
+
+        line: str
+            The next line in the data
+
+        Returns
+        -------
+
+        fseq.SeqEncoder
+            Returns `self`
+
+        Raises
+        ------
+
+        FormatUnknown
+            If no known formatters are left
+        """
         self._possibleFormats = [f for f in self._possibleFormats if
                 f.expects(line)]
         
