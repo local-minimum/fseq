@@ -599,11 +599,11 @@ class FastQ(SeqFormat):
 
     Valid format::
 
-        >Contig_1
+        @Contig_1
         AACAATACGA
         +Contig_1
         @+>AACADGH
-        >Contig_2
+        @Contig_2
         CCATTTACGA
         +
         >CCAGJDFGH
@@ -663,7 +663,7 @@ class FastQ(SeqFormat):
             return False
         elif self._mod == 0:
             self._decay()
-            ret = line.startswith(">")
+            ret = line.startswith("@")
         elif self._mod == 1:
             ret = bool(re.match(self.MATCH_AA, line) or
                        re.match(self.MATCH_NT, line))
