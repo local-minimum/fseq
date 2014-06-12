@@ -120,6 +120,15 @@ class TestSeqFormats(unittest.TestCase):
             self.assertNotEqual(set(getattr(f, p) for p in notName),
                                 notInformative)
 
+    def test_propertiesAreInformative(self):
+
+        for f in self._derivedFormats:
+
+            if f.hasSequence:
+                self.assertNotEqual(f.SEQUENCE_LINE, None)
+            if f.hasQuality:
+                self.assertNotEqual(f.HEADER_LINE, None)
+
     def test_itemSize(self):
 
         itemSizes = {type(None), int}
