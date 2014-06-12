@@ -104,6 +104,12 @@ class TestSeqFormats(unittest.TestCase):
             self.assertIsInstance(n, str)
             self.assertNotEqual(len(n), 0)
 
+    def test_uniqueNames(self):
+
+        names = [f.name for f in self._derivedFormats]
+        self.assertEqual(len(names), len(set(names)),
+                         msg="All names are not unique")
+
     def test_propertiesNotNameInformative(self):
 
         notName = set(self._baseProperties).difference(['name'])
