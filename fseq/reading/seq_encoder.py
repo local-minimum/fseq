@@ -375,7 +375,13 @@ class SeqFormat(object):
     """
 
     MATCH_NT = re.compile(r'^[ATCG]+$', re.IGNORECASE)
-    MATCH_AA = re.compile(r'^[A-Z]+$', re.IGNORECASE)
+    MATCH_AA = re.compile(r'^[A-Z]+[*]?$', re.IGNORECASE)
+    MATCH_NT_S = re.compile(r'^[ATCG ]+$', re.IGNORECASE)
+    MATCH_AA_S = re.compile(r'^[A-Z ]+[*]?$', re.IGNORECASE)
+
+    def __init__(self):
+
+        self._giveup = 20
 
     @property
     def name(self):
@@ -507,7 +513,8 @@ class FastaMultiline(SeqFormat):
                     if not self._decay():
                         return False
                     return True
-            elif re.match(self.MATCH_AA, line) or re.match(self.MATCH_NT, line):
+            elif (re.match(self.MATCH_AA_S, line) or
+                    re.match(self.MATCH_NT_S, line)):
                 self._prevHeader = False
                 return True
             else:
