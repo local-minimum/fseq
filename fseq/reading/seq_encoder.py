@@ -341,6 +341,8 @@ class SeqEncoder(object):
 
         self.format = f
 
+        self._formatCompatible = True
+
         return self
 
     def reset(self):
