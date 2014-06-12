@@ -380,7 +380,7 @@ class SeqFormat(object):
     @property
     def name(self):
         """Human readable description of format: str"""
-        return "UNKNOWN"
+        return None
 
     @property
     def itemSize(self):
