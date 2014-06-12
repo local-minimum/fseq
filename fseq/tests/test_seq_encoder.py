@@ -2,6 +2,7 @@
 
 import unittest
 import random
+import os
 
 import fseq
 
@@ -49,7 +50,10 @@ class TestSeqFormats(unittest.TestCase):
         self._comboData = self._invalidDataType + self._validDataType
         self._baseProperties = tuple(
             p for p in set(vars(fseq.SeqFormat)).difference(vars(object)) if
-            isinstance(getattr(fseq.SeqFormat, p), property))
+            isinstance(getattr(fseq.SeqFormat, p), property) and
+            p not in {'givenUp'})
+
+        self._baseDir = os.path.abspath(os.path.dirname(__file__))
 
     def test_baseExpects(self):
 
@@ -129,6 +133,86 @@ class TestSeqFormats(unittest.TestCase):
                     "{0} has invalid type of quality encoding {1}".format(
                         f, qe))
 
+    def test_singlelineFasta(self):
 
+        fastaS = fseq.FastaSingleline()
+        fastaM = fseq.FastaMultiline()
+        fastQ = fseq.FastQ()
 
-                
+        fQres = []
+
+        with open(os.path.join(
+                self._baseDir, 'data/singlelineProt.fasta'), 'r') as fs:
+
+            for i, line in enumerate(fs):
+                msg = "{0} did not return {1}\n" + "{0}: {1}".format(i + 1, line)
+                self.assertTrue(fastaS.expects(line), msg=msg.format(
+                    type(fastaS), True))
+                if not fastaM.givenUp:
+                    self.assertTrue(fastaM.expects(line), msg=msg.format(
+                        type(fastaM), True))
+                else:
+                    self.assertFalse(fastaM.expects(line), msg=msg.format(
+                        type(fastaM), False))
+
+                fQres.append(fastQ.expects(line))
+
+        self.assertIn(False, fQres)
+
+    def test_multilineFasta(self):
+
+        for p in ('data/multilineNT.fasta', 'data/multilineProt.fasta'):
+
+            fastaS = fseq.FastaSingleline()
+            fastaM = fseq.FastaMultiline()
+            fastQ = fseq.FastQ()
+
+            fQres = []
+            fSres = []
+
+            with open(os.path.join(
+                    self._baseDir, p), 'r') as fs:
+
+                for i, line in enumerate(fs):
+                    msg = "{0} did not return {1}\n" + "{0}: {1}".format(i + 1, line)
+                    if not fastaM.givenUp:
+                        self.assertTrue(fastaM.expects(line), msg=msg.format(
+                            type(fastaM), True))
+                    else:
+                        self.assertFalse(fastaM.expects(line), msg=msg.format(
+                            type(fastaM), False))
+
+                    fQres.append(fastQ.expects(line))
+                    fSres.append(fastaS.expects(line))
+
+            self.assertIn(False, fQres)
+            self.assertIn(False, fSres)
+
+    def test_fastq(self):
+
+        for p in ('data/NT.fastq',):
+
+            fastaS = fseq.FastaSingleline()
+            fastaM = fseq.FastaMultiline()
+            fastQ = fseq.FastQ()
+
+            fMres = []
+            fSres = []
+
+            with open(os.path.join(
+                    self._baseDir, p), 'r') as fs:
+
+                for i, line in enumerate(fs):
+                    msg = "{0} did not return {1}\n" + "{0}: {1}".format(i + 1, line)
+                    if not fastQ.givenUp:
+                        self.assertTrue(fastQ.expects(line), msg=msg.format(
+                            type(fastQ), True))
+                    else:
+                        self.assertFalse(fastQ.expects(line), msg=msg.format(
+                            type(fastQ), False))
+
+                    fMres.append(fastaM.expects(line))
+                    fSres.append(fastaS.expects(line))
+
+            self.assertIn(False, fMres)
+            self.assertIn(False, fSres)
