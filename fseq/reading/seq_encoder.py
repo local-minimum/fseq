@@ -335,7 +335,10 @@ class SeqEncoder(object):
                 " replaced by {2} to {3}".format(
                     f, enc))
 
+        #Setting to None is just to suppress warning when assigning
+        #format.
         self._qualityEncoding = None
+
         self.format = f
 
         return self
