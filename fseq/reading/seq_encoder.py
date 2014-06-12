@@ -742,6 +742,9 @@ class SeqFormatDetector(object):
         self._hasQuality = None
         self._qualityEncoding = None
         if forceFormat:
+            if not isinstance(forceFormat, SeqFormat):
+                raise TypeError("{0} not a `SeqFormat`".format(forceFormat))
+
             self._possibleFormats = [forceFormat]
         else:
             self._possibleFormats = [f() for f in self.FORMATS]
