@@ -100,20 +100,21 @@ class SeqEncoder(object):
         else:
 
             self._format = val
-            enc = val.qualityEncoding
-            if enc is not None:
+            if not val.detecting:
+                enc = val.qualityEncoding
+                if enc is not None:
 
-                if self._qualityEncoding is None:
+                    if self._qualityEncoding is None:
 
-                    self._qualityEncoding = enc
+                        self._qualityEncoding = enc
 
-                else:
+                    else:
 
-                    warnings.warn(
-                        "{0} will keep its quality encoding {1}".format(
-                            self, self.qualityEncoding) +
-                        " and not use {2} from {3}".format(
-                            enc, val))
+                        warnings.warn(
+                            "{0} will keep its quality encoding {1}".format(
+                                self, self.qualityEncoding) +
+                            " and not use {2} from {3}".format(
+                                enc, val))
 
     @property
     def initiated(self):
