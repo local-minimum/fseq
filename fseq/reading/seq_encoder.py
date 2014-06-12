@@ -163,7 +163,7 @@ class SeqEncoder(object):
         SeqEncoder.format
             Manually setting the format
         """
-        if not initiated:
+        if not self.initiated:
             if self._format is None:
                 raise FormatError("Encoder has not been formatted")
             else:
