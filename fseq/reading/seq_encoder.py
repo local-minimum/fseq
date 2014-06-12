@@ -415,6 +415,28 @@ class SeqFormat(object):
         """
         return None
 
+    def _decay(self):
+
+        self._giveup -= 1
+        return self
+
+    @property
+    def givenUp(self):
+        """Reports if format has given up even though everything still was
+        matching.
+        
+        The purpose is to be able to promote more restricted formats that
+        represents a subset of the more general
+        
+        Returns
+        -------
+        
+        bool
+            The status
+        """
+
+        return self._giveup < 0
+
     def expects(self, line):
         """Test for if line fits into required pattern for the format
 
@@ -491,27 +513,24 @@ class FastaMultiline(SeqFormat):
 
         return "FASTA:MULTILINE"
 
-    def _decay(self):
-
-        self._giveup -= 1
-        return self._giveup > 0
-
     def expects(self, line):
 
         h = self._isHeader(line)
 
-        if self._firstLine:
+        if self.givenUp:
+            return False
+        elif self._firstLine:
             self._firstLine = False
             self._prevHeader = h
             return h
         else:
+
             if h:
                 if self._prevHeader:
                     return False
                 else:
                     self._prevHeader = True
-                    if not self._decay():
-                        return False
+                    self._decay()
                     return True
             elif (re.match(self.MATCH_AA_S, line) or
                     re.match(self.MATCH_NT_S, line)):
@@ -557,7 +576,7 @@ class FastaSingleline(FastaMultiline):
 
     def _decay(self):
 
-        return True
+        return self
 
     def expects(self, line):
 
@@ -598,8 +617,8 @@ class FastQ(SeqFormat):
 
     def __init__(self):
 
+        super(FastQ, self).__init__()
         self._mod = 0
-        self._giveup = 20
         self._expectedQlenght = None
 
                 
@@ -609,7 +628,8 @@ class FastQ(SeqFormat):
         
     def _qualExpect(self, line):
 
-        return True
+        self._decay()
+        return self
 
     @property
     @inheritDocFromSeqFormat
@@ -635,18 +655,14 @@ class FastQ(SeqFormat):
 
         return True
 
-    def _decay(self):
-
-        self._giveup -= 1
-        return self._giveup > 0
-
     def expects(self, line):
 
         ret = False
 
-        if self._mod == 0:
-            if not self._decay():
-                return False
+        if self.givenUp:
+            return False
+        elif self._mod == 0:
+            self._decay()
             ret = line.startswith(">")
         elif self._mod == 1:
             ret = bool(re.match(self.MATCH_AA, line) or
