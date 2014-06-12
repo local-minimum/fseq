@@ -745,6 +745,9 @@ class SeqFormatDetector(object):
 
     def compatible(self, encoder):
 
+        if (self.detecting):
+            raise FormatError("Format is still ambiguious")
+
         return ((not encoder.useSequence or self.hasSequence) and
                 (not encoder.useQuality or self.hasQuality))
 
