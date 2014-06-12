@@ -694,7 +694,10 @@ class SeqFormatDetector(object):
         self._hasSequence = None
         self._hasQuality = None
         self._qualityEncoding = None
-        self._possibleFormats = [f() for f in self.FORMATS]
+        if forceFormat:
+            self._possibleFormats = [forceFormat]
+        else:
+            self._possibleFormats = [f() for f in self.FORMATS]
 
     @property
     def detecting(self):
