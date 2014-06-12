@@ -216,3 +216,6 @@ class TestSeqFormats(unittest.TestCase):
 
             self.assertIn(False, fMres)
             self.assertIn(False, fSres)
+
+if __name__ == '__main__':
+    unittest.main()
