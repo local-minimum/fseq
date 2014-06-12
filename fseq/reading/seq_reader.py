@@ -2,7 +2,11 @@
 """Module for reading sequence data"""
 
 import os
+import threading
 import numpy as np
+
+from time import sleep
+from collections import deque
 
 from fseq.reading.seq_encoder import SeqEncoder
 from fseq.reporting.report_builder import ReportBuilder
@@ -46,10 +50,15 @@ class SeqReader(object):
     the results in the state of the instance.
     """
 
+    WORKERS = 32
+    DATA_INITIAL_SIZE = 100000
+    DEBUG = False
+
     def __init__(
             self, seqEncoder=None, dataSourcePaths=None, dataTargetPaths=None,
             reportBuilder=None, popDataSources=True, resetSeqEncoder=True,
-            popEncodingResults=None):
+            popEncodingResults=None, dataArrayConstructor=np.zeros,
+            dataWidth=101, dataType=np.float):
         """
         Parameters
         ----------
@@ -89,6 +98,19 @@ class SeqReader(object):
             If encoding results should be popped after they have been processed.
             (Default: `False` if initiated with exactly one source,
             else `True`)
+
+        dataArrayConstructor: func, optional
+            The function used to create data storages, e.g. `np.zeros`,
+            `np.ones` or `np.empty`.
+            (Default: `np.zeros`)
+
+        dataWidth: int, optional
+            Max length of sequences expected.
+            (Default: 101)
+
+        dataType: type, optional
+            Data type for the data array.
+            (Default: np.float)
         """
 
         self._idData = -1
@@ -98,6 +120,11 @@ class SeqReader(object):
         self._seqEncoder = None
         self._reportTargetBase = ""
         self._results = []
+
+        #TODO: Make setters and getters
+        self._dataArrayConstructor = dataArrayConstructor
+        self._dataWidth = dataWidth
+        self._dataType = dataType
 
         if seqEncoder:
             self.seqEncoder = seqEncoder
@@ -459,7 +486,52 @@ class SeqReader(object):
 
             if not self.popEncodingResults:
 
-                self._results.append(rb)
+                self._results.append(res)
+
+        return self
+
+    def _encodingWorker(self, idW, encoder, data):
+
+        while not self._workersStart:
+            sleep(0.01)
+
+        while self._more:
+
+            try:
+                outIndex, lines = self._lines.popleft()
+            except IndexError:
+                if self.DEBUG:
+                    print("Worker-{0}: Lazy worker awaits more job".format(idW))
+                sleep(0.01)
+            else:
+                if self.DEBUG:
+                    print(idW, outIndex, data.shape, id(data))
+                encoder.parse(lines, data, outIndex)
+
+    def _spawnWorkers(self, encoder, data):
+
+        workers = []
+        self._workersStart = False
+        for idW in range(self.WORKERS):
+            worker = threading.Thread(target=self._encodingWorker,
+                                      args=(idW, encoder, data))
+            worker.start()
+            workers.append(worker)
+
+        return workers
+        
+    def _joinWorkers(self, workers):
+
+        #If workers never started
+        self._workersStart = True
+
+        #Let workers know no more awaits even if it does
+        self._more = False
+
+        while workers:
+            worker = workers.pop()
+            while worker.isAlive():
+                worker.join(1)
 
         return self
 
@@ -504,9 +576,90 @@ class SeqReader(object):
         if self.resetSeqEncoder:
             E.reset()
 
-        D = np.array()
+        D = self._dataArrayConstructor(
+                (self.DATA_INITIAL_SIZE, self._dataWidth),
+                dtype=self._dataType)
         
+        lenD = D.shape[0]
 
-        raise NotImplemented()
+        detectorThread = threading.Thread(target=E.detectFormat)
+        detectorThread.start()
 
-        return D
+        notInitiated = True
+        chunkSize = None
+
+        workingIndex = 0
+        linesStore = []
+
+        self._more = True
+        self._lines = deque()
+        workers = self._spawnWorkers(E, D)
+
+        notEOF = True
+        lines2Store = True
+
+        with open(source, 'r') as fh:
+
+            while lines2Store:
+
+                if notEOF:
+                    line = fh.readline()
+                    if line == '':
+                        notEOF = False
+                    else:
+                        line = line.rstrip("\n")
+                        linesStore.append(line)
+
+                if notInitiated:
+                    if E.initiated:
+                        self._workersStart = True
+                        chunkSize = E.itemSize
+                        notInitiated = False
+                    elif notEOF:
+                        E.feedDetection(line)
+                    elif not detectorThread.isAlive():
+                        lines2Store = False
+                    else:
+                        sleep(0.01)
+                else:
+
+                    while len(linesStore) >= chunkSize:
+
+                        if workingIndex == lenD:
+
+                            self._joinWorkers(workers)
+                            sleep(0.015)
+
+                            D = np.concatenate((D, self._dataArrayConstructor(
+                                (self.DATA_INITIAL_SIZE, self._dataWidth),
+                                dtype=self._dataType)))
+
+                            lenD = D.shape[0]
+
+                            self._spawnWorkers(E, D)
+                            self._more = True
+                            self._workersStart = True
+
+                        else:
+
+                            self._lines.append(
+                                (workingIndex, linesStore[:chunkSize]))
+
+                            linesStore = linesStore[chunkSize:]
+
+                            workingIndex += 1
+                            
+
+
+                        #print chunkSize, workingIndex, linesStore
+
+                    if notEOF is False:
+                        lines2Store = False
+
+        while self._lines:
+            sleep(0.01)
+
+        detectorThread.join()
+        self._joinWorkers(workers)
+
+        return D[:workingIndex]
