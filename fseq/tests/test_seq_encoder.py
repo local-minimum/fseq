@@ -67,7 +67,7 @@ class TestSeqFormats(unittest.TestCase):
 
             self.assertIsNone(getattr(self._baseFormat, p))
 
-    def test_derivdedFormatExpects(self):
+    def test_derivedFormatExpects(self):
 
         for f in self._derivedFormats:
 
