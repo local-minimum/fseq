@@ -191,7 +191,7 @@ class SeqReader(object):
             Clearing the list of results
         """
 
-        return self._results
+        return (r for r in self._results)
 
     @popEncodingResults.setter
     def popEncodingResults(self, val):

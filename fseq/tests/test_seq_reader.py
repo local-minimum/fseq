@@ -229,7 +229,7 @@ class TestSeqReader(unittest.TestCase):
 
         s = SeqReader()
 
-        self.assertEqual(s.results, [])
+        self.assertEqual(list(s.results), [])
 
     def test_reportDirectory(self):
 
