@@ -32,7 +32,7 @@ class SeqEncoder(object):
         Paramters
         ---------
 
-        expectedInputFormat: SeqFormatDetector, optional
+        expectedInputFormat: SeqFormatDetector or SeqFormat, optional
             A seqence format expected in the input.
             (Default: Letting encoder guess format from input)
 
@@ -81,13 +81,16 @@ class SeqEncoder(object):
 
         TypeError
             If attempting to set format with object not derived from
-            `SeqFormatDetector`
+            `SeqFormatDetector` or `SeqFormat`
         """
 
         return self._format
 
     @format.setter
     def format(self, val):
+
+        if isinstance(val, SeqFormat):
+            val = SeqFormatDetector(forceFormat=val)
 
         if not isinstance(val, SeqFormatDetector):
 
