@@ -114,3 +114,44 @@ class ReportBase(object):
         """
 
         raise NotImplemented("This method should be overwritten")
+
+
+class LinePlot(ReportBase):
+
+    def __init__(self, name="line.pdf", saveArgs=tuple(), saveKwargs=dict()):
+
+        super(LinePlot, self).__init__(name=name, saveArgs=saveArgs,
+            saveKwargs=saveKwargs)
+
+    def distill(self, data, name=None, outputRoot=None, outputNamePrefix=None,
+            title=None, text=None, ylabel=None, xlabel=None,
+            saveArgs=tuple(), saveKwargs=dict(), logX=False, logY=False,
+            basex=None, basey=None, labels=None,
+            *args, **kwargs):
+
+        f = plt.figure(name)
+        ax = f.gca()
+        if logX and logY:
+            ax.loglog(data, '-g', lw=2, basey=basey, basex=basex, label=labels)
+        elif logX:
+            ax.semilogx(data, '-g', lw=2, basex=basex, label=labels)
+        elif logY:
+            ax.semilogy(data, '-g', lw=2, basey=basey, label=labels)
+        else:
+            ax.plot(data, '-g', lw=2)
+
+        if labels:
+            ax.legend()
+
+        if title is not None:
+            ax.set_title(title)
+        if text is not None:
+            pass
+        if ylabel is not None:
+            ax.set_ylabel(ylabel)
+        if xlabel is not None:
+            ax.set_xlabel(xlabel)
+
+        self.savefig(f, outputRoot=outputRoot,
+                outputNamePrefix=outputNamePrefix,
+                name=name, *saveArgs, **saveKwargs)
