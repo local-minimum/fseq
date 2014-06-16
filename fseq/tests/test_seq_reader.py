@@ -25,7 +25,7 @@ encoder is present.
 
 import unittest
 
-from fseq import SeqReader, SeqEncoder, ReportBuilder
+from fseq import SeqReader, SeqEncoder, ReportBuilderBase
 
 
 class TestSeqReader(unittest.TestCase):
@@ -126,8 +126,8 @@ class TestSeqReader(unittest.TestCase):
 
     def test_reportBulder(self):
 
-        rb = ReportBuilder()
-        rb2 = ReportBuilder()
+        rb = ReportBuilderBase()
+        rb2 = ReportBuilderBase()
 
         s = SeqReader(reportBuilder=rb)
 
@@ -138,10 +138,10 @@ class TestSeqReader(unittest.TestCase):
 
         self.assertEqual(len(tuple(s.reportBuilders)), 2)
 
-    def test_reportBuilderRemoval(self):
+    def test_ReportBuilderBaseRemoval(self):
 
-        rb = ReportBuilder()
-        rb2 = ReportBuilder()
+        rb = ReportBuilderBase()
+        rb2 = ReportBuilderBase()
 
         s = SeqReader(reportBuilder=rb)
         s.addReportBuilder(rb2)
@@ -162,7 +162,7 @@ class TestSeqReader(unittest.TestCase):
     def test_reportBulderFail(self):
 
         s = SeqReader()
-        rbs = (ReportBuilder(), ReportBuilder())
+        rbs = (ReportBuilderBase(), ReportBuilderBase())
 
         self.assertRaises(TypeError, s.addReportBuilder, None)
         self.assertRaises(TypeError, s.addReportBuilder, True)
