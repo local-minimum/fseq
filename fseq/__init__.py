@@ -37,3 +37,5 @@ from fseq.reading.seq_encoder import \
 from fseq.reporting.report_builder import ReportBuilderBase, \
     ReportBuilderPositionAverage
 
+from fseq.reporting.reports import ReportBase, LinePlot 
+
