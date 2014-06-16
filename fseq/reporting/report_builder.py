@@ -21,9 +21,9 @@ class ReportBuilderBase(object):
         return self._outputNamePrefix
 
     @outputNamePrefix.setter
-    def outputNamePrefix(self):
+    def outputNamePrefix(self, val):
 
-        return self._outputNamePrefix
+        self._outputNamePrefix = val
 
     @property
     def outputRoot(self):
