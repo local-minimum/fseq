@@ -120,6 +120,39 @@ class ReportBase(object):
         raise NotImplemented("This method should be overwritten")
 
 
+class HeatMap(ReportBase):
+
+    def __init__(self, name='heatmap.pdf', saveArgs=tuple(), saveKwargs=dict()):
+
+        super(HeatMap, self).__init__(name=name, saveArgs=saveArgs,
+            saveKwargs=saveKwargs)
+
+    def distill(self, data, name, outputRoot=None, outputNamePrefix=None,
+            title=None, text=None, ylabel=None, xlabel=None,
+            saveArgs=tuple(), saveKwargs=dict(), vmin=None, vmax=None,
+            aspect='auto', axisOff=True,
+            cmap=plt.cm.RdBu):
+
+        f = plt.figure(name)
+        ax = f.gca()
+        ax.pcolor(data, aspect=aspect, interpolation='nearest', cmap=cmap,
+                  vmin=vmin, vmax=vmax, ylabel=ylabel, xlabel=xlabel)
+
+        ax.colorbar()
+
+        if axisOff:
+            ax.axis('off')
+
+        if title is not None:
+            ax.set_title(title)
+
+        f.tight_layout()
+
+        self.saveFig(f, outputRoot=outputRoot,
+                outputNamePrefix=outputNamePrefix,
+                name=name, *saveArgs, **saveKwargs)
+
+
 class LinePlot(ReportBase):
 
     def __init__(self, name="line.pdf", saveArgs=tuple(), saveKwargs=dict()):
