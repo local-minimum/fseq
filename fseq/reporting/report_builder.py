@@ -4,6 +4,9 @@
 import warnings
 import numpy as np
 
+import scipy.spatial.distance as dist
+import scipy.cluster.hierarchy as hier
+
 
 class ReportBuilderBase(object):
 
@@ -90,6 +93,94 @@ class ReportBuilderBase(object):
             r.distill(*args, **kwargs)
 
         return self
+
+class ReportBuilderFFT(ReportBuilderBase):
+
+    METRICS = {'braycurtis', 'canberra', 'chebyshev', 'cityblock',
+               'correlation', 'cosine', 'dice', 'euclidean', 'hamming',
+               'jaccard', 'kulsinski', 'mahalanobis', 'matching',
+               'minkowski', 'rogerstanimoto', 'russellrao', 'seuclidean',
+               'sokalmichener', 'sokalsneath', 'sqeuclidean', 'yule'}
+
+    def __init__(self, outputRoot=None, outputNamePrefix=None,
+                 sampleSize=1000, distanceMetric='correlation', *reports):
+
+        super(ReportBuilderFFT, self).__init__(
+            outputRoot=outputRoot, outputNamePrefix=outputNamePrefix,
+            *reports)
+
+        self.sampleSize = sampleSize
+
+    @property
+    def distanceMetric(self):
+
+        return self._distanceMetric
+
+    @distanceMetric.setter
+    def distanceMetric(self, metric):
+
+        metric = metric.lower()
+        if metric in self.METRICS:
+            self._distanceMetric = metric
+        else:
+            raise ValueError("{0} not a valid metric ({1})".format(
+                metric, self.METRICS))
+
+    @property
+    def sampleSize(self):
+
+        return self._sampleSize
+
+    @sampleSize.setter
+    def sampleSize(self, val):
+
+        self._sampleSize = val
+    
+    def _getLeafOrder(self, A):
+
+        distMatrix = dist.pdist(A, metric=metric)
+
+        distSquareM = dist.squareform(distMatrix)
+
+        linkageM = hier.linkage(distSquareM)
+
+        dendro = hier.dendrogram(linkageM)
+
+        return dendro['leaves'] 
+
+
+    def distill(self, data, distanceMetric=None, *args, **kwargs):
+
+        if metric is None:
+            metric = self.distanceMetric
+
+        D = np.arange(data.shape[0])
+        np.shuffle(D)
+        data = data[D[:self.sampleSize]]
+
+        fD = np.fft.rfft(data, axis=1)
+
+        A = np.abs(fD)
+
+        super(ReportBuilderFFT, self).distill(
+            A[self._getLeafOrder(A)],
+            outputNamePrefix='FFT-sample.abs.',
+            title='absolute FFT values for {0} random sample sequences'.format(
+                self.sampleSize),
+            xlabel='Frequency',
+            ylabel='Read n',
+            *args, **kwargs)
+
+        A = (np.angle(fD) - np.angle(fD[:, 1])) % (2 * np.pi)
+        
+        super(ReportBuilderFFT, self).distill(
+            A[self._getLeafOrder(A)],
+            outputNamePrefix='FFT-sample.angle.',
+            title='FFT angle for {0} random sample sequences'.format(
+                self.sampleSize),
+            xlabel='Frequency',
+            ylabel='Read n',
+            *args, **kwargs)
 
 
 class ReportBuilderPositionAverage(ReportBuilderBase):

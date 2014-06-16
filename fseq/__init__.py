@@ -35,7 +35,7 @@ from fseq.reading.seq_encoder import \
     SeqFormat, FastaMultiline, FastaSingleline, FastQ
 
 from fseq.reporting.report_builder import ReportBuilderBase, \
-    ReportBuilderPositionAverage
+    ReportBuilderPositionAverage, ReportBuilderFFT
 
 from fseq.reporting.reports import ReportBase, LinePlot 
 
