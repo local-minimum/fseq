@@ -137,9 +137,9 @@ class ReportBuilderFFT(ReportBuilderBase):
 
         self._sampleSize = val
     
-    def _getLeafOrder(self, A, metric):
+    def _getLeafOrder(self, A, metric, w=None, V=None, VI=None):
 
-        distMatrix = dist.pdist(A, metric=metric)
+        distMatrix = dist.pdist(A, metric=metric, w=w, V=V, VI=VI)
 
         distSquareM = dist.squareform(distMatrix)
 
@@ -150,7 +150,8 @@ class ReportBuilderFFT(ReportBuilderBase):
         return dendro['leaves'] 
 
 
-    def distill(self, data, distanceMetric=None, *args, **kwargs):
+    def distill(self, data, distanceMetric=None, clusterOnAbsOnly=True,
+            *args, **kwargs):
 
         if distanceMetric is None:
             distanceMetric = self.distanceMetric
@@ -162,9 +163,11 @@ class ReportBuilderFFT(ReportBuilderBase):
         fD = np.fft.rfft(data, axis=1)
 
         A = np.abs(fD)
+        V = np.std(A, axis=0) 
+        O = self._getLeafOrder(A, distanceMetric, V=V)
 
         super(ReportBuilderFFT, self).distill(
-            A[self._getLeafOrder(A, distanceMetric)],
+            A[O],
             outputNamePrefix='fft-sample.abs.',
             title='absolute FFT values for {0} random sample sequences'.format(
                 self.sampleSize),
@@ -173,10 +176,14 @@ class ReportBuilderFFT(ReportBuilderBase):
             axisOff=False,
             *args, **kwargs)
 
-        A = (np.angle(fD) - np.angle(fD[:, :1])) % (2 * np.pi)
+        #A = (np.angle(fD) - np.angle(fD[:, :1])) % (2 * np.pi)
+        A = np.angle(fD)
+        V = np.std(A, axis=0) 
+        if not clusterOnAbsOnly:
+            O = self._getLeafOrder(A, distanceMetric, V=V)
         
         super(ReportBuilderFFT, self).distill(
-            A[self._getLeafOrder(A, distanceMetric)],
+            A[O],
             outputNamePrefix='fft-sample.angle.',
             title='FFT angle for {0} random sample sequences'.format(
                 self.sampleSize),
