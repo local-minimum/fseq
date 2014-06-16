@@ -165,7 +165,7 @@ class ReportBuilderFFT(ReportBuilderBase):
 
         super(ReportBuilderFFT, self).distill(
             A[self._getLeafOrder(A, distanceMetric)],
-            outputNamePrefix='FFT-sample.abs.',
+            outputNamePrefix='fft-sample.abs.',
             title='absolute FFT values for {0} random sample sequences'.format(
                 self.sampleSize),
             xlabel='Frequency',
@@ -177,7 +177,7 @@ class ReportBuilderFFT(ReportBuilderBase):
         
         super(ReportBuilderFFT, self).distill(
             A[self._getLeafOrder(A, distanceMetric)],
-            outputNamePrefix='FFT-sample.angle.',
+            outputNamePrefix='fft-sample.angle.',
             title='FFT angle for {0} random sample sequences'.format(
                 self.sampleSize),
             xlabel='Frequency',
