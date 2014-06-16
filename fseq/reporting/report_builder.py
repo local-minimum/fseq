@@ -137,7 +137,7 @@ class ReportBuilderFFT(ReportBuilderBase):
 
         self._sampleSize = val
     
-    def _getLeafOrder(self, A):
+    def _getLeafOrder(self, A, metric):
 
         distMatrix = dist.pdist(A, metric=metric)
 
