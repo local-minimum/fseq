@@ -2,6 +2,7 @@
 """Module for holding the various implemented reporting classes"""
 
 import matplotlib.pyplot as plt
+import os
 
 
 class ReportBase(object):
@@ -90,7 +91,10 @@ class ReportBase(object):
 
         path = os.path.join(outputRoot, outputNamePrefix + name)
 
-        os.makedirs(path)
+        try:
+            os.makedirs(os.path.dirname(path))
+        except OSError:
+            pass
 
         if len(args) == 0:
             args = self.saveArgs
