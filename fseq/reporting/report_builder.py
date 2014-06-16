@@ -173,7 +173,11 @@ class ReportBuilderPositionAverage(ReportBuilderBase):
 
         super(ReportBuilderPositionAverage, self).distill(
             data.mean(axis=0, dtype=np.float),
-            outputNamePrefix='average.total.', *args, **kwargs)
+            outputNamePrefix='average.total.',
+            title='Average GC per position',
+            xlabel='Read position',
+            ylabel='%GC',
+            *args, **kwargs)
 
         freqs, bins = zip(*(self._floatBin(C) for C in data.T))
         undecidedV = np.ones_like(freqs) * undecidedValue
@@ -182,10 +186,16 @@ class ReportBuilderPositionAverage(ReportBuilderBase):
 
         super(ReportBuilderPositionAverage, self).distill(
             lacking(freqs, bins, undecidedV),
+            title='Frequency of missing data per position',
+            xlabel='Read position',
+            ylabel='f',
             outputNamePrefix='average.lacking.', *args, **kwargs)
     
         notLacking = np.frompyfunc(self._getNotF, 3, 1)
 
         super(ReportBuilderPositionAverage, self).distill(
             notLacking(freqs, bins, undecidedV),
+            title='Average GC per position, omitting uncertain',
+            xlabel='Read position',
+            ylabel='%GC',
             outputNamePrefix='average.not-lacking.', *args, **kwargs)
