@@ -49,16 +49,10 @@ class SeqEncoder(object):
             Translation map from input to output
         """
 
-        self._sequenceLine = None
-        self._qualityLine = None
-        self._headerLine = None
-
         self._qualityEncoding = None
         self._sequenceEncoding = None
 
-        self._formatCompatible = False
-        self._format = None
-        self._detectFeed = []
+        self.reset()
 
         if expectedInputFormat:
             self.format = expectedInputFormat
@@ -303,6 +297,9 @@ class SeqEncoder(object):
         SeqEncoder.detectFormat()
             Guessing
         """
+        
+        if self.initiated:
+            return self
 
         f = SeqFormatDetector()
 
@@ -360,7 +357,14 @@ class SeqEncoder(object):
         SeqEncoder.detectFormat()
             Guessing
         """
+
+        self._sequenceLine = None
+        self._qualityLine = None
+        self._headerLine = None
+
+        self._formatCompatible = False
         self._format = None
+        self._detectFeed = []
 
         return self
 
