@@ -199,3 +199,5 @@ class ReportBuilderPositionAverage(ReportBuilderBase):
             xlabel='Read position',
             ylabel='%GC',
             outputNamePrefix='average.not-lacking.', *args, **kwargs)
+
+        return self
