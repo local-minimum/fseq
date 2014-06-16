@@ -478,15 +478,27 @@ class SeqReader(object):
             Returns `self`
         """
 
+        reporters = set()
+        kwargs = dict(outputRoot=self.reportDirectory)
+        
+
         for res in self:
 
+            args = (res, )
             for rb in self._reportBuilders:
 
-                rb.distill(res, outputRoot=self.reportDirectory)
+                t = threading.Thread(
+                    target=rb.distill,
+                    args=args,
+                    kwargs=kwargs)
+                t.start()
+                reporters.add(t)
 
             if not self.popEncodingResults:
 
                 self._results.append(res)
+
+        self._joinThreads(reporters)
 
         return self
 
@@ -520,7 +532,7 @@ class SeqReader(object):
 
         return workers
         
-    def _joinWorkers(self, workers):
+    def _joinThreads(self, workers):
 
         #If workers never started
         self._workersStart = True
@@ -627,7 +639,7 @@ class SeqReader(object):
 
                         if workingIndex == lenD:
 
-                            self._joinWorkers(workers)
+                            self._joinThreads(workers)
                             sleep(0.015)
 
                             D = np.concatenate((D, self._dataArrayConstructor(
@@ -660,6 +672,6 @@ class SeqReader(object):
             sleep(0.01)
 
         detectorThread.join()
-        self._joinWorkers(workers)
+        self._joinThreads(workers)
 
         return D[:workingIndex]
