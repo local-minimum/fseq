@@ -127,11 +127,11 @@ class HeatMap(ReportBase):
         super(HeatMap, self).__init__(name=name, saveArgs=saveArgs,
             saveKwargs=saveKwargs)
 
-    def distill(self, data, name, outputRoot=None, outputNamePrefix=None,
+    def distill(self, data, name=None, outputRoot=None, outputNamePrefix=None,
             title=None, text=None, ylabel=None, xlabel=None,
             saveArgs=tuple(), saveKwargs=dict(), vmin=None, vmax=None,
             aspect='auto', axisOff=True,
-            cmap=plt.cm.RdBu):
+            cmap=plt.cm.RdBu, *args, **kwargs):
 
         f = plt.figure(name)
         ax = f.gca()
