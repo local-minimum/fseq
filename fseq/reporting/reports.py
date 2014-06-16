@@ -135,10 +135,15 @@ class HeatMap(ReportBase):
 
         f = plt.figure(name)
         ax = f.gca()
-        ax.pcolor(data, aspect=aspect, interpolation='nearest', cmap=cmap,
-                  vmin=vmin, vmax=vmax, ylabel=ylabel, xlabel=xlabel)
+        im = ax.imshow(data, aspect=aspect, cmap=cmap, interpolation='nearest',
+                       vmin=vmin, vmax=vmax)
 
-        ax.colorbar()
+        if ylabel is not None:
+            ax.set_ylabel(ylabel)
+        if xlabel is not None:
+            ax.set_xlabel(xlabel)
+
+        plt.colorbar(im, ax=ax)
 
         if axisOff:
             ax.axis('off')
