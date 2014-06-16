@@ -116,14 +116,14 @@ class ReportBuilderPositionAverage(ReportBuilderBase):
         u = np.unique(C)
         return np.histogram(C, bins=np.hstack((np.unique(C), (np.inf,))))
 
-    def _getF(X, Y, val):
+    def _getF(self, X, Y, val):
 
         if val not in Y:
             return 0
 
         return X[Y[:X.size] == val] / X.sum().astype(np.float)
 
-    def _getNotF(X, Y, val):
+    def _getNotF(self, X, Y, val):
 
         pos = Y[:X.size] != val
         return (X[pos] * Y[pos]).sum() / X.sum().astype(np.float)
