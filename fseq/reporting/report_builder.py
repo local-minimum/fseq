@@ -41,6 +41,10 @@ class ReportBuilderBase(object):
         self.outputNamePrefix=outputNamePrefix 
         self.addReports(*reports)
 
+    def __iter__(self):
+
+        return iter(self._reports)
+
     @property
     def outputNamePrefix(self):
         """Partial file name to prepend the individual reports: str"""
