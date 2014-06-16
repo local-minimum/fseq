@@ -110,6 +110,7 @@ class ReportBuilderFFT(ReportBuilderBase):
             *reports)
 
         self.sampleSize = sampleSize
+        self.distanceMetric = distanceMetric
 
     @property
     def distanceMetric(self):
@@ -151,8 +152,8 @@ class ReportBuilderFFT(ReportBuilderBase):
 
     def distill(self, data, distanceMetric=None, *args, **kwargs):
 
-        if metric is None:
-            metric = self.distanceMetric
+        if distanceMetric is None:
+            distanceMetric = self.distanceMetric
 
         D = np.arange(data.shape[0])
         np.shuffle(D)
@@ -163,7 +164,7 @@ class ReportBuilderFFT(ReportBuilderBase):
         A = np.abs(fD)
 
         super(ReportBuilderFFT, self).distill(
-            A[self._getLeafOrder(A)],
+            A[self._getLeafOrder(A, distanceMetric)],
             outputNamePrefix='FFT-sample.abs.',
             title='absolute FFT values for {0} random sample sequences'.format(
                 self.sampleSize),
@@ -174,7 +175,7 @@ class ReportBuilderFFT(ReportBuilderBase):
         A = (np.angle(fD) - np.angle(fD[:, 1])) % (2 * np.pi)
         
         super(ReportBuilderFFT, self).distill(
-            A[self._getLeafOrder(A)],
+            A[self._getLeafOrder(A, distanceMetric)],
             outputNamePrefix='FFT-sample.angle.',
             title='FFT angle for {0} random sample sequences'.format(
                 self.sampleSize),
