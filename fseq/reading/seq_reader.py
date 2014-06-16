@@ -9,7 +9,7 @@ from time import sleep
 from collections import deque
 
 from fseq.reading.seq_encoder import SeqEncoder
-from fseq.reporting.report_builder import ReportBuilder
+from fseq.reporting.report_builder import ReportBuilderBase as ReportBuilder
 
 
 class SeqReader(object):
@@ -482,7 +482,7 @@ class SeqReader(object):
 
             for rb in self._reportBuilders:
 
-                rb.distill(res, dirname=self.reportDirectory)
+                rb.distill(res, outputRoot=self.reportDirectory)
 
             if not self.popEncodingResults:
 
