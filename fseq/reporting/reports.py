@@ -156,6 +156,6 @@ class LinePlot(ReportBase):
         if xlabel is not None:
             ax.set_xlabel(xlabel)
 
-        self.savefig(f, outputRoot=outputRoot,
+        self.saveFig(f, outputRoot=outputRoot,
                 outputNamePrefix=outputNamePrefix,
                 name=name, *saveArgs, **saveKwargs)
