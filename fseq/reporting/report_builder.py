@@ -184,7 +184,7 @@ class ReportBuilderPositionAverage(ReportBuilderBase):
             lacking(freqs, bins, undecidedV),
             outputNamePrefix='average.lacking.', *args, **kwargs)
     
-        notLacking = np.frompyfunc(self._getF, 3, 1)
+        notLacking = np.frompyfunc(self._getNotF, 3, 1)
 
         super(ReportBuilderPositionAverage, self).distill(
             notLacking(freqs, bins, undecidedV),
