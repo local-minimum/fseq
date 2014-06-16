@@ -7,8 +7,33 @@ import warnings
 
 
 class ReportBase(object):
+    """Base class for simple report creations.
+
+    Main purpose is to make a common interface for figure saving using
+    matplotlib figures.
+
+    Attributes
+    ----------
+
+    name
+    saveArgs
+    saveKwargs
+    """
 
     def __init__(self, name=None, saveArgs=tuple(), saveKwargs=dict()):
+        """
+        Properties
+        ----------
+
+        name: str, optional
+            A specific name of the report
+
+        saveArgs: tuple or list, optional
+            Any args to be passed to `matplotlib.savefig` after the figure
+
+        saveKwargs: dict, optional
+            Any keyword args to be passed to `matplotlib.savefig`
+        """
 
         self.name = name
         self.saveArgs = saveArgs
@@ -122,8 +147,23 @@ class ReportBase(object):
 
 
 class HeatMap(ReportBase):
+    """Makes heatmaps from data"""
 
     def __init__(self, name='heatmap.pdf', saveArgs=tuple(), saveKwargs=dict()):
+        """
+        Properties
+        ----------
+
+        name: str, optional
+            A specific name of the report
+            (Default: 'heatmap.pdf')
+
+        saveArgs: tuple or list, optional
+            Any args to be passed to `matplotlib.savefig` after the figure
+
+        saveKwargs: dict, optional
+            Any keyword args to be passed to `matplotlib.savefig`
+        """
 
         super(HeatMap, self).__init__(name=name, saveArgs=saveArgs,
             saveKwargs=saveKwargs)
@@ -133,6 +173,59 @@ class HeatMap(ReportBase):
             saveArgs=tuple(), saveKwargs=dict(), vmin=None, vmax=None,
             aspect='auto', axisOff=True,
             cmap=plt.cm.RdBu, *args, **kwargs):
+        """Creates the actual heatmap.
+
+        Parameters
+        ----------
+
+        data: numpy.ndarray
+            The data to be plotted
+
+        name: str, optional
+            If the default name of the HeatMap instance should be overwritten
+
+        outputRoot: str, optional
+            The directory in which to place the report
+
+        outputNamePrefix: str, optional
+            A prefix to prepend the name when saving the output.
+
+        title: str, optional
+            A title to be put over the heatmap
+
+        text: str, optional
+            An explanatory text to put under the plot
+
+        ylabel: str, optional
+            A label for the y-axis
+
+        xlabel: str, optional
+            A label for the x-axis
+
+        saveArgs: tuple or list, optional
+            A set of arguments to overwrite the instance's default save args
+
+        saveKwargs: dict, optional
+            A set of keyword arguments to overwrite the instanc's default
+
+        vmin: number, optional
+            To set a minimum color-scale number for the heatmap
+
+        vmax: number, optional
+            To set a maximum color-scale number for the heatmap
+
+        aspect: str, optional
+            The aspect ratio of the blocks/pixels in the heatmap, default
+            is 'auto', which allows for rectangular pixels.
+
+        axisOff: bool, optional
+            If the axis of the plot should not be rendered
+            (Default: True)
+            
+        cmap: matplotlib.cmap, optional
+            A colormap to be used when plotting.
+            (Default: Red -- Blue)
+        """
 
         if len(args):
             warnings.warn("Unused arguments: {0}".format(args))
@@ -165,8 +258,22 @@ class HeatMap(ReportBase):
 
 
 class LinePlot(ReportBase):
+    """Makes lines from data"""
 
     def __init__(self, name="line.pdf", saveArgs=tuple(), saveKwargs=dict()):
+        """
+        Properties
+        ----------
+
+        name: str, optional
+            A specific name of the report
+
+        saveArgs: tuple or list, optional
+            Any args to be passed to `matplotlib.savefig` after the figure
+
+        saveKwargs: dict, optional
+            Any keyword args to be passed to `matplotlib.savefig`
+        """
 
         super(LinePlot, self).__init__(name=name, saveArgs=saveArgs,
             saveKwargs=saveKwargs)
@@ -177,6 +284,56 @@ class LinePlot(ReportBase):
             basex=None, basey=None, labels=None,
             *args, **kwargs):
 
+        """Creates the actual heatmap.
+
+        Parameters
+        ----------
+
+        data: numpy.ndarray
+            The data to be plotted
+
+        name: str, optional
+            If the default name of the HeatMap instance should be overwritten
+
+        outputRoot: str, optional
+            The directory in which to place the report
+
+        outputNamePrefix: str, optional
+            A prefix to prepend the name when saving the output.
+
+        title: str, optional
+            A title to be put over the heatmap
+
+        text: str, optional
+            An explanatory text to put under the plot
+
+        ylabel: str, optional
+            A label for the y-axis
+
+        xlabel: str, optional
+            A label for the x-axis
+
+        saveArgs: tuple or list, optional
+            A set of arguments to overwrite the instance's default save args
+
+        saveKwargs: dict, optional
+            A set of keyword arguments to overwrite the instanc's default
+        
+        logX: bool, optional
+            If X-axis should be logged
+
+        logY: bool, optional
+            If Y-axis should be logged
+
+        basex: number, optional
+            To specify other then 10-base logging
+
+        basey: number, optional
+            To specify other than 10-base logging
+
+        labels: str, optional
+            To name the line plotted and thus add a legend to the plot.
+        """
         if len(args):
             warnings.warn("Unused arguments: {0}".format(args))
         if len(kwargs):

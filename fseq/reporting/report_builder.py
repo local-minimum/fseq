@@ -9,8 +9,32 @@ import scipy.cluster.hierarchy as hier
 
 
 class ReportBuilderBase(object):
+    """Base class for common report builder features.
 
+    Most prominently, the distill-method needs to be implemented in
+    subclasses to make much sence in most use cases.
+
+    Attributes
+    ----------
+
+    outputRoot
+    outputNamePrefix
+
+    """
     def __init__(self, outputRoot=None, outputNamePrefix=None, *reports):
+        """
+        Parameters
+        ----------
+
+        outputRoot: str, optional
+            Path to the directory where all reports should be put
+
+        outputNamePrefix: str, optional
+            Partial name to be added to all reports done by the builder
+
+        *reports: objects, optional
+            Any number of reports to be added from start
+        """
 
         self._reports = set()
         self.outputRoot=outputRoot
@@ -56,6 +80,12 @@ class ReportBuilderBase(object):
 
         fseq.ReportBuilderBase
             Returns `self`
+
+        Raises
+        ------
+
+        ValueError
+            If a report lacks a method named `distill`
         """
 
         for r in reports:
@@ -95,6 +125,20 @@ class ReportBuilderBase(object):
         return self
 
 class ReportBuilderFFT(ReportBuilderBase):
+    """Samples part of data set and performs FFT-based analysis on it.
+
+    Attributes
+    ----------
+
+    distanceMetric
+    sampleSize
+
+    See also
+    --------
+
+    ReportBuilderBase
+        Base class implementing more attributes.
+    """
 
     METRICS = {'braycurtis', 'canberra', 'chebyshev', 'cityblock',
                'correlation', 'cosine', 'dice', 'euclidean', 'hamming',
@@ -104,7 +148,27 @@ class ReportBuilderFFT(ReportBuilderBase):
 
     def __init__(self, outputRoot=None, outputNamePrefix=None,
                  sampleSize=1000, distanceMetric='correlation', *reports):
+        """
+        Parameters
+        ----------
 
+        outputRoot: str, optional
+            Path to the directory where all reports should be put
+
+        outputNamePrefix: str, optional
+            Partial name to be added to all reports done by the builder
+
+        sampleSize: int, optional
+            Size of sample to be randomly drawn (Default: 1000)
+
+        distanceMetric: str, optional
+            Name of distance metric to be used.
+            See `ReportBuilderFFT.METRICS` for allowed metrics.
+            (Default: 'correlation')
+
+        *reports: objects, optional
+            Any number of reports to be added from start
+        """
         super(ReportBuilderFFT, self).__init__(
             outputRoot=outputRoot, outputNamePrefix=outputNamePrefix,
             *reports)
@@ -152,7 +216,30 @@ class ReportBuilderFFT(ReportBuilderBase):
 
     def distill(self, data, distanceMetric=None, clusterOnAbsOnly=True,
             *args, **kwargs):
+        """Make reports from data.
 
+        Produces two analyses:
+
+        Amplitude evaluation
+            A clustered FFT-amplitude analysis
+
+        Angle evaluation
+            A clustered FFT-angle analysis
+
+        Parameters
+        ----------
+
+        data: numpy.ndarray
+            The 2D-array of data given
+
+        distanceMetric: str, optional
+            A distance metric to overwrite the default one of the instance.
+            
+        clusterOnAbsOnly: bool, optional
+            If clustering should be performed only on the amplitude (abs-values)
+            or if amplitude and angle be clustered independently.
+            (Default: Cluster only on amplitude)
+        """
         if distanceMetric is None:
             distanceMetric = self.distanceMetric
 
@@ -194,9 +281,39 @@ class ReportBuilderFFT(ReportBuilderBase):
 
 
 class ReportBuilderPositionAverage(ReportBuilderBase):
+    """Per position analysis builder.
 
+    Attributes
+    ----------
+
+    undecidedValue
+
+    See also
+    --------
+
+    ReportBuilderBase
+        Base class which implements some more attributes.
+    """
     def __init__(self, outputRoot=None, outputNamePrefix=None,
                  undecidedValue=0.5, *reports):
+        """
+        Parameters
+        ----------
+
+        outputRoot: str, optional
+            Path to the directory where all reports should be put
+
+        outputNamePrefix: str, optional
+            Partial name to be added to all reports done by the builder
+
+        undecidedValue: int, optional
+            The value for which undecided items were encoded (so it
+            can be omited and calculated separately for 2 of 3 graphs).
+            (Default: 0.5)
+
+        *reports: objects, optional
+            Any number of reports to be added from start
+        """
 
         super(ReportBuilderPositionAverage, self).__init__(
             outputRoot=outputRoot, outputNamePrefix=outputNamePrefix,
