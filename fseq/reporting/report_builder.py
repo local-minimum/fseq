@@ -156,7 +156,7 @@ class ReportBuilderFFT(ReportBuilderBase):
             distanceMetric = self.distanceMetric
 
         D = np.arange(data.shape[0])
-        np.shuffle(D)
+        np.random.shuffle(D)
         data = data[D[:self.sampleSize]]
 
         fD = np.fft.rfft(data, axis=1)
@@ -170,9 +170,10 @@ class ReportBuilderFFT(ReportBuilderBase):
                 self.sampleSize),
             xlabel='Frequency',
             ylabel='Read n',
+            axisOff=False,
             *args, **kwargs)
 
-        A = (np.angle(fD) - np.angle(fD[:, 1])) % (2 * np.pi)
+        A = (np.angle(fD) - np.angle(fD[:, :1])) % (2 * np.pi)
         
         super(ReportBuilderFFT, self).distill(
             A[self._getLeafOrder(A, distanceMetric)],
@@ -181,6 +182,7 @@ class ReportBuilderFFT(ReportBuilderBase):
                 self.sampleSize),
             xlabel='Frequency',
             ylabel='Read n',
+            axisOff=False,
             *args, **kwargs)
 
 
