@@ -34,5 +34,5 @@ from fseq.reading.seq_encoder import \
     FormatError, FormatImplementationError, FormatUnknown, \
     SeqFormat, FastaMultiline, FastaSingleline, FastQ
 
-from fseq.reporting.report_builder import ReportBuilder
+from fseq.reporting.report_builder import ReportBuilderBase
 
