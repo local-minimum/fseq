@@ -3,6 +3,7 @@
 
 import matplotlib.pyplot as plt
 import os
+import warnings
 
 
 class ReportBase(object):
@@ -133,6 +134,11 @@ class HeatMap(ReportBase):
             aspect='auto', axisOff=True,
             cmap=plt.cm.RdBu, *args, **kwargs):
 
+        if len(args):
+            warnings.warn("Unused arguments: {0}".format(args))
+        if len(kwargs):
+            warnings.warn("Unused keyword arguments: {0}".format(kwargs))
+
         f = plt.figure(name)
         ax = f.gca()
         im = ax.imshow(data, aspect=aspect, cmap=cmap, interpolation='nearest',
@@ -170,6 +176,11 @@ class LinePlot(ReportBase):
             saveArgs=tuple(), saveKwargs=dict(), logX=False, logY=False,
             basex=None, basey=None, labels=None,
             *args, **kwargs):
+
+        if len(args):
+            warnings.warn("Unused arguments: {0}".format(args))
+        if len(kwargs):
+            warnings.warn("Unused keyword arguments: {0}".format(kwargs))
 
         f = plt.figure(name)
         ax = f.gca()
