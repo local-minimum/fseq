@@ -111,7 +111,7 @@ class SeqReader(object):
 
         dataType: type, optional
             Data type for the data array.
-            (Default: np.float)
+            (Default: np.float16)
 
         verbose: bool, optional
             If running will emit some status messages
