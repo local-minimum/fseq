@@ -125,10 +125,9 @@ class SeqReader(object):
         self._reportTargetBase = ""
         self._results = []
 
-        #TODO: Make setters and getters
-        self._dataArrayConstructor = dataArrayConstructor
-        self._dataWidth = dataWidth
-        self._dataType = dataType
+        self.dataArrayConstructor = dataArrayConstructor
+        self.dataWidth = dataWidth
+        self.dataType = dataType
 
         self.verbose = verbose
 
@@ -163,6 +162,46 @@ class SeqReader(object):
     def __len__(self):
 
         return len(self._dataTargetPaths)
+
+    @property
+    def dataArrayConstructor(self):
+
+        return self._dataArrayConstructor
+
+    @dataArrayConstructor.setter
+    def dataArrayConstructor(self, dc):
+
+        self._dataArrayConstructor = dc
+
+    @property
+    def dataWidth(self):
+
+        return self._dataWidth
+
+    @dataWidth.setter
+    def dataWidth(self, w):
+
+        self._dataWidth = int(w)
+
+    @property
+    def dataType(val):
+        
+        return self._dataType
+
+    @dataType.setter
+    def dataType(self, T):
+
+        if isinstance(T, type):
+
+            self._dataType = T
+
+        else:
+
+            warnings.warn(
+                "{0} is not at type, setting it to {1} instead".format(
+                    T, type(T)))
+
+            self._dataType = type(T)
 
     @property
     def popDataSources(self):
