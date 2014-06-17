@@ -420,14 +420,14 @@ class SeqReader(object):
 
         return self
 
-    def addReportBuilder(self, reportBuilder):
+    def addReportBuilders(self, *reportBuilders):
         """Add a report builder to the set of reports done upon analysis.
 
         Parameters
         ----------
 
-        reportBuilder: fseq.ReportBuilder
-            Report builder to be added
+        reportBuilders: fseq.ReportBuilder, optional
+            Any number of report builder to be added
 
         Returns
         -------
@@ -439,18 +439,19 @@ class SeqReader(object):
         ------
 
         TypeError
-            If `reportBuilder` is not a valid `fseq.ReportBuilder`
+            If an item in `reportBuilders` is not a valid `fseq.ReportBuilder`
         """
 
-        if not isinstance(reportBuilder, ReportBuilder):
+        for reportBuilder in  reportBuilders:
+            if not isinstance(reportBuilder, ReportBuilder):
 
-            raise TypeError(
-                "Report Builder {0} is not a `fseq.ReportBuilder`".format(
-                    ReportBuilder))
+                raise TypeError(
+                    "Report Builder {0} is not a `fseq.ReportBuilder`".format(
+                        ReportBuilder))
 
-        else:
+            else:
 
-            self._reportBuilders.append(reportBuilder)
+                self._reportBuilders.append(reportBuilder)
 
         return self
 
