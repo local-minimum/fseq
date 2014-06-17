@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """Module for holding the various implemented reporting classes"""
 
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import os
 import warnings
