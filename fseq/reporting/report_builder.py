@@ -42,6 +42,10 @@ class ReportBuilderBase(object):
             kwargs['outputNamePrefix'] or None
         self.addReports(*reports)
 
+    def __len__(self):
+
+        return len(self._reports)
+
     def __iter__(self):
 
         return iter(self._reports)
