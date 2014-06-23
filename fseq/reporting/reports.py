@@ -143,11 +143,11 @@ class ReportBase(object):
         Raises
         ------
 
-        NotImplemented
+        NotImplementedError
             Always raises this exception
         """
 
-        raise NotImplemented("This method should be overwritten")
+        raise NotImplementedError("This method should be overwritten")
 
 
 class HeatMap(ReportBase):
