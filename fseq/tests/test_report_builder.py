@@ -9,6 +9,7 @@ class TestGenericBuilder(unittest.TestCase):
     def setUp(self):
 
         self._builderConstructor = fseq.ReportBuilderBase
+        self._startReports = 0
 
     def test_empty(self):
 
@@ -16,7 +17,7 @@ class TestGenericBuilder(unittest.TestCase):
 
         self.assertEqual(rb.outputRoot, '')
 
-        self.assertEqual(len(rb), 0)
+        self.assertEqual(len(rb), self._startReports)
 
     def test_raisesBadReport(self):
 
@@ -40,7 +41,7 @@ class TestGenericBuilder(unittest.TestCase):
         rb = self._builderConstructor()
         rb.addReports(fseq.HeatMap())
 
-        self.assertEqual(len(rb), 1)
+        self.assertEqual(len(rb), self._startReports + 1)
 
     def test_setPrefix(self):
 
@@ -78,6 +79,7 @@ class TestFFTBulder(TestGenericBuilder):
     def setUp(self):
 
         self._builderConstructor = fseq.ReportBuilderFFT
+        self._startReports = 1
 
     def test_sampleSize(self):
 
@@ -109,6 +111,7 @@ class TestAverageBuilder(TestGenericBuilder):
     def setUp(self):
 
         self._builderConstructor = fseq.ReportBuilderPositionAverage
+        self._startReports = 1
 
     def test_undecidedValue(self):
 
