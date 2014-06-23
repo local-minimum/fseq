@@ -520,7 +520,7 @@ class TestEncoderQC(unittest.TestCase):
         l = 1000
         self._eQC.parse([self._spoofHead, 'G'*l], self._out, 5)
         
-        np.testing.assert_allclose(self._out[6], 1)
+        np.testing.assert_allclose(self._out[5], 1)
 
     def test_C(self):
 
