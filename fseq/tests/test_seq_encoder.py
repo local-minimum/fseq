@@ -433,13 +433,13 @@ class TestEncoder(unittest.TestCase):
         qe = {}
         e = fseq.SeqEncoder(qualityEncoding=qe)
 
-        self.assertIs(e, qe)
+        self.assertIs(e.qualityEncoding, qe)
 
         qe = {'a': 1}
 
         e.qualityEncoding = qe
 
-        self.assertIs(e, qe)
+        self.assertIs(e.qualityEncoding, qe)
 
         with self.assertRaises(TypeError):
             e.qualityEncoding = []

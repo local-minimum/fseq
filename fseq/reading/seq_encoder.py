@@ -60,9 +60,9 @@ class SeqEncoder(object):
         self.useSequence = useSequence
         self.useQuality = useQuality
 
-        if sequenceEncoding:
+        if sequenceEncoding is not None:
             self.sequenceEncoding = sequenceEncoding
-        if qualityEncoding:
+        if qualityEncoding is not None:
             self.qualityEncoding = qualityEncoding
 
     @property
@@ -179,7 +179,7 @@ class SeqEncoder(object):
         ------
 
         TypeError
-            If attempting to set with object not having key-lookup
+            If attempting to set with object not having char key-lookup
         """
         return self._qualityEncoding
 
@@ -193,7 +193,16 @@ class SeqEncoder(object):
 
         else:
 
-            self._qualityEncoding = val
+            try:
+                val['A']
+            except TypeError:
+
+                raise TypeError("{0} must be able to take chars as keys".format(
+                    val))
+            except KeyError:
+                self._qualityEncoding = val
+            else:
+                self._qualityEncoding = val
 
     @property
     def sequenceEncoding(self):
@@ -208,7 +217,7 @@ class SeqEncoder(object):
         ------
 
         TypeError
-            If attempting to set with object not having key-lookup
+            If attempting to set with object not having char key-lookup
         """
         return self._sequenceEncoding
 
@@ -222,7 +231,16 @@ class SeqEncoder(object):
 
         else:
 
-            self._sequenceEncoding = val
+            try:
+                val['A']
+            except TypeError:
+
+                raise TypeError("{0} must be able to take chars as keys".format(
+                    val))
+            except KeyError:
+                self._sequenceEncoding = val
+            else:
+                self._sequenceEncoding = val
 
     @property
     def useQuality(self):
