@@ -4,6 +4,7 @@
 import os
 import threading
 import numpy as np
+import logging
 
 from time import sleep
 from collections import deque
@@ -59,9 +60,9 @@ class SeqReader(object):
 
     def __init__(
             self, seqEncoder=None, dataSourcePaths=None, dataTargetPaths=None,
-            reportBuilder=None, popDataSources=True, resetSeqEncoder=True,
+            reportBuilders=None, popDataSources=True, resetSeqEncoder=True,
             popEncodingResults=None, dataArrayConstructor=np.zeros,
-            dataWidth=101, dataType=np.float):
+            dataWidth=101, dataType=np.float16, verbose=False):
         """
         Parameters
         ----------
@@ -83,9 +84,10 @@ class SeqReader(object):
             ..note:: If supplied, must reflect equal number of outputs as
                 inputs in `dataSourcePaths` 
 
-        reportBuilder: fseq.ReportBuilder, optional
+        reportBuilders: fseq.ReportBuilder or tuple/list, optional
             If a report should be automatically be built upon encoding
             completion.
+            If a list or tuple, it should only contain report builders.
             (Default: no report builder)
 
         popDataSources: bool, optional
@@ -113,7 +115,10 @@ class SeqReader(object):
 
         dataType: type, optional
             Data type for the data array.
-            (Default: np.float)
+            (Default: np.float16)
+
+        verbose: bool, optional
+            If running will emit some status messages
         """
 
         self._idData = -1
@@ -128,14 +133,28 @@ class SeqReader(object):
         self.dataWidth = dataWidth
         self.dataType = dataType
 
+        self.verbose = verbose
+
+        logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                    datefmt='%y-%m-%d %H:%M')
+
+        self._logger = logging.getLogger("SeqReader")
+
         if seqEncoder:
             self.seqEncoder = seqEncoder
 
         if dataSourcePaths:
             self.addData(dataSourcePaths, targetPaths=dataTargetPaths)
 
-        if reportBuilder is not None:
-            self.addReportBuilder(reportBuilder)
+        if reportBuilders is not None:
+            if (isinstance(reportBuilders, list) or
+                    isinstance(reportBuilders, tuple)):
+
+                self.addReportBuilders(*reportBuilders)
+
+            else:
+                self.addReportBuilders(reportBuilders)
 
         self.popDataSources = popDataSources
         self.resetSeqEncoder = resetSeqEncoder
@@ -160,9 +179,9 @@ class SeqReader(object):
         return self._dataArrayConstructor
 
     @dataArrayConstructor.setter
-    def dataArrayConstructor(self, val):
+    def dataArrayConstructor(self, dc):
 
-        self._dataArrayConstructor = val
+        self._dataArrayConstructor = dc
 
     @property
     def dataWidth(self):
@@ -172,17 +191,27 @@ class SeqReader(object):
     @dataWidth.setter
     def dataWidth(self, w):
 
-        self._dataWidth = w
+        self._dataWidth = int(w)
 
     @property
-    def dataType(self):
+    def dataType(val):
         
         return self._dataType
 
     @dataType.setter
-    def dataType(self, t):
+    def dataType(self, T):
 
-        self._dataType = t
+        if isinstance(T, type):
+
+            self._dataType = T
+
+        else:
+
+            warnings.warn(
+                "{0} is not at type, setting it to {1} instead".format(
+                    T, type(T)))
+
+            self._dataType = type(T)
 
     @property
     def popDataSources(self):
@@ -340,6 +369,16 @@ class SeqReader(object):
         """
         return self._reportTargetBase
 
+    @property
+    def verbose(self):
+
+        return self._verbose
+
+    @verbose.setter
+    def verbose(self, val):
+
+        self._verbose = bool(val)
+
     def addData(self, sourcePaths, targetPaths=None):
         """Add a data source path to be analysed.
 
@@ -391,14 +430,14 @@ class SeqReader(object):
 
         return self
 
-    def addReportBuilder(self, reportBuilder):
+    def addReportBuilders(self, *reportBuilders):
         """Add a report builder to the set of reports done upon analysis.
 
         Parameters
         ----------
 
-        reportBuilder: fseq.ReportBuilder
-            Report builder to be added
+        reportBuilders: fseq.ReportBuilder, optional
+            Any number of report builder to be added
 
         Returns
         -------
@@ -410,18 +449,19 @@ class SeqReader(object):
         ------
 
         TypeError
-            If `reportBuilder` is not a valid `fseq.ReportBuilder`
+            If an item in `reportBuilders` is not a valid `fseq.ReportBuilder`
         """
 
-        if not isinstance(reportBuilder, ReportBuilder):
+        for reportBuilder in  reportBuilders:
+            if not isinstance(reportBuilder, ReportBuilder):
 
-            raise TypeError(
-                "Report Builder {0} is not a `fseq.ReportBuilder`".format(
-                    ReportBuilder))
+                raise TypeError(
+                    "Report Builder {0} is not a `fseq.ReportBuilder`".format(
+                        ReportBuilder))
 
-        else:
+            else:
 
-            self._reportBuilders.append(reportBuilder)
+                self._reportBuilders.append(reportBuilder)
 
         return self
 
@@ -513,6 +553,8 @@ class SeqReader(object):
         reporters = set()
         kwargs = dict(outputRoot=self.reportDirectory)
         
+        if self.verbose:
+            self._logger.info("Has {0} jobs".format(len(self)))
 
         for res in self:
 
@@ -530,7 +572,15 @@ class SeqReader(object):
 
                 self._results.append(res)
 
+        if self.verbose:
+            self._logger.info(
+                "Waiting for {0} report builders to finish".format(
+                    len(reporters)))
         self._joinThreads(reporters)
+
+        if self.verbose:
+            self._logger.info(
+                "All jobs complete")
 
         return self
 
@@ -599,13 +649,17 @@ class SeqReader(object):
             If no more data-source exists.
         """
 
+        if len(self) == 0 or self._idData == len(self):
+            raise StopIteration()
+
+        if self.verbose:
+            self._logger.info("Reading started")
+
         E = self.seqEncoder
 
         if E is None:
             raise ValueError("No encoder present")
 
-        if len(self) == 0 or self._idData == len(self):
-            raise StopIteration()
 
         if self.popDataSources:
             source = self._dataSourcePaths.pop(0)
@@ -705,5 +759,8 @@ class SeqReader(object):
 
         detectorThread.join()
         self._joinThreads(workers)
+
+        if self.verbose:
+            self._logger.info("Reading done")
 
         return D[:workingIndex]
