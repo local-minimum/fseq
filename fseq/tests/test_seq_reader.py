@@ -114,7 +114,7 @@ class TestSeqReader(unittest.TestCase):
 
     def test_allRunFails(self):
 
-        s = SeqReader()
+        s = SeqReader(dataSourcePaths='anypath')
 
         with self.assertRaises(ValueError):
             for res in s:
@@ -129,33 +129,38 @@ class TestSeqReader(unittest.TestCase):
         rb = ReportBuilderBase()
         rb2 = ReportBuilderBase()
 
-        s = SeqReader(reportBuilder=rb)
+        s = SeqReader(reportBuilders=rb)
 
         self.assertEqual(len(tuple(s.reportBuilders)), 1)
         self.assertEqual(tuple(s.reportBuilders)[0], rb)
 
-        s.addReportBuilder(rb2)
+        s.addReportBuilders(rb2)
 
         self.assertEqual(len(tuple(s.reportBuilders)), 2)
+
+        s = SeqReader(reportBuilders=(rb, rb2))
+
+        self.assertEqual(len(tuple(s.reportBuilders)), 2)
+        self.assertIn(rb, s.reportBuilders)
+        self.assertIn(rb2, s.reportBuilders)
 
     def test_ReportBuilderBaseRemoval(self):
 
         rb = ReportBuilderBase()
         rb2 = ReportBuilderBase()
 
-        s = SeqReader(reportBuilder=rb)
-        s.addReportBuilder(rb2)
+        s = SeqReader(reportBuilders=rb)
+        s.addReportBuilders(rb2)
         s.removeReportBuilders(rb)
         
         self.assertEqual(len(tuple(s.reportBuilders)), 1)
         self.assertEqual(tuple(s.reportBuilders)[0], rb2)
 
-        s.addReportBuilder(rb)
+        s.addReportBuilders(rb)
         s.removeReportBuilders(rb, rb2)
         self.assertEqual(len(tuple(s.reportBuilders)), 0)
 
-        s.addReportBuilder(rb)
-        s.addReportBuilder(rb2)
+        s.addReportBuilders(rb, rb2)
         s.removeReportBuilders()
         self.assertEqual(len(tuple(s.reportBuilders)), 0)
 
@@ -164,11 +169,11 @@ class TestSeqReader(unittest.TestCase):
         s = SeqReader()
         rbs = (ReportBuilderBase(), ReportBuilderBase())
 
-        self.assertRaises(TypeError, s.addReportBuilder, None)
-        self.assertRaises(TypeError, s.addReportBuilder, True)
-        self.assertRaises(TypeError, s.addReportBuilder, 1)
-        self.assertRaises(TypeError, s.addReportBuilder, "adsf")
-        self.assertRaises(TypeError, s.addReportBuilder, rbs)
+        self.assertRaises(TypeError, s.addReportBuilders, None)
+        self.assertRaises(TypeError, s.addReportBuilders, True)
+        self.assertRaises(TypeError, s.addReportBuilders, 1)
+        self.assertRaises(TypeError, s.addReportBuilders, "adsf")
+        self.assertRaises(TypeError, s.addReportBuilders, rbs)
 
     def test_popDataSources(self):
 
