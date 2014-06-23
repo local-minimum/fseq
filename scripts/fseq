@@ -17,4 +17,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    fseq.SeqReader(vebose=args.verbose, dataSourcePaths=args.files)
+    fseq.SeqReader(vebose=args.verbose, dataSourcePaths=args.files).run()
