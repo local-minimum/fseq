@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """fSeQ is a toolbox for sequence analysis in the frequency domain.
 
 The module is organized around two phases of work: *reading* and *reporting*.
@@ -73,11 +74,6 @@ fseq.FormatImplementationError
     If a format is not correctly implemented 
 fseq.FormatUnknown
     If data is of unknown format
-
-Examples
---------
-
-
 """
 
 from fseq.reading.seq_reader import SeqReader
