@@ -54,11 +54,11 @@ class SeqEncoder(object):
 
         self.reset()
 
-        if expectedInputFormat:
-            self.format = expectedInputFormat
-
         self.useSequence = useSequence
         self.useQuality = useQuality
+
+        if expectedInputFormat:
+            self.format = expectedInputFormat
 
         if sequenceEncoding is not None:
             self.sequenceEncoding = sequenceEncoding
@@ -101,6 +101,12 @@ class SeqEncoder(object):
 
             if not val.detecting:
 
+                if not val.compatible(self):
+
+                    raise FormatError(
+                        "Encoder requires information not present in format")
+
+
                 self._sequenceLine = val.sequenceLine
                 self._qualityLine = val.qualityLine
                 self._headerLine = val.headerLine
@@ -119,6 +125,8 @@ class SeqEncoder(object):
                                 self, self.qualityEncoding) +
                             " and not use {2} from {3}".format(
                                 enc, val))
+
+                self._formatCompatible = True
 
             else:
 
@@ -335,11 +343,6 @@ class SeqEncoder(object):
 
             time.sleep(0.05)
 
-        if not f.compatible(self):
-
-            raise FormatError(
-                "Encoder requires information not present in format")
-
         enc = f.qualityEncoding
 
         if self.qualityEncoding:
@@ -356,7 +359,6 @@ class SeqEncoder(object):
 
         self.format = f
 
-        self._formatCompatible = True
 
         return self
 

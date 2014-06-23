@@ -460,8 +460,6 @@ class TestEncoder(unittest.TestCase):
 
         self.assertTrue(e.initiated)
 
-        self.assertNotEqual(e.sequenceLine, None)
-
     def test_reset(self):
 
         e = fseq.SeqEncoder(expectedInputFormat=fseq.FastQ())
