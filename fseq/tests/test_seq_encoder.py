@@ -485,7 +485,7 @@ class TestEncoderQC(unittest.TestCase):
             expectedInputFormat=fseq.FastaSingleline())
 
         self._spoofHead=">Read1"
-        self._out = np.zeros((11, 101)) * -1
+        self._out = np.ones((11, 101)) * -1
 
     def test_putRightRow(self):
 
