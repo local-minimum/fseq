@@ -75,13 +75,49 @@ class TestGenericBuilder(unittest.TestCase):
 
 class TestFFTBulder(TestGenericBuilder):
 
-    def setup(self):
+    def setUp(self):
 
         self._builderConstructor = fseq.ReportBuilderFFT
 
+    def test_sampleSize(self):
 
+        self.assertEqual(self._builderConstructor(sampleSize=50).sampleSize, 50)
+
+        rb = self._builderConstructor()
+
+        rb.sampleSize = 2000
+
+        self.assertEqual(rb.sampleSize, 2000)
+
+    def test_distanceMetirc(self):
+
+        self.assertIn(self._builderConstructor().distanceMetric,
+                      self._builderConstructor.METRICS)
+
+        m2 = None
+        for i, m in enumerate(self._builderConstructor.METRICS):
+            rb = self._builderConstructor(distanceMetric=m)
+            self.assertEqual(rb.distanceMetric, m)
+            if m2 is not None:
+                rb.distanceMetric = m2
+                self.assertEqual(rb.distanceMetric, m2)
+            m2 = m
+
+        
 class TestAverageBuilder(TestGenericBuilder):
 
-    def setup(self):
+    def setUp(self):
 
         self._builderConstructor = fseq.ReportBuilderPositionAverage
+
+    def test_undecidedValue(self):
+
+        self.assertEqual(self._builderConstructor().undecidedValue, 0.5)
+
+        rb = self._builderConstructor(undecidedValue=-1)
+
+        self.assertEqual(rb.undecidedValue, -1)
+
+        rb.undecidedValue = 0.5
+
+        self.assertEqual(rb.undecidedValue, 0.5)
