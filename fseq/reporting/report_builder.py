@@ -94,18 +94,19 @@ class ReportBuilderBase(object):
         ------
 
         ValueError
-            If a report lacks a method named `distill`
+            If a report lacks a method named `distill` or can't be hashed
         """
 
         for r in reports:
 
-            if r not in self._reports:
-                if hasattr(r, 'distill'):
-                    self._reports.add(r)
-                else:
-                    raise ValueError("{0} lacks distill-method".format(r))
+            if hasattr(r, 'distill') and r.__hash__ is not None:
+                if r in self._reports:
+                    warnings.warn(
+                        "{0} already in reports...omitting.".format(r))
+                self._reports.add(r)
             else:
-                warnings.warn("{0} already in reports...omitting.".format(r))
+                raise ValueError(
+                    "{0} lacks distill-method or not hashable".format(r))
 
         return self
 
