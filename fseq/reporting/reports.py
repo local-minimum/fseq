@@ -351,7 +351,7 @@ class LinePlot(ReportBase):
             ax.plot(data, '-g', lw=2)
 
         if labels:
-            ax.legend()
+            ax.legend(prop={'size': 'x-small'})
 
         if title is not None:
             ax.set_title(title)
@@ -361,6 +361,11 @@ class LinePlot(ReportBase):
             ax.set_ylabel(ylabel)
         if xlabel is not None:
             ax.set_xlabel(xlabel)
+
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.get_xaxis().tick_bottom()
+        ax.get_yaxis().tick_right()
 
         f.tight_layout()
 
