@@ -21,7 +21,7 @@ class ReportBuilderBase(object):
     outputNamePrefix
 
     """
-    def __init__(self, outputRoot=None, outputNamePrefix=None, *reports):
+    def __init__(self, *reports, **kwargs):
         """
         Parameters
         ----------
@@ -37,8 +37,9 @@ class ReportBuilderBase(object):
         """
 
         self._reports = set()
-        self.outputRoot=outputRoot
-        self.outputNamePrefix=outputNamePrefix 
+        self.outputRoot='outputRoot' in kwargs and kwargs['outputRoot'] or None
+        self.outputNamePrefix='outputNamePrefix' in kwargs and \
+            kwargs['outputNamePrefix'] or None
         self.addReports(*reports)
 
     def __iter__(self):
