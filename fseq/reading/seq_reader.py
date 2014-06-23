@@ -134,7 +134,7 @@ class SeqReader(object):
         if dataSourcePaths:
             self.addData(dataSourcePaths, targetPaths=dataTargetPaths)
 
-        if reportBuilder:
+        if reportBuilder is not None:
             self.addReportBuilder(reportBuilder)
 
         self.popDataSources = popDataSources
