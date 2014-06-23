@@ -570,7 +570,7 @@ class SeqReader(object):
                         "Reporting {0} with args={1}, kwargs={2}".format(
                             type(rb),
                             tuple((
-                                isinstance(a, np.a) and
+                                isinstance(a, np.ndarray) and
                                 "{0}.shape={1}".format(type(a), a.shape) or
                                 a)
                                 for a in args),
