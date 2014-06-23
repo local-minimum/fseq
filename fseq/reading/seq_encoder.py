@@ -420,7 +420,7 @@ class SeqEncoderGC(SeqEncoder):
 
         d = [e[char] for char in lines[self._sequenceLine]]
 
-        out[outindex][:len(d)] = d
+        out[outindex][:len(d)] = d[:out.shape[1]]
 
 #####################################################################
 #
