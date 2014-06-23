@@ -7,7 +7,8 @@ import fseq
 
 if __name__ == "__main__":
 
-    parser = ArgumentParser(description="fSeq -- a fourier view on Sequences")
+    parser = argparse.ArgumentParser(
+        description="fSeq -- a fourier view on Sequences")
 
     parser.add_argument('-v', '--verbose', dest='verbose', type=bool,
                         default=True, help="Increase status outputs")
