@@ -9,6 +9,7 @@ import logging
 from time import sleep
 from collections import deque
 
+import fseq
 from fseq.reading.seq_encoder import SeqEncoder
 from fseq.reporting.report_builder import ReportBuilderBase as ReportBuilder
 
@@ -70,7 +71,7 @@ class SeqReader(object):
         seqEncoder : fseq.SeqEncoder, optional
             An instance of a sequence encoder that will be used to encode the
             input strings
-            (Default: No specified encoder) 
+            (Default: GC-encoder) 
 
         dataSourcePaths: string or iterable object, optional
             Either a path string or a collection of paths to data files
@@ -88,7 +89,7 @@ class SeqReader(object):
             If a report should be automatically be built upon encoding
             completion.
             If a list or tuple, it should only contain report builders.
-            (Default: no report builder)
+            (Default: The report builders that the encoder requests or none)
 
         popDataSources: bool, optional
             If data sources should be removed from stack once encoded
@@ -141,20 +142,25 @@ class SeqReader(object):
 
         self._logger = logging.getLogger("SeqReader")
 
-        if seqEncoder:
-            self.seqEncoder = seqEncoder
+        if seqEncoder is None:
+            seqEncoder = fseq.SeqEncoderGC()
+
+        self.seqEncoder = seqEncoder
+
+        if reportBuilders is None:
+
+            reportBuilders = tuple(r() for r in seqEncoder.requestReports)
 
         if dataSourcePaths:
             self.addData(dataSourcePaths, targetPaths=dataTargetPaths)
 
-        if reportBuilders is not None:
-            if (isinstance(reportBuilders, list) or
-                    isinstance(reportBuilders, tuple)):
+        if (isinstance(reportBuilders, list) or
+                isinstance(reportBuilders, tuple)):
 
-                self.addReportBuilders(*reportBuilders)
+            self.addReportBuilders(*reportBuilders)
 
-            else:
-                self.addReportBuilders(reportBuilders)
+        else:
+            self.addReportBuilders(reportBuilders)
 
         self.popDataSources = popDataSources
         self.resetSeqEncoder = resetSeqEncoder

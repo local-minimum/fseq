@@ -4,6 +4,8 @@ import re
 
 from inspect import getmro
 
+import fseq
+
 
 def inheritDocFromSeqFormat(f):
     """This decorator will copy the docstring from `SeqFormat` for the
@@ -27,7 +29,8 @@ def inheritDocFromSeqFormat(f):
 class SeqEncoder(object):
 
     def __init__(self, expectedInputFormat=None, useSequence=True,
-            useQuality=False, sequenceEncoding=None, qualityEncoding=None):
+            useQuality=False, sequenceEncoding=None, qualityEncoding=None,
+            requestReports=tuple()):
         """
         Paramters
         ---------
@@ -56,6 +59,7 @@ class SeqEncoder(object):
 
         self.useSequence = useSequence
         self.useQuality = useQuality
+        self.requestReports = requestReports
 
         if expectedInputFormat:
             self.format = expectedInputFormat
@@ -133,6 +137,21 @@ class SeqEncoder(object):
                 self._sequenceLine = None
                 self._qualityLine = None 
                 self._headerLine = None 
+
+    @property
+    def requestReports(self):
+        """The reports that the encoder likes to be produced by the reader"""
+        return self._requestReports
+
+    @requestReports.setter
+    def requestReports(self, rps):
+
+        try:
+            rps = tuple(rps)
+        except TypeError:
+            rps = (rps, )
+
+        self._requestReports = rps
 
     @property
     def initiated(self):
@@ -438,7 +457,9 @@ class SeqEncoderGC(SeqEncoder):
         super(SeqEncoderGC, self).__init__(
             expectedInputFormat=expectedInputFormat, useSequence=True,
             useQuality=False, sequenceEncoding=sequenceEncoding,
-            qualityEncoding=None)
+            qualityEncoding=None,
+            requestReports=(fseq.ReportBuilderFFT,
+                            fseq.ReportBuilderPositionAverage))
 
     def parse(self, lines, out, outindex):
 

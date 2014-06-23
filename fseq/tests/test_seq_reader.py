@@ -112,6 +112,7 @@ class TestSeqReader(unittest.TestCase):
 
         self.assertEqual(s.seqEncoder, e2)
 
+    """TEST REMOVED SINCE ENCODER ALWAYS PRESENT
     def test_allRunFails(self):
 
         s = SeqReader(dataSourcePaths='anypath')
@@ -123,6 +124,7 @@ class TestSeqReader(unittest.TestCase):
         self.assertRaises(ValueError, s.run)
 
         self.assertRaises(ValueError, s.next)
+    """
 
     def test_reportBulder(self):
 
