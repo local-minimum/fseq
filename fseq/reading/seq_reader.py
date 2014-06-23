@@ -24,6 +24,9 @@ class SeqReader(object):
 
     Attributes
     ----------
+    dataArrayConstructor
+    dataWidth
+    dataType
     popDataSources
     popEncodingResults
     jobQueue
@@ -121,10 +124,9 @@ class SeqReader(object):
         self._reportTargetBase = ""
         self._results = []
 
-        #TODO: Make setters and getters
-        self._dataArrayConstructor = dataArrayConstructor
-        self._dataWidth = dataWidth
-        self._dataType = dataType
+        self.dataArrayConstructor = dataArrayConstructor
+        self.dataWidth = dataWidth
+        self.dataType = dataType
 
         if seqEncoder:
             self.seqEncoder = seqEncoder
@@ -151,6 +153,36 @@ class SeqReader(object):
     def __len__(self):
 
         return len(self._dataTargetPaths)
+
+    @property
+    def dataArrayConstructor(self):
+
+        return self._dataArrayConstructor
+
+    @dataArrayConstructor.setter
+    def dataArrayConstructor(self, val):
+
+        self._dataArrayConstructor = val
+
+    @property
+    def dataWidth(self):
+
+        return self._dataWidth
+
+    @dataWidth.setter
+    def dataWidth(self, w):
+
+        self._dataWidth = w
+
+    @property
+    def dataType(self):
+        
+        return self._dataType
+
+    @dataType.setter
+    def dataType(self, t):
+
+        self._dataType = t
 
     @property
     def popDataSources(self):
