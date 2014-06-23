@@ -34,6 +34,7 @@ Reporting
     packages=['fseq', 'fseq.reading', 'fseq.reporting'],
     licence='MIT',
     scripts=[os.path.join("scripts", p) for p in ("fseq",)],
+    requires=['numpy', 'scipy', 'matplotlib'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Science/Research',
