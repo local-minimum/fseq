@@ -1,0 +1,470 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fseq.reporting.reports &mdash; fSeq 1.0.0a documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0.0a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="fSeq 1.0.0a documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">fSeq 1.0.0a documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for fseq.reporting.reports</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+<span class="sd">&quot;&quot;&quot;Module for holding the various implemented reporting classes&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s">&#39;Agg&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+
+<div class="viewcode-block" id="ReportBase"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.reports.ReportBase">[docs]</a><span class="k">class</span> <span class="nc">ReportBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for simple report creations.</span>
+
+<span class="sd">    Main purpose is to make a common interface for figure saving using</span>
+<span class="sd">    matplotlib figures.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    name</span>
+<span class="sd">    saveArgs</span>
+<span class="sd">    saveKwargs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">saveArgs</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(),</span> <span class="n">saveKwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Properties</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        name: str, optional</span>
+<span class="sd">            A specific name of the report</span>
+
+<span class="sd">        saveArgs: tuple or list, optional</span>
+<span class="sd">            Any args to be passed to `matplotlib.savefig` after the figure</span>
+
+<span class="sd">        saveKwargs: dict, optional</span>
+<span class="sd">            Any keyword args to be passed to `matplotlib.savefig`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveArgs</span> <span class="o">=</span> <span class="n">saveArgs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveKwargs</span> <span class="o">=</span> <span class="n">saveKwargs</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+
+    <span class="nd">@name.setter</span>
+<div class="viewcode-block" id="ReportBase.name"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.reports.ReportBase.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">saveArgs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_saveArgs</span>
+
+    <span class="nd">@saveArgs.setter</span>
+<div class="viewcode-block" id="ReportBase.saveArgs"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.reports.ReportBase.saveArgs">[docs]</a>    <span class="k">def</span> <span class="nf">saveArgs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_saveArgs</span> <span class="o">=</span> <span class="n">args</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">saveKwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_saveKwargs</span>
+
+    <span class="nd">@saveKwargs.setter</span>
+<div class="viewcode-block" id="ReportBase.saveKwargs"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.reports.ReportBase.saveKwargs">[docs]</a>    <span class="k">def</span> <span class="nf">saveKwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_saveKwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+</div>
+<div class="viewcode-block" id="ReportBase.saveFig"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.reports.ReportBase.saveFig">[docs]</a>    <span class="k">def</span> <span class="nf">saveFig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span> <span class="n">outputRoot</span><span class="p">,</span> <span class="n">outputNamePrefix</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Saves a figure and creates directories if needed.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        fig: matplotlib.figure</span>
+<span class="sd">            The figure to be saved</span>
+
+<span class="sd">        outputRoot: str</span>
+<span class="sd">            The root directory for reports</span>
+
+<span class="sd">        outputNamePrefix: str</span>
+<span class="sd">            If the name of the file should be prepended by some string.</span>
+<span class="sd">            Normally added by the *Report Builder*</span>
+
+<span class="sd">        name: str, optional</span>
+<span class="sd">            A specific name for this figure-file.</span>
+<span class="sd">            If none supplied the default name for the report will be used,</span>
+<span class="sd">            if no such has been set `ValueError` is raised.</span>
+
+<span class="sd">        *args:</span>
+<span class="sd">            Any arguments to be sent to `matplotlib.Figure.save`.</span>
+<span class="sd">            If none added the `ReportBase.saveArgs` will be used.</span>
+
+<span class="sd">        **kwargs:</span>
+<span class="sd">            Any keyword arguments to be sent to `matplotlib.Figure.save`.</span>
+<span class="sd">            If notn addd the `ReportBase.saveKwargs` will be used.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        ReportBase</span>
+<span class="sd">            Returns `self`</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+
+<span class="sd">        ValueError</span>
+<span class="sd">            If no name has been given.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Can&#39;t save file when no name give to report&quot;</span><span class="p">)</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outputRoot</span><span class="p">,</span> <span class="n">outputNamePrefix</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">saveArgs</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">saveKwargs</span>
+
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Saving -&gt; {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+</div>
+<div class="viewcode-block" id="ReportBase.distill"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.reports.ReportBase.distill">[docs]</a>    <span class="k">def</span> <span class="nf">distill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">outputRoot</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">outputNamePrefix</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Placeholder distill interface not to be used.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            Always raises this exception</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;This method should be overwritten&quot;</span><span class="p">)</span>
+
+</div></div>
+<div class="viewcode-block" id="HeatMap"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.reports.HeatMap">[docs]</a><span class="k">class</span> <span class="nc">HeatMap</span><span class="p">(</span><span class="n">ReportBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Makes heatmaps from data&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;heatmap.pdf&#39;</span><span class="p">,</span> <span class="n">saveArgs</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(),</span> <span class="n">saveKwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Properties</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        name: str, optional</span>
+<span class="sd">            A specific name of the report</span>
+<span class="sd">            (Default: &#39;heatmap.pdf&#39;)</span>
+
+<span class="sd">        saveArgs: tuple or list, optional</span>
+<span class="sd">            Any args to be passed to `matplotlib.savefig` after the figure</span>
+
+<span class="sd">        saveKwargs: dict, optional</span>
+<span class="sd">            Any keyword args to be passed to `matplotlib.savefig`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">HeatMap</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">saveArgs</span><span class="o">=</span><span class="n">saveArgs</span><span class="p">,</span>
+            <span class="n">saveKwargs</span><span class="o">=</span><span class="n">saveKwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="HeatMap.distill"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.reports.HeatMap.distill">[docs]</a>    <span class="k">def</span> <span class="nf">distill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">outputRoot</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">outputNamePrefix</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+            <span class="n">saveArgs</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(),</span> <span class="n">saveKwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span> <span class="n">vmin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+            <span class="n">aspect</span><span class="o">=</span><span class="s">&#39;auto&#39;</span><span class="p">,</span> <span class="n">axisOff</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">RdBu</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates the actual heatmap.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        data: numpy.ndarray</span>
+<span class="sd">            The data to be plotted</span>
+
+<span class="sd">        name: str, optional</span>
+<span class="sd">            If the default name of the HeatMap instance should be overwritten</span>
+
+<span class="sd">        outputRoot: str, optional</span>
+<span class="sd">            The directory in which to place the report</span>
+
+<span class="sd">        outputNamePrefix: str, optional</span>
+<span class="sd">            A prefix to prepend the name when saving the output.</span>
+
+<span class="sd">        title: str, optional</span>
+<span class="sd">            A title to be put over the heatmap</span>
+
+<span class="sd">        text: str, optional</span>
+<span class="sd">            An explanatory text to put under the plot</span>
+
+<span class="sd">        ylabel: str, optional</span>
+<span class="sd">            A label for the y-axis</span>
+
+<span class="sd">        xlabel: str, optional</span>
+<span class="sd">            A label for the x-axis</span>
+
+<span class="sd">        saveArgs: tuple or list, optional</span>
+<span class="sd">            A set of arguments to overwrite the instance&#39;s default save args</span>
+
+<span class="sd">        saveKwargs: dict, optional</span>
+<span class="sd">            A set of keyword arguments to overwrite the instanc&#39;s default</span>
+
+<span class="sd">        vmin: number, optional</span>
+<span class="sd">            To set a minimum color-scale number for the heatmap</span>
+
+<span class="sd">        vmax: number, optional</span>
+<span class="sd">            To set a maximum color-scale number for the heatmap</span>
+
+<span class="sd">        aspect: str, optional</span>
+<span class="sd">            The aspect ratio of the blocks/pixels in the heatmap, default</span>
+<span class="sd">            is &#39;auto&#39;, which allows for rectangular pixels.</span>
+
+<span class="sd">        axisOff: bool, optional</span>
+<span class="sd">            If the axis of the plot should not be rendered</span>
+<span class="sd">            (Default: True)</span>
+<span class="sd">            </span>
+<span class="sd">        cmap: matplotlib.cmap, optional</span>
+<span class="sd">            A colormap to be used when plotting.</span>
+<span class="sd">            (Default: Red -- Blue)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;Unused arguments: {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;Unused keyword arguments: {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kwargs</span><span class="p">))</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="n">aspect</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s">&#39;nearest&#39;</span><span class="p">,</span>
+                       <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ylabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xlabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">axisOff</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s">&#39;off&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveFig</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">outputRoot</span><span class="o">=</span><span class="n">outputRoot</span><span class="p">,</span>
+                <span class="n">outputNamePrefix</span><span class="o">=</span><span class="n">outputNamePrefix</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">saveArgs</span><span class="p">,</span> <span class="o">**</span><span class="n">saveKwargs</span><span class="p">)</span>
+
+</div></div>
+<div class="viewcode-block" id="LinePlot"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.reports.LinePlot">[docs]</a><span class="k">class</span> <span class="nc">LinePlot</span><span class="p">(</span><span class="n">ReportBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Makes lines from data&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;line.pdf&quot;</span><span class="p">,</span> <span class="n">saveArgs</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(),</span> <span class="n">saveKwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Properties</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        name: str, optional</span>
+<span class="sd">            A specific name of the report</span>
+
+<span class="sd">        saveArgs: tuple or list, optional</span>
+<span class="sd">            Any args to be passed to `matplotlib.savefig` after the figure</span>
+
+<span class="sd">        saveKwargs: dict, optional</span>
+<span class="sd">            Any keyword args to be passed to `matplotlib.savefig`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">LinePlot</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">saveArgs</span><span class="o">=</span><span class="n">saveArgs</span><span class="p">,</span>
+            <span class="n">saveKwargs</span><span class="o">=</span><span class="n">saveKwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LinePlot.distill"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.reports.LinePlot.distill">[docs]</a>    <span class="k">def</span> <span class="nf">distill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">outputRoot</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">outputNamePrefix</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+            <span class="n">saveArgs</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(),</span> <span class="n">saveKwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span> <span class="n">logX</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">logY</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+            <span class="n">basex</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">basey</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;Creates the actual heatmap.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        data: numpy.ndarray</span>
+<span class="sd">            The data to be plotted</span>
+
+<span class="sd">        name: str, optional</span>
+<span class="sd">            If the default name of the HeatMap instance should be overwritten</span>
+
+<span class="sd">        outputRoot: str, optional</span>
+<span class="sd">            The directory in which to place the report</span>
+
+<span class="sd">        outputNamePrefix: str, optional</span>
+<span class="sd">            A prefix to prepend the name when saving the output.</span>
+
+<span class="sd">        title: str, optional</span>
+<span class="sd">            A title to be put over the heatmap</span>
+
+<span class="sd">        text: str, optional</span>
+<span class="sd">            An explanatory text to put under the plot</span>
+
+<span class="sd">        ylabel: str, optional</span>
+<span class="sd">            A label for the y-axis</span>
+
+<span class="sd">        xlabel: str, optional</span>
+<span class="sd">            A label for the x-axis</span>
+
+<span class="sd">        saveArgs: tuple or list, optional</span>
+<span class="sd">            A set of arguments to overwrite the instance&#39;s default save args</span>
+
+<span class="sd">        saveKwargs: dict, optional</span>
+<span class="sd">            A set of keyword arguments to overwrite the instanc&#39;s default</span>
+<span class="sd">        </span>
+<span class="sd">        logX: bool, optional</span>
+<span class="sd">            If X-axis should be logged</span>
+
+<span class="sd">        logY: bool, optional</span>
+<span class="sd">            If Y-axis should be logged</span>
+
+<span class="sd">        basex: number, optional</span>
+<span class="sd">            To specify other then 10-base logging</span>
+
+<span class="sd">        basey: number, optional</span>
+<span class="sd">            To specify other than 10-base logging</span>
+
+<span class="sd">        labels: str, optional</span>
+<span class="sd">            To name the line plotted and thus add a legend to the plot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;Unused arguments: {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;Unused keyword arguments: {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kwargs</span><span class="p">))</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">logX</span> <span class="ow">and</span> <span class="n">logY</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s">&#39;-g&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">basey</span><span class="o">=</span><span class="n">basey</span><span class="p">,</span> <span class="n">basex</span><span class="o">=</span><span class="n">basex</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">logX</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s">&#39;-g&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">basex</span><span class="o">=</span><span class="n">basex</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">logY</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s">&#39;-g&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">basey</span><span class="o">=</span><span class="n">basey</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s">&#39;-g&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">labels</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;size&#39;</span><span class="p">:</span> <span class="s">&#39;x-small&#39;</span><span class="p">})</span>
+
+        <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">text</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">if</span> <span class="n">ylabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xlabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">get_xaxis</span><span class="p">()</span><span class="o">.</span><span class="n">tick_bottom</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">get_yaxis</span><span class="p">()</span><span class="o">.</span><span class="n">tick_right</span><span class="p">()</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveFig</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">outputRoot</span><span class="o">=</span><span class="n">outputRoot</span><span class="p">,</span>
+                <span class="n">outputNamePrefix</span><span class="o">=</span><span class="n">outputNamePrefix</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">saveArgs</span><span class="p">,</span> <span class="o">**</span><span class="n">saveKwargs</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">fSeq 1.0.0a documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Martin Zackrisson.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

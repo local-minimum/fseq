@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tutorial &mdash; fSeq 1.0.0a documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="fSeq 1.0.0a documentation" href="index.html" />
+    <link rel="prev" title="Welcome to fSeq’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to fSeq’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">fSeq 1.0.0a documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installing">
+<h2>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h2>
+<p>The program is installed for current user by running:</p>
+<div class="highlight-python"><div class="highlight"><pre>python setup.py install --user
+</pre></div>
+</div>
+<p>Or for all users by running:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo python setup.py install
+</pre></div>
+</div>
+<p>The following dependencies needs to be installed seperately:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">numpy</span><span class="p">,</span> <span class="n">scipy</span><span class="p">,</span> <span class="n">matplotlib</span>
+</pre></div>
+</div>
+<p>On debian systems copy:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo apt-get update &amp;&amp; sudo apt-get install python-numpy python-scipy python-matplotlib
+</pre></div>
+</div>
+</div>
+<div class="section" id="command-line-use">
+<h2>Command Line Use<a class="headerlink" href="#command-line-use" title="Permalink to this headline">¶</a></h2>
+<p>The following example runs default analysis on two different files:</p>
+<div class="highlight-python"><div class="highlight"><pre>&gt;fseq ~/Data/Mysc_24_ATCACG_L008_R1_001.fastq ~/Data/Mysc_74_GTTTCG_L008_R1_001.fastq
+14-06-23 17:55 SeqReader    INFO     Has 2 jobs
+14-06-23 17:55 SeqReader    INFO     Reading: /home/martin/Data/Mysc_24_ATCACG_L008_R1_001.fastq
+14-06-23 17:57 SeqReader    INFO     Reading Complete: /home/martin/Data/Mysc_24_ATCACG_L008_R1_001.fastq
+14-06-23 17:57 SeqReader    INFO     Reporting &lt;class &#39;fseq.reporting.report_builder.ReportBuilderFFT&#39;&gt; with args=(&quot;&lt;type &#39;numpy.ndarray&#39;&gt;.shape=(4831521, 101)&quot;,), kwargs={&#39;outputRoot&#39;: &#39;/home/martin/Data/Mysc_24_ATCACG_L008_R1_001.fastq.reports&#39;}
+14-06-23 17:57 SeqReader    INFO     Reporting &lt;class &#39;fseq.reporting.report_builder.ReportBuilderPositionAverage&#39;&gt; with args=(&quot;&lt;type &#39;numpy.ndarray&#39;&gt;.shape=(4831521, 101)&quot;,), kwargs={&#39;outputRoot&#39;: &#39;/home/martin/Data/Mysc_24_ATCACG_L008_R1_001.fastq.reports&#39;}
+14-06-23 17:57 SeqReader    INFO     Reading: /home/martin/Data/Mysc_74_GTTTCG_L008_R1_001.fastq
+Saving -&gt; /home/martin/Data/Mysc_24_ATCACG_L008_R1_001.fastq.reports/fft-sample.abs.heatmap.pdf
+Saving -&gt; /home/martin/Data/Mysc_24_ATCACG_L008_R1_001.fastq.reports/average.total.line.pdf
+Saving -&gt; /home/martin/Data/Mysc_24_ATCACG_L008_R1_001.fastq.reports/fft-sample.angle.heatmap.pdf
+14-06-23 18:01 SeqReader    INFO     Reading Complete: /home/martin/Data/Mysc_74_GTTTCG_L008_R1_001.fastq
+14-06-23 18:01 SeqReader    INFO     Reporting &lt;class &#39;fseq.reporting.report_builder.ReportBuilderFFT&#39;&gt; with args=(&quot;&lt;type &#39;numpy.ndarray&#39;&gt;.shape=(5634723, 101)&quot;,), kwargs={&#39;outputRoot&#39;: &#39;/home/martin/Data/Mysc_74_GTTTCG_L008_R1_001.fastq.reports&#39;}
+14-06-23 18:01 SeqReader    INFO     Reporting &lt;class &#39;fseq.reporting.report_builder.ReportBuilderPositionAverage&#39;&gt; with args=(&quot;&lt;type &#39;numpy.ndarray&#39;&gt;.shape=(5634723, 101)&quot;,), kwargs={&#39;outputRoot&#39;: &#39;/home/martin/Data/Mysc_74_GTTTCG_L008_R1_001.fastq.reports&#39;}
+14-06-23 18:01 SeqReader    INFO     Waiting for 4 report builders to finish
+Saving -&gt; /home/martin/Data/Mysc_74_GTTTCG_L008_R1_001.fastq.reports/average.total.line.pdf
+Saving -&gt; /home/martin/Data/Mysc_74_GTTTCG_L008_R1_001.fastq.reports/fft-sample.abs.heatmap.pdf
+Saving -&gt; /home/martin/Data/Mysc_74_GTTTCG_L008_R1_001.fastq.reports/fft-sample.angle.heatmap.pdf
+Saving -&gt; /home/martin/Data/Mysc_24_ATCACG_L008_R1_001.fastq.reports/average.lacking.line.pdf
+Saving -&gt; /home/martin/Data/Mysc_24_ATCACG_L008_R1_001.fastq.reports/average.not-lacking.line.pdf
+Saving -&gt; /home/martin/Data/Mysc_74_GTTTCG_L008_R1_001.fastq.reports/average.lacking.line.pdf
+Saving -&gt; /home/martin/Data/Mysc_74_GTTTCG_L008_R1_001.fastq.reports/average.not-lacking.line.pdf
+14-06-23 18:03 SeqReader    INFO     All jobs complete`
+</pre></div>
+</div>
+</div>
+<div class="section" id="python-use">
+<h2>Python Use<a class="headerlink" href="#python-use" title="Permalink to this headline">¶</a></h2>
+<p>For all scenarios it should suffice to import the package:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">fseq</span>
+</pre></div>
+</div>
+<p>To create a reader that will run the analysis:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">fseq</span><span class="o">.</span><span class="n">SeqReader</span><span class="p">(</span><span class="n">dataSourcePaths</span><span class="o">=</span><span class="p">(</span><span class="s">&quot;~/Data/Mysc_24_ATCACG_L008_R1_001.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;~/Data/Mysc_74_GTTTCG_L008_R1_001.fastq&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>We can see how many jobs the reader has left:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+<p>And we can see the encoding that will be performed (and change it):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">seqEncoder</span>
+<span class="go">&lt;fseq.reading.seq_encoder.SeqEncoderGC at 0x7fa9f9539b10&gt;</span>
+</pre></div>
+</div>
+<p>This encoder is the default and will translate Gs and Cs to 1 while As and Ts
+are made into 0s.</p>
+<p>We can also see which reports were requested by the encoder and thus added to
+the reader since we didn&#8217;t say what reports we wanted:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">tuple</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">reportBuilders</span><span class="p">)</span>
+<span class="go">(&lt;fseq.reporting.report_builder.ReportBuilderFFT at 0x7fa9f95399d0&gt;,</span>
+<span class="go"> &lt;fseq.reporting.report_builder.ReportBuilderPositionAverage at 0x7fa9f9539c50&gt;)</span>
+</pre></div>
+</div>
+<p>To run encoding and produce results, simply:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Note that this will take some time and consume quite a lot of resoursece.
+It took about 10 minutes on a standard desktop for the two files in the
+command line example, and the python use is no different.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tutorial</a><ul>
+<li><a class="reference internal" href="#installing">Installing</a></li>
+<li><a class="reference internal" href="#command-line-use">Command Line Use</a></li>
+<li><a class="reference internal" href="#python-use">Python Use</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to fSeq&#8217;s documentation!</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/tutorial.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to fSeq’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">fSeq 1.0.0a documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Martin Zackrisson.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

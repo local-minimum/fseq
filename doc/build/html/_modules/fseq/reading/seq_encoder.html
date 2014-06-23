@@ -1,0 +1,1177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fseq.reading.seq_encoder &mdash; fSeq 1.0.0a documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0.0a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="fSeq 1.0.0a documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">fSeq 1.0.0a documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for fseq.reading.seq_encoder</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">getmro</span>
+
+<span class="kn">import</span> <span class="nn">fseq</span>
+
+
+<div class="viewcode-block" id="inheritDocFromSeqFormat"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.inheritDocFromSeqFormat">[docs]</a><span class="k">def</span> <span class="nf">inheritDocFromSeqFormat</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This decorator will copy the docstring from `SeqFormat` for the</span>
+<span class="sd">    matching function `f` if such exists and no docstring has been added</span>
+<span class="sd">    manually.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">__doc__</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">__name__</span>
+
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">getmro</span><span class="p">(</span><span class="n">SeqFormat</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">__doc__</span>
+                <span class="k">if</span> <span class="n">d</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="n">d</span>
+                    <span class="k">break</span>
+
+    <span class="k">return</span> <span class="n">f</span>
+
+</div>
+<div class="viewcode-block" id="SeqEncoder"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqEncoder">[docs]</a><span class="k">class</span> <span class="nc">SeqEncoder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expectedInputFormat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">useSequence</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+            <span class="n">useQuality</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">sequenceEncoding</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">qualityEncoding</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+            <span class="n">requestReports</span><span class="o">=</span><span class="nb">tuple</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Paramters</span>
+<span class="sd">        ---------</span>
+
+<span class="sd">        expectedInputFormat: SeqFormatDetector or SeqFormat, optional</span>
+<span class="sd">            A sequence format expected in the input.</span>
+<span class="sd">            (Default: Letting encoder guess format from input)</span>
+
+<span class="sd">        useSequence: bool</span>
+<span class="sd">            If encoder will be using the sequence information</span>
+
+<span class="sd">        useQuality: bool</span>
+<span class="sd">            If encoder will be using the quality information</span>
+
+<span class="sd">        sequenceEncoding: dict or object implementing __getitem__</span>
+<span class="sd">            Translation map from input to output</span>
+
+<span class="sd">        qualityEncoding: dict or object implementing __getitem__</span>
+<span class="sd">            Translation map from input to output</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_qualityEncoding</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sequenceEncoding</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">useSequence</span> <span class="o">=</span> <span class="n">useSequence</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">useQuality</span> <span class="o">=</span> <span class="n">useQuality</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">requestReports</span> <span class="o">=</span> <span class="n">requestReports</span>
+
+        <span class="k">if</span> <span class="n">expectedInputFormat</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">expectedInputFormat</span>
+
+        <span class="k">if</span> <span class="n">sequenceEncoding</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sequenceEncoding</span> <span class="o">=</span> <span class="n">sequenceEncoding</span>
+        <span class="k">if</span> <span class="n">qualityEncoding</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qualityEncoding</span> <span class="o">=</span> <span class="n">qualityEncoding</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The input format currently expected.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        SeqFormatDetector</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+
+<span class="sd">        TypeError</span>
+<span class="sd">            If attempting to set format with object not derived from</span>
+<span class="sd">            `SeqFormatDetector` or `SeqFormat`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span>
+
+    <span class="nd">@format.setter</span>
+<div class="viewcode-block" id="SeqEncoder.format"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqEncoder.format">[docs]</a>    <span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">SeqFormat</span><span class="p">):</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">SeqFormatDetector</span><span class="p">(</span><span class="n">forceFormat</span><span class="o">=</span><span class="n">val</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">SeqFormatDetector</span><span class="p">):</span>
+
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;Format {0} is not a `SeqFormatDetector`&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">val</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_format</span> <span class="o">=</span> <span class="n">val</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">val</span><span class="o">.</span><span class="n">detecting</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">val</span><span class="o">.</span><span class="n">compatible</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+                    <span class="k">raise</span> <span class="n">FormatError</span><span class="p">(</span>
+                        <span class="s">&quot;Encoder requires information not present in format&quot;</span><span class="p">)</span>
+
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sequenceLine</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">sequenceLine</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_qualityLine</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">qualityLine</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_headerLine</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">headerLine</span>
+
+                <span class="n">enc</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">qualityEncoding</span>
+                <span class="k">if</span> <span class="n">enc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_qualityEncoding</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_qualityEncoding</span> <span class="o">=</span> <span class="n">enc</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+
+                        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                            <span class="s">&quot;{0} will keep its quality encoding {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">qualityEncoding</span><span class="p">)</span> <span class="o">+</span>
+                            <span class="s">&quot; and not use {2} from {3}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">enc</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_formatCompatible</span> <span class="o">=</span> <span class="bp">True</span>
+
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sequenceLine</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_qualityLine</span> <span class="o">=</span> <span class="bp">None</span> 
+                <span class="bp">self</span><span class="o">.</span><span class="n">_headerLine</span> <span class="o">=</span> <span class="bp">None</span> 
+</div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">requestReports</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The reports that the encoder likes to be produced by the reader&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_requestReports</span>
+
+    <span class="nd">@requestReports.setter</span>
+<div class="viewcode-block" id="SeqEncoder.requestReports"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqEncoder.requestReports">[docs]</a>    <span class="k">def</span> <span class="nf">requestReports</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rps</span><span class="p">):</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">rps</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">rps</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="n">rps</span> <span class="o">=</span> <span class="p">(</span><span class="n">rps</span><span class="p">,</span> <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_requestReports</span> <span class="o">=</span> <span class="n">rps</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="SeqEncoder.initiated"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqEncoder.initiated">[docs]</a>    <span class="k">def</span> <span class="nf">initiated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;If the sequence encoder is ready to start parsing: bool&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_formatCompatible</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="SeqEncoder.itemSize"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqEncoder.itemSize">[docs]</a>    <span class="k">def</span> <span class="nf">itemSize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The size in number of lines for each item in the source.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        int</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+
+<span class="sd">        fseq.FormatError</span>
+<span class="sd">            If encoder is not fully initiated</span>
+
+<span class="sd">        See also</span>
+<span class="sd">        --------</span>
+
+<span class="sd">        SeqEncoder.initiated</span>
+<span class="sd">            The initiation status</span>
+<span class="sd">        SeqEncoder.detectFormat()</span>
+<span class="sd">            Detecting the format</span>
+<span class="sd">        SeqEncoder.format</span>
+<span class="sd">            Manually setting the format</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">initiated</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FormatError</span><span class="p">(</span><span class="s">&quot;Encoder has not been formatted&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FormatError</span><span class="p">(</span><span class="s">&quot;Encoder and format are incompatible&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span><span class="o">.</span><span class="n">itemSize</span>
+
+</div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">qualityEncoding</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Map for translating quality chars to numeric values.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        Object with key-lookup (implementing __getitem__)</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+
+<span class="sd">        TypeError</span>
+<span class="sd">            If attempting to set with object not having char key-lookup</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_qualityEncoding</span>
+
+    <span class="nd">@qualityEncoding.setter</span>
+<div class="viewcode-block" id="SeqEncoder.qualityEncoding"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqEncoder.qualityEncoding">[docs]</a>    <span class="k">def</span> <span class="nf">qualityEncoding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="s">&quot;__getitem__&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s">&quot;{0} does not implement item look-up&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">val</span><span class="p">[</span><span class="s">&#39;A&#39;</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;{0} must be able to take chars as keys&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">val</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_qualityEncoding</span> <span class="o">=</span> <span class="n">val</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_qualityEncoding</span> <span class="o">=</span> <span class="n">val</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sequenceEncoding</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Map for translating sequence chars to numeric values.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        Object with key-lookup (implementing __getitem__)</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+
+<span class="sd">        TypeError</span>
+<span class="sd">            If attempting to set with object not having char key-lookup</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequenceEncoding</span>
+
+    <span class="nd">@sequenceEncoding.setter</span>
+<div class="viewcode-block" id="SeqEncoder.sequenceEncoding"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqEncoder.sequenceEncoding">[docs]</a>    <span class="k">def</span> <span class="nf">sequenceEncoding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="s">&quot;__getitem__&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s">&quot;{0} does not implement item look-up&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">val</span><span class="p">[</span><span class="s">&#39;A&#39;</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;{0} must be able to take chars as keys&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">val</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sequenceEncoding</span> <span class="o">=</span> <span class="n">val</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sequenceEncoding</span> <span class="o">=</span> <span class="n">val</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">useQuality</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;If quality-line is to be used by the encoder.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_useQuality</span>
+    
+    <span class="nd">@useQuality.setter</span>
+<div class="viewcode-block" id="SeqEncoder.useQuality"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqEncoder.useQuality">[docs]</a>    <span class="k">def</span> <span class="nf">useQuality</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_useQuality</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">useSequence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;If sequence-line is to be used by the encoder</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_useSequence</span>
+
+    <span class="nd">@useSequence.setter</span>
+<div class="viewcode-block" id="SeqEncoder.useSequence"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqEncoder.useSequence">[docs]</a>    <span class="k">def</span> <span class="nf">useSequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_useSequence</span> <span class="o">=</span> <span class="n">val</span>
+</div>
+<div class="viewcode-block" id="SeqEncoder.feedDetection"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqEncoder.feedDetection">[docs]</a>    <span class="k">def</span> <span class="nf">feedDetection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Give detection a line to work with.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        line: str</span>
+<span class="sd">            A line from the source file</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        fseq.SeqEncoder</span>
+<span class="sd">            Returns `self`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_detectFeed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+</div>
+<div class="viewcode-block" id="SeqEncoder.detectFormat"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqEncoder.detectFormat">[docs]</a>    <span class="k">def</span> <span class="nf">detectFormat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Detect format based on current input stream</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        fseq.SeqEncoder</span>
+<span class="sd">            Returns `self`</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+
+<span class="sd">        FormatError</span>
+<span class="sd">            If data is not compatible with information requested</span>
+
+<span class="sd">        See also</span>
+<span class="sd">        --------</span>
+
+<span class="sd">        SeqEncoder.detectFormat()</span>
+<span class="sd">            Guessing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">initiated</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="n">SeqFormatDetector</span><span class="p">()</span>
+
+        <span class="k">while</span> <span class="n">f</span><span class="o">.</span><span class="n">detecting</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_detectFeed</span><span class="p">):</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_detectFeed</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">f</span><span class="o">.</span><span class="n">detecting</span><span class="p">:</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_sequenceLine</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">sequenceLine</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_qualityLine</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">qualityLine</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_headerLine</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">headerLine</span>
+
+                    <span class="k">break</span>
+
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+
+        <span class="n">enc</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">qualityEncoding</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qualityEncoding</span><span class="p">:</span>
+
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s">&quot;{0} got its quality encoding {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">qualityEncoding</span><span class="p">)</span> <span class="o">+</span>
+                <span class="s">&quot; replaced by {2} to {3}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">f</span><span class="p">,</span> <span class="n">enc</span><span class="p">))</span>
+
+        <span class="c">#Setting to None is just to suppress warning when assigning</span>
+        <span class="c">#format.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_qualityEncoding</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">f</span>
+
+
+        <span class="k">return</span> <span class="bp">self</span>
+</div>
+<div class="viewcode-block" id="SeqEncoder.reset"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqEncoder.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Clears the sequence format</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        fseq.SeqEncoder</span>
+<span class="sd">            Returns `self`</span>
+
+<span class="sd">        See also</span>
+<span class="sd">        --------</span>
+
+<span class="sd">        SeqEncoder.detectFormat()</span>
+<span class="sd">            Guessing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sequenceLine</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_qualityLine</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_headerLine</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_formatCompatible</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_format</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_detectFeed</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+</div>
+<div class="viewcode-block" id="SeqEncoder.parse"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqEncoder.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">outindex</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Placeholder parser overwritten when subclassing</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        lines: iterable of str</span>
+<span class="sd">            Iterable of length equal to `self.itemSize` containing the</span>
+<span class="sd">            raw data for one item</span>
+
+<span class="sd">        out: numpy.ndarray</span>
+<span class="sd">            Array that will have values written to it</span>
+
+<span class="sd">        outIndex: object</span>
+<span class="sd">            Index for where the parse output should be written in the `out`</span>
+<span class="sd">            array such that `out[outIndex]` gives a sufficiently large array</span>
+<span class="sd">            that the result of parsing will fit in it.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+
+<span class="sd">        NotImplemented</span>
+<span class="sd">            If base class parse not overwritten or base class used directly</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;`SeqEncoder.parse` should be overwritten&quot;</span><span class="p">)</span>
+
+</div></div>
+<div class="viewcode-block" id="SeqEncoderGC"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqEncoderGC">[docs]</a><span class="k">class</span> <span class="nc">SeqEncoderGC</span><span class="p">(</span><span class="n">SeqEncoder</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expectedInputFormat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sequenceEncoding</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        expectedInputFormat: SeqFormatDetector or SeqFormat, optional</span>
+<span class="sd">            A sequence format expected in the input.</span>
+<span class="sd">            (Default: Letting encoder guess format from input)</span>
+<span class="sd">    </span>
+<span class="sd">        sequenceEncoding: dict or object implementing __getitem__, optional</span>
+<span class="sd">            (Default: Any G or C value 1; A and T get 0;</span>
+<span class="sd">            Unknown values such as N get 0.5)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">sequenceEncoding</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">sequenceEncoding</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;G&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s">&#39;C&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s">&#39;A&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39;T&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39; &#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                    <span class="s">&#39;N&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">SeqEncoderGC</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+            <span class="n">expectedInputFormat</span><span class="o">=</span><span class="n">expectedInputFormat</span><span class="p">,</span> <span class="n">useSequence</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+            <span class="n">useQuality</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">sequenceEncoding</span><span class="o">=</span><span class="n">sequenceEncoding</span><span class="p">,</span>
+            <span class="n">qualityEncoding</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+            <span class="n">requestReports</span><span class="o">=</span><span class="p">(</span><span class="n">fseq</span><span class="o">.</span><span class="n">ReportBuilderFFT</span><span class="p">,</span>
+                            <span class="n">fseq</span><span class="o">.</span><span class="n">ReportBuilderPositionAverage</span><span class="p">))</span>
+
+<div class="viewcode-block" id="SeqEncoderGC.parse"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqEncoderGC.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">outindex</span><span class="p">):</span>
+
+        <span class="n">e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequenceEncoding</span>
+
+        <span class="n">d</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_sequenceLine</span><span class="p">]]</span>
+
+        <span class="n">out</span><span class="p">[</span><span class="n">outindex</span><span class="p">][:</span><span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)]</span> <span class="o">=</span> <span class="n">d</span><span class="p">[:</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+<span class="c">#####################################################################</span>
+<span class="c">#</span>
+<span class="c"># FORMATTERS</span>
+<span class="c">#</span>
+<span class="c">#</span>
+<span class="c">#####################################################################</span>
+</div></div>
+<div class="viewcode-block" id="FormatError"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FormatError">[docs]</a><span class="k">class</span> <span class="nc">FormatError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sequence Format Error for exceptions relating to missmatches between</span>
+<span class="sd">    encoders and sequence formats as well as lacking formattings in encoders</span>
+<span class="sd">    and unknown sequence formats.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">pass</span>
+
+</div>
+<div class="viewcode-block" id="FormatImplementationError"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FormatImplementationError">[docs]</a><span class="k">class</span> <span class="nc">FormatImplementationError</span><span class="p">(</span><span class="n">FormatError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Error for exposing parts of interface that needs to be overwritten</span>
+<span class="sd">    in subclasses&quot;&quot;&quot;</span>
+
+    <span class="k">pass</span>
+
+</div>
+<div class="viewcode-block" id="FormatUnknown"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FormatUnknown">[docs]</a><span class="k">class</span> <span class="nc">FormatUnknown</span><span class="p">(</span><span class="n">FormatError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Error for having no available detectors left&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+</div>
+<div class="viewcode-block" id="SeqFormat"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormat">[docs]</a><span class="k">class</span> <span class="nc">SeqFormat</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base Class for implementing data format detectors.</span>
+
+<span class="sd">    The attributes present in subclass should overwrite the</span>
+<span class="sd">    parent properties. All subclasses must also overwrite the</span>
+<span class="sd">    `SeqFormat.expects(line)`.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    name</span>
+<span class="sd">    itemSize</span>
+<span class="sd">    hasSequence</span>
+<span class="sd">    hasQuality</span>
+<span class="sd">    qualityEncoding</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">MATCH_NT</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;^[ATCG]+$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+    <span class="n">MATCH_AA</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;^[A-Z]+[*]?$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+    <span class="n">MATCH_NT_S</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;^[ATCG ]+$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+    <span class="n">MATCH_AA_S</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;^[A-Z ]+[*]?$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+
+    <span class="n">HEADER_LINE</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">SEQUENCE_LINE</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">QUALITY_LINE</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_giveup</span> <span class="o">=</span> <span class="mi">20</span>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="SeqFormat.name"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormat.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Human readable description of format: str&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">None</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="SeqFormat.itemSize"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormat.itemSize">[docs]</a>    <span class="k">def</span> <span class="nf">itemSize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The size (lines) of each entry: int&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">None</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="SeqFormat.hasSequence"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormat.hasSequence">[docs]</a>    <span class="k">def</span> <span class="nf">hasSequence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;If format has sequence information: bool&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">None</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="SeqFormat.hasQuality"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormat.hasQuality">[docs]</a>    <span class="k">def</span> <span class="nf">hasQuality</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;If format quality information: bool&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">None</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="SeqFormat.qualityEncoding"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormat.qualityEncoding">[docs]</a>    <span class="k">def</span> <span class="nf">qualityEncoding</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;If format comes with a known encoding of quality.</span>
+
+<span class="sd">        See also</span>
+<span class="sd">        --------</span>
+
+<span class="sd">        SeqEncoder.qualityEncoding</span>
+<span class="sd">            Setter of encoder quality.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">None</span>
+</div>
+    <span class="k">def</span> <span class="nf">_decay</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_giveup</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="SeqFormat.givenUp"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormat.givenUp">[docs]</a>    <span class="k">def</span> <span class="nf">givenUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Reports if format has given up even though everything still was</span>
+<span class="sd">        matching.</span>
+<span class="sd">        </span>
+<span class="sd">        The purpose is to be able to promote more restricted formats that</span>
+<span class="sd">        represents a subset of the more general</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        </span>
+<span class="sd">        bool</span>
+<span class="sd">            The status</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_giveup</span> <span class="o">&lt;</span> <span class="mi">0</span>
+</div>
+<div class="viewcode-block" id="SeqFormat.expects"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormat.expects">[docs]</a>    <span class="k">def</span> <span class="nf">expects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Test for if line fits into required pattern for the format</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        bool</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        </span>
+<span class="sd">        FormatImplementationError</span>
+<span class="sd">            If `SeqFormat.expects` (the base class method) is called.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="n">FormatImplementationError</span><span class="p">(</span><span class="s">&quot;This method should be overwritten&quot;</span><span class="p">)</span>
+
+</div></div>
+<div class="viewcode-block" id="FastaMultiline"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FastaMultiline">[docs]</a><span class="k">class</span> <span class="nc">FastaMultiline</span><span class="p">(</span><span class="n">SeqFormat</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Detector of multi-line FASTA</span>
+
+<span class="sd">    ..note:: This format is not supported in the current implementation</span>
+<span class="sd">        as it has no predictable item-size.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    Valid format::</span>
+
+<span class="sd">        &gt;Contig_1</span>
+<span class="sd">        ACAATACA</span>
+<span class="sd">        GATTACA</span>
+<span class="sd">        &gt;Contig_2</span>
+<span class="sd">        ACCCACA</span>
+<span class="sd">        &gt;Contig_3</span>
+<span class="sd">        ACCAAACA</span>
+<span class="sd">        CCAACACA</span>
+<span class="sd">        ACAACCAC</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    SeqFormat</span>
+<span class="sd">        Base class for detectors</span>
+<span class="sd">    FastaSingleline</span>
+<span class="sd">        Derived class, with more restricitons</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">HEADER_LINE</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">SEQUENCE_LINE</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">QUALITY_LINE</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_firstLine</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prevHeader</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_giveup</span> <span class="o">=</span> <span class="mi">20</span>
+
+    <span class="k">def</span> <span class="nf">_isHeader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;&gt;&quot;</span><span class="p">)</span>
+    
+    <span class="nd">@property</span>
+    <span class="nd">@inheritDocFromSeqFormat</span>
+<div class="viewcode-block" id="FastaMultiline.hasSequence"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FastaMultiline.hasSequence">[docs]</a>    <span class="k">def</span> <span class="nf">hasSequence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="bp">True</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="nd">@inheritDocFromSeqFormat</span>
+<div class="viewcode-block" id="FastaMultiline.hasQuality"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FastaMultiline.hasQuality">[docs]</a>    <span class="k">def</span> <span class="nf">hasQuality</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="bp">False</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="nd">@inheritDocFromSeqFormat</span>
+<div class="viewcode-block" id="FastaMultiline.name"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FastaMultiline.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="s">&quot;FASTA:MULTILINE&quot;</span>
+</div>
+    <span class="nd">@inheritDocFromSeqFormat</span>
+<div class="viewcode-block" id="FastaMultiline.expects"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FastaMultiline.expects">[docs]</a>    <span class="k">def</span> <span class="nf">expects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_isHeader</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">givenUp</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_firstLine</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_firstLine</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prevHeader</span> <span class="o">=</span> <span class="n">h</span>
+            <span class="k">return</span> <span class="n">h</span>
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">h</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prevHeader</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_prevHeader</span> <span class="o">=</span> <span class="bp">True</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_decay</span><span class="p">()</span>
+                    <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MATCH_AA_S</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span> <span class="ow">or</span>
+                    <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MATCH_NT_S</span><span class="p">,</span> <span class="n">line</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_prevHeader</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">False</span>
+
+</div></div>
+<div class="viewcode-block" id="FastaSingleline"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FastaSingleline">[docs]</a><span class="k">class</span> <span class="nc">FastaSingleline</span><span class="p">(</span><span class="n">FastaMultiline</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Detector of single-line FASTA format.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    Valid format::</span>
+
+<span class="sd">        &gt;Contig_1</span>
+<span class="sd">        AACAATACGA</span>
+<span class="sd">        &gt;Contig_2</span>
+<span class="sd">        CCATTTACGA</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    SeqFormat</span>
+<span class="sd">        Base class for detectors</span>
+<span class="sd">    FastaMultiline</span>
+<span class="sd">        Parent class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">HEADER_LINE</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">SEQUENCE_LINE</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">QUALITY_LINE</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@inheritDocFromSeqFormat</span>
+<div class="viewcode-block" id="FastaSingleline.itemSize"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FastaSingleline.itemSize">[docs]</a>    <span class="k">def</span> <span class="nf">itemSize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="mi">2</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="nd">@inheritDocFromSeqFormat</span>
+<div class="viewcode-block" id="FastaSingleline.name"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FastaSingleline.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="s">&quot;FASTA:SINGLELINE&quot;</span>
+</div>
+    <span class="k">def</span> <span class="nf">_decay</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="nd">@inheritDocFromSeqFormat</span>
+<div class="viewcode-block" id="FastaSingleline.expects"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FastaSingleline.expects">[docs]</a>    <span class="k">def</span> <span class="nf">expects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+
+        <span class="n">prevStatus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prevHeader</span>
+        <span class="n">test</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">FastaSingleline</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">expects</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">prevStatus</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prevHeader</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">test</span>
+
+</div></div>
+<div class="viewcode-block" id="FastQ"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FastQ">[docs]</a><span class="k">class</span> <span class="nc">FastQ</span><span class="p">(</span><span class="n">SeqFormat</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Detector of FASTQ format</span>
+
+<span class="sd">    ..note:: This class can be subclassed to detect the different</span>
+<span class="sd">        quality-encoding schemes in the future.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    Valid format::</span>
+
+<span class="sd">        @Contig_1</span>
+<span class="sd">        AACAATACGA</span>
+<span class="sd">        +Contig_1</span>
+<span class="sd">        @+&gt;AACADGH</span>
+<span class="sd">        @Contig_2</span>
+<span class="sd">        CCATTTACGA</span>
+<span class="sd">        +</span>
+<span class="sd">        &gt;CCAGJDFGH</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    SeqFormat</span>
+<span class="sd">        Base class for detectors</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">HEADER_LINE</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">SEQUENCE_LINE</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">QUALITY_LINE</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">FastQ</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mod</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_expectedQlenght</span> <span class="o">=</span> <span class="bp">None</span>
+
+                
+    <span class="k">def</span> <span class="nf">_next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mod</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mod</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span>
+        
+    <span class="k">def</span> <span class="nf">_qualExpect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_decay</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@inheritDocFromSeqFormat</span>
+<div class="viewcode-block" id="FastQ.name"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FastQ.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="s">&quot;FASTQ&quot;</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="nd">@inheritDocFromSeqFormat</span>
+<div class="viewcode-block" id="FastQ.itemSize"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FastQ.itemSize">[docs]</a>    <span class="k">def</span> <span class="nf">itemSize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="mi">4</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="nd">@inheritDocFromSeqFormat</span>
+<div class="viewcode-block" id="FastQ.hasSequence"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FastQ.hasSequence">[docs]</a>    <span class="k">def</span> <span class="nf">hasSequence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="bp">True</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="nd">@inheritDocFromSeqFormat</span>
+<div class="viewcode-block" id="FastQ.hasQuality"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FastQ.hasQuality">[docs]</a>    <span class="k">def</span> <span class="nf">hasQuality</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="bp">True</span>
+</div>
+    <span class="nd">@inheritDocFromSeqFormat</span>
+<div class="viewcode-block" id="FastQ.expects"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FastQ.expects">[docs]</a>    <span class="k">def</span> <span class="nf">expects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+
+        <span class="n">ret</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">givenUp</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mod</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_decay</span><span class="p">()</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;@&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mod</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MATCH_AA</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span> <span class="ow">or</span>
+                       <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MATCH_NT</span><span class="p">,</span> <span class="n">line</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_expectedQlenght</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mod</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;+&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mod</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expectedQlenght</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_qualExpect</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_next</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">ret</span>
+    
+</div></div>
+<div class="viewcode-block" id="SeqFormatDetector"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormatDetector">[docs]</a><span class="k">class</span> <span class="nc">SeqFormatDetector</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Detection of data-format manager</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    detecting</span>
+<span class="sd">    format</span>
+<span class="sd">    itemSize</span>
+<span class="sd">    hasSequence</span>
+<span class="sd">    hasQuality</span>
+<span class="sd">    qualityEncoding</span>
+<span class="sd">    headerLine</span>
+<span class="sd">    sequenceLine</span>
+<span class="sd">    qualityLine</span>
+<span class="sd">    headerLine</span>
+<span class="sd">    sequenceLine</span>
+<span class="sd">    qualityLine</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">FORMATS</span> <span class="o">=</span> <span class="p">[</span><span class="n">FastaSingleline</span><span class="p">,</span> <span class="n">FastaMultiline</span><span class="p">,</span> <span class="n">FastQ</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forceFormat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        </span>
+<span class="sd">        forceFormat: SeqFormat, optional</span>
+<span class="sd">            A format explicitly required. Detection still has to be fed</span>
+<span class="sd">            lines and succeed.</span>
+<span class="sd">            </span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+
+<span class="sd">        TypeError</span>
+<span class="sd">            If `forceFormat` is submitted and not a class derived from</span>
+<span class="sd">            `SeqFormat`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_safetyCheck</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_format</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_itemSize</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hasSequence</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hasQuality</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_qualityEncoding</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_qualityLine</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_headerLine</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sequenceLine</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">if</span> <span class="n">forceFormat</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">forceFormat</span><span class="p">,</span> <span class="n">SeqFormat</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;{0} not a `SeqFormat`&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">forceFormat</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_possibleFormats</span> <span class="o">=</span> <span class="p">[</span><span class="n">forceFormat</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_setFormat</span><span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_possibleFormats</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">()</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">FORMATS</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="SeqFormatDetector.detecting"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormatDetector.detecting">[docs]</a>    <span class="k">def</span> <span class="nf">detecting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;If attempting to detect: bool&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span> <span class="ow">is</span> <span class="bp">None</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="nd">@inheritDocFromSeqFormat</span>
+<div class="viewcode-block" id="SeqFormatDetector.itemSize"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormatDetector.itemSize">[docs]</a>    <span class="k">def</span> <span class="nf">itemSize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_itemSize</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="nd">@inheritDocFromSeqFormat</span>
+<div class="viewcode-block" id="SeqFormatDetector.hasQuality"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormatDetector.hasQuality">[docs]</a>    <span class="k">def</span> <span class="nf">hasQuality</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hasQuality</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="nd">@inheritDocFromSeqFormat</span>
+<div class="viewcode-block" id="SeqFormatDetector.hasSequence"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormatDetector.hasSequence">[docs]</a>    <span class="k">def</span> <span class="nf">hasSequence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hasSequence</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="SeqFormatDetector.format"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormatDetector.format">[docs]</a>    <span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The format name of the detected format: str&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="nd">@inheritDocFromSeqFormat</span>
+<div class="viewcode-block" id="SeqFormatDetector.qualityEncoding"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormatDetector.qualityEncoding">[docs]</a>    <span class="k">def</span> <span class="nf">qualityEncoding</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_qualityEncoding</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="SeqFormatDetector.qualityLine"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormatDetector.qualityLine">[docs]</a>    <span class="k">def</span> <span class="nf">qualityLine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The line index in the item for the quality</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        </span>
+<span class="sd">        int</span>
+<span class="sd">        </span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        </span>
+<span class="sd">        FormatError</span>
+<span class="sd">            If attempting to use before format is detected</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">detecting</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FormatError</span><span class="p">(</span><span class="s">&quot;Format is still ambiguious&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_qualityLine</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="SeqFormatDetector.headerLine"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormatDetector.headerLine">[docs]</a>    <span class="k">def</span> <span class="nf">headerLine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The line index in the item for the header</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        </span>
+<span class="sd">        int</span>
+<span class="sd">        </span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        </span>
+<span class="sd">        FormatError</span>
+<span class="sd">            If attempting to use before format is detected</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">detecting</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FormatError</span><span class="p">(</span><span class="s">&quot;Format is still ambiguious&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_headerLine</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="SeqFormatDetector.sequenceLine"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormatDetector.sequenceLine">[docs]</a>    <span class="k">def</span> <span class="nf">sequenceLine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The line index in the item for the sequence</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        </span>
+<span class="sd">        int</span>
+<span class="sd">        </span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        </span>
+<span class="sd">        FormatError</span>
+<span class="sd">            If attempting to use before format is detected</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">detecting</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FormatError</span><span class="p">(</span><span class="s">&quot;Format is still ambiguious&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequenceLine</span>
+</div>
+    <span class="k">def</span> <span class="nf">_testFormatInformative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">itemSize</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FormatError</span><span class="p">(</span>
+                <span class="s">&quot;Format {0} detected,&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">+</span>
+                <span class="s">&quot; can&#39;t be used due to no fixed item-size&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">f</span><span class="o">.</span><span class="n">hasSequence</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">f</span><span class="o">.</span><span class="n">hasQuality</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FormatError</span><span class="p">(</span>
+                <span class="s">&quot;Format {0} detected,&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">+</span>
+                <span class="s">&quot; can&#39;t use because has neither sequence nor quality&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">True</span>
+
+<div class="viewcode-block" id="SeqFormatDetector.compatible"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormatDetector.compatible">[docs]</a>    <span class="k">def</span> <span class="nf">compatible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoder</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Evaluates if encoder is compatible with the detected format</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        bool</span>
+<span class="sd">            Compatibility</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+
+<span class="sd">        FormatError</span>
+<span class="sd">            If attempting to test compatibility before format is detected</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">detecting</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">FormatError</span><span class="p">(</span><span class="s">&quot;Format is still ambiguious&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">((</span><span class="ow">not</span> <span class="n">encoder</span><span class="o">.</span><span class="n">useSequence</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasSequence</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="p">(</span><span class="ow">not</span> <span class="n">encoder</span><span class="o">.</span><span class="n">useQuality</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasQuality</span><span class="p">))</span>
+</div>
+    <span class="k">def</span> <span class="nf">_setFormat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_possibleFormats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safetyCheck</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">itemSize</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_safetyCheck</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_safetyCheck</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">itemSize</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safetyCheck</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_safetyCheck</span> <span class="o">-=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testFormatInformative</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_headerLine</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">HEADER_LINE</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_qualityLine</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">QUALITY_LINE</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sequenceLine</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">SEQUENCE_LINE</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_itemSize</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">itemSize</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hasSequence</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">hasSequence</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hasQuality</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">hasQuality</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_qualityEncoding</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">qualityEncoding</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_format</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span>
+
+<div class="viewcode-block" id="SeqFormatDetector.feed"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormatDetector.feed">[docs]</a>    <span class="k">def</span> <span class="nf">feed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Supply a new line to format detector.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        line: str</span>
+<span class="sd">            The next line in the data</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        fseq.SeqEncoder</span>
+<span class="sd">            Returns `self`</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+
+<span class="sd">        FormatUnknown</span>
+<span class="sd">            If no known formatters are left</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_possibleFormats</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_possibleFormats</span> <span class="k">if</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">expects</span><span class="p">(</span><span class="n">line</span><span class="p">)]</span>
+        
+        <span class="n">l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_possibleFormats</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FormatUnknown</span><span class="p">(</span>
+                    <span class="s">&quot;No known formats left, causing line</span><span class="se">\n</span><span class="s">{0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">l</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_setFormat</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">fSeq 1.0.0a documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Martin Zackrisson.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fseq package &mdash; fSeq 1.0.0a documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="fSeq 1.0.0a documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">fSeq 1.0.0a documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="fseq-package">
+<h1>fseq package<a class="headerlink" href="#fseq-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fseq.reading.html">fseq.reading package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fseq.reading.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fseq.reading.html#module-fseq.reading.seq_encoder">fseq.reading.seq_encoder module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fseq.reading.html#module-fseq.reading.seq_reader">fseq.reading.seq_reader module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fseq.reading.html#module-fseq.reading">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fseq.reporting.html">fseq.reporting package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fseq.reporting.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fseq.reporting.html#module-fseq.reporting.report_builder">fseq.reporting.report_builder module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fseq.reporting.html#module-fseq.reporting.reports">fseq.reporting.reports module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fseq.reporting.html#module-fseq.reporting">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="module-fseq">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-fseq" title="Permalink to this headline">¶</a></h2>
+<p>fSeQ is a toolbox for sequence analysis in the frequency domain.</p>
+<p>The module is organized around two phases of work: <em>reading</em> and <em>reporting</em>.</p>
+<p>The reading uses a data format detector <cite>SeqFormatDetector</cite>, which detects
+the current <cite>SeqFormat</cite> that is being read by the <cite>SeqReader</cite> and passed to the
+<cite>SeqEncoder</cite> to translate into a numpy array</p>
+<p>The <cite>Report`s and `ReportBuilder</cite> use the output of the import phase to produce
+the output. They are organized as such that a builder pre-processes the data
+without any graphics done and the reporters the takes the pre-processed data
+and make displays out of them.</p>
+<p>All relevant parts of <em>reading</em> and <em>reporting</em> are directly imported to the
+package root.</p>
+<div class="section" id="reading">
+<h3>Reading<a class="headerlink" href="#reading" title="Permalink to this headline">¶</a></h3>
+<p>There is one generic reader that is intended to handle all use cases.</p>
+<dl class="docutils">
+<dt>fseq.SeqReader</dt>
+<dd>Root object that coordinates reading, encoding and reporting</dd>
+</dl>
+<p>The encoders translates and manages format detection</p>
+<dl class="docutils">
+<dt>fseq.SeqEncoder</dt>
+<dd>Base class encoder</dd>
+<dt>fseq.SeqEncoderGC</dt>
+<dd>Encoder that translates Gs and Cs to 1 while A and T become 0</dd>
+</dl>
+<p>There&#8217;s a general format detector, and several data-formats.</p>
+<dl class="docutils">
+<dt>fseq.SeqFormatDetector</dt>
+<dd>Detector of formats</dd>
+<dt>fseq.SeqFormat</dt>
+<dd>The base class from which all formats must be derived</dd>
+<dt>fseq.FastaMultiline</dt>
+<dd>Format detecting a fasta-file where sequence may span more than one line</dd>
+<dt>fseq.FastaSingleline</dt>
+<dd>Format detecting a fasta-file where sequence is in a signle line</dd>
+<dt>fseq.FastQ</dt>
+<dd>Format detecting fastq, but not which quality encoding</dd>
+</dl>
+</div>
+<div class="section" id="reporting">
+<h3>Reporting<a class="headerlink" href="#reporting" title="Permalink to this headline">¶</a></h3>
+<p>There is a report builder base from which all report builders should be
+made, and two specific report builders.</p>
+<dl class="docutils">
+<dt>fseq.ReportBuilderBase</dt>
+<dd>The base class for all builders</dd>
+<dt>fseq.ReportBuilderPositionAverage</dt>
+<dd>A report builder that averages data per position</dd>
+<dt>fseq.ReportBuilderFFT</dt>
+<dd>A report builder that subsamples and then does clustered FFT analysis</dd>
+</dl>
+<p>There are two reports included and an optional base class.</p>
+<dl class="docutils">
+<dt>fseq.ReportBase</dt>
+<dd>Base class to make constructing new reports more efficient</dd>
+<dt>fseq.LinePlot</dt>
+<dd>Plots a line from the data sent to it</dd>
+<dt>fseq.HeatMap</dt>
+<dd>Plots a heat-map from the data sent to it.</dd>
+</dl>
+</div>
+<div class="section" id="exceptions">
+<h3>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>fseq.FormatError</dt>
+<dd>Base exception for error with data-formats</dd>
+<dt>fseq.FormatImplementationError</dt>
+<dd>If a format is not correctly implemented</dd>
+<dt>fseq.FormatUnknown</dt>
+<dd>If data is of unknown format</dd>
+</dl>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">fseq package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#module-fseq">Module contents</a><ul>
+<li><a class="reference internal" href="#reading">Reading</a></li>
+<li><a class="reference internal" href="#reporting">Reporting</a></li>
+<li><a class="reference internal" href="#exceptions">Exceptions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/fseq.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">fSeq 1.0.0a documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Martin Zackrisson.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,544 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fseq.reporting.report_builder &mdash; fSeq 1.0.0a documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0.0a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="fSeq 1.0.0a documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">fSeq 1.0.0a documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for fseq.reporting.report_builder</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+<span class="sd">&quot;&quot;&quot;The report builders are classes that coordinate report productions&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">as</span> <span class="nn">dist</span>
+<span class="kn">import</span> <span class="nn">scipy.cluster.hierarchy</span> <span class="kn">as</span> <span class="nn">hier</span>
+
+<span class="kn">import</span> <span class="nn">fseq</span>
+
+
+<div class="viewcode-block" id="ReportBuilderBase"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.report_builder.ReportBuilderBase">[docs]</a><span class="k">class</span> <span class="nc">ReportBuilderBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for common report builder features.</span>
+
+<span class="sd">    Most prominently, the distill-method needs to be implemented in</span>
+<span class="sd">    subclasses to make much sence in most use cases.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    outputRoot</span>
+<span class="sd">    outputNamePrefix</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">DEFAULT_REPORTS</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">reports</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        outputRoot: str, optional</span>
+<span class="sd">            Path to the directory where all reports should be put</span>
+
+<span class="sd">        outputNamePrefix: str, optional</span>
+<span class="sd">            Partial name to be added to all reports done by the builder</span>
+
+<span class="sd">        *reports: objects, optional</span>
+<span class="sd">            Any number of reports to be added from start</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reports</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">reports</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">reports</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">r</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_REPORTS</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputRoot</span><span class="o">=</span><span class="s">&#39;outputRoot&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;outputRoot&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputNamePrefix</span><span class="o">=</span><span class="s">&#39;outputNamePrefix&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> \
+            <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;outputNamePrefix&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addReports</span><span class="p">(</span><span class="o">*</span><span class="n">reports</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reports</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reports</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">outputNamePrefix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Partial file name to prepend the individual reports: str&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputNamePrefix</span>
+
+    <span class="nd">@outputNamePrefix.setter</span>
+<div class="viewcode-block" id="ReportBuilderBase.outputNamePrefix"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.report_builder.ReportBuilderBase.outputNamePrefix">[docs]</a>    <span class="k">def</span> <span class="nf">outputNamePrefix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_outputNamePrefix</span> <span class="o">=</span> <span class="n">val</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">outputRoot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The base for saving out reports: str&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputRoot</span>
+
+    <span class="nd">@outputRoot.setter</span>
+<div class="viewcode-block" id="ReportBuilderBase.outputRoot"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.report_builder.ReportBuilderBase.outputRoot">[docs]</a>    <span class="k">def</span> <span class="nf">outputRoot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_outputRoot</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ReportBuilderBase.addReports"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.report_builder.ReportBuilderBase.addReports">[docs]</a>    <span class="k">def</span> <span class="nf">addReports</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">reports</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds any number of reports given that the reports exposes a </span>
+<span class="sd">        distill method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        </span>
+<span class="sd">        *reports: objects, optional</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        fseq.ReportBuilderBase</span>
+<span class="sd">            Returns `self`</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+
+<span class="sd">        ValueError</span>
+<span class="sd">            If a report lacks a method named `distill` or can&#39;t be hashed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">reports</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s">&#39;distill&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">r</span><span class="o">.</span><span class="n">__hash__</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reports</span><span class="p">:</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                        <span class="s">&quot;{0} already in reports...omitting.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_reports</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s">&quot;{0} lacks distill-method or not hashable&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+</div>
+<div class="viewcode-block" id="ReportBuilderBase.distill"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.report_builder.ReportBuilderBase.distill">[docs]</a>    <span class="k">def</span> <span class="nf">distill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The base distiller will not process any data passed to it,</span>
+<span class="sd">        it will send all arguments and keyword arguments to the individual</span>
+<span class="sd">        reports.</span>
+
+<span class="sd">        If either `outputRoot` or `outputNamePrefix` are passed as kwargs,</span>
+<span class="sd">        the corresponding values preset in the system will be added to the</span>
+<span class="sd">        kwargs sent to the subreports.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        fseq.ReportBuilderBase</span>
+<span class="sd">            Returns `self`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;outputRoot&#39;</span><span class="p">,</span> <span class="s">&#39;outputNamePrefix&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> 
+
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reports</span><span class="p">:</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">distill</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+</div></div>
+<div class="viewcode-block" id="ReportBuilderFFT"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.report_builder.ReportBuilderFFT">[docs]</a><span class="k">class</span> <span class="nc">ReportBuilderFFT</span><span class="p">(</span><span class="n">ReportBuilderBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Samples part of data set and performs FFT-based analysis on it.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    distanceMetric</span>
+<span class="sd">    sampleSize</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    ReportBuilderBase</span>
+<span class="sd">        Base class implementing more attributes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">METRICS</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;braycurtis&#39;</span><span class="p">,</span> <span class="s">&#39;canberra&#39;</span><span class="p">,</span> <span class="s">&#39;chebyshev&#39;</span><span class="p">,</span> <span class="s">&#39;cityblock&#39;</span><span class="p">,</span>
+               <span class="s">&#39;correlation&#39;</span><span class="p">,</span> <span class="s">&#39;cosine&#39;</span><span class="p">,</span> <span class="s">&#39;dice&#39;</span><span class="p">,</span> <span class="s">&#39;euclidean&#39;</span><span class="p">,</span> <span class="s">&#39;hamming&#39;</span><span class="p">,</span>
+               <span class="s">&#39;jaccard&#39;</span><span class="p">,</span> <span class="s">&#39;kulsinski&#39;</span><span class="p">,</span> <span class="s">&#39;mahalanobis&#39;</span><span class="p">,</span> <span class="s">&#39;matching&#39;</span><span class="p">,</span>
+               <span class="s">&#39;minkowski&#39;</span><span class="p">,</span> <span class="s">&#39;rogerstanimoto&#39;</span><span class="p">,</span> <span class="s">&#39;russellrao&#39;</span><span class="p">,</span> <span class="s">&#39;seuclidean&#39;</span><span class="p">,</span>
+               <span class="s">&#39;sokalmichener&#39;</span><span class="p">,</span> <span class="s">&#39;sokalsneath&#39;</span><span class="p">,</span> <span class="s">&#39;sqeuclidean&#39;</span><span class="p">,</span> <span class="s">&#39;yule&#39;</span><span class="p">}</span>
+
+    <span class="n">DEFAULT_REPORTS</span> <span class="o">=</span> <span class="p">(</span><span class="n">fseq</span><span class="o">.</span><span class="n">HeatMap</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">reports</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        outputRoot: str, optional</span>
+<span class="sd">            Path to the directory where all reports should be put</span>
+
+<span class="sd">        outputNamePrefix: str, optional</span>
+<span class="sd">            Partial name to be added to all reports done by the builder</span>
+
+<span class="sd">        sampleSize: int, optional</span>
+<span class="sd">            Size of sample to be randomly drawn (Default: 1000)</span>
+
+<span class="sd">        distanceMetric: str, optional</span>
+<span class="sd">            Name of distance metric to be used.</span>
+<span class="sd">            See `ReportBuilderFFT.METRICS` for allowed metrics.</span>
+<span class="sd">            (Default: &#39;correlation&#39;)</span>
+
+<span class="sd">        *reports: objects, optional</span>
+<span class="sd">            Any number of reports to be added from start</span>
+<span class="sd">            (Default: A fseq.HeatMap)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">reports</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">reports</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">r</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_REPORTS</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">ReportBuilderFFT</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">reports</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sampleSize</span> <span class="o">=</span> <span class="s">&#39;sampleSize&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;sampleSize&#39;</span><span class="p">]</span> <span class="ow">or</span> \
+            <span class="mi">1000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distanceMetric</span> <span class="o">=</span> <span class="s">&#39;distanceMetric&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> \
+            <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;distanceMetric&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="s">&#39;correlation&#39;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">distanceMetric</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distanceMetric</span>
+
+    <span class="nd">@distanceMetric.setter</span>
+<div class="viewcode-block" id="ReportBuilderFFT.distanceMetric"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.report_builder.ReportBuilderFFT.distanceMetric">[docs]</a>    <span class="k">def</span> <span class="nf">distanceMetric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">):</span>
+
+        <span class="n">metric</span> <span class="o">=</span> <span class="n">metric</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">metric</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">METRICS</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_distanceMetric</span> <span class="o">=</span> <span class="n">metric</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;{0} not a valid metric ({1})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">metric</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">METRICS</span><span class="p">))</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sampleSize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sampleSize</span>
+
+    <span class="nd">@sampleSize.setter</span>
+<div class="viewcode-block" id="ReportBuilderFFT.sampleSize"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.report_builder.ReportBuilderFFT.sampleSize">[docs]</a>    <span class="k">def</span> <span class="nf">sampleSize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sampleSize</span> <span class="o">=</span> <span class="n">val</span>
+    </div>
+    <span class="k">def</span> <span class="nf">_getLeafOrder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">V</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">VI</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+        <span class="n">distMatrix</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">pdist</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">V</span><span class="o">=</span><span class="n">V</span><span class="p">,</span> <span class="n">VI</span><span class="o">=</span><span class="n">VI</span><span class="p">)</span>
+
+        <span class="n">distSquareM</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">squareform</span><span class="p">(</span><span class="n">distMatrix</span><span class="p">)</span>
+
+        <span class="n">linkageM</span> <span class="o">=</span> <span class="n">hier</span><span class="o">.</span><span class="n">linkage</span><span class="p">(</span><span class="n">distSquareM</span><span class="p">)</span>
+
+        <span class="n">dendro</span> <span class="o">=</span> <span class="n">hier</span><span class="o">.</span><span class="n">dendrogram</span><span class="p">(</span><span class="n">linkageM</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">dendro</span><span class="p">[</span><span class="s">&#39;leaves&#39;</span><span class="p">]</span> 
+
+
+<div class="viewcode-block" id="ReportBuilderFFT.distill"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.report_builder.ReportBuilderFFT.distill">[docs]</a>    <span class="k">def</span> <span class="nf">distill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">distanceMetric</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">clusterOnAbsOnly</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make reports from data.</span>
+
+<span class="sd">        Produces two analyses:</span>
+
+<span class="sd">        Amplitude evaluation</span>
+<span class="sd">            A clustered FFT-amplitude analysis</span>
+
+<span class="sd">        Angle evaluation</span>
+<span class="sd">            A clustered FFT-angle analysis</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        data: numpy.ndarray</span>
+<span class="sd">            The 2D-array of data given</span>
+
+<span class="sd">        distanceMetric: str, optional</span>
+<span class="sd">            A distance metric to overwrite the default one of the instance.</span>
+<span class="sd">            </span>
+<span class="sd">        clusterOnAbsOnly: bool, optional</span>
+<span class="sd">            If clustering should be performed only on the amplitude (abs-values)</span>
+<span class="sd">            or if amplitude and angle be clustered independently.</span>
+<span class="sd">            (Default: Cluster only on amplitude)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">distanceMetric</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">distanceMetric</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distanceMetric</span>
+
+        <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">D</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">sampleSize</span><span class="p">]]</span>
+
+        <span class="n">fD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fD</span><span class="p">)</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> 
+        <span class="n">O</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getLeafOrder</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">distanceMetric</span><span class="p">,</span> <span class="n">V</span><span class="o">=</span><span class="n">V</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">ReportBuilderFFT</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">distill</span><span class="p">(</span>
+            <span class="n">A</span><span class="p">[</span><span class="n">O</span><span class="p">],</span>
+            <span class="n">outputNamePrefix</span><span class="o">=</span><span class="s">&#39;fft-sample.abs.&#39;</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s">&#39;absolute FFT values for {0} random sample sequences&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sampleSize</span><span class="p">),</span>
+            <span class="n">xlabel</span><span class="o">=</span><span class="s">&#39;Frequency&#39;</span><span class="p">,</span>
+            <span class="n">ylabel</span><span class="o">=</span><span class="s">&#39;Read n&#39;</span><span class="p">,</span>
+            <span class="n">axisOff</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c">#A = (np.angle(fD) - np.angle(fD[:, :1])) % (2 * np.pi)</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">fD</span><span class="p">)</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> 
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">clusterOnAbsOnly</span><span class="p">:</span>
+            <span class="n">O</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getLeafOrder</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">distanceMetric</span><span class="p">,</span> <span class="n">V</span><span class="o">=</span><span class="n">V</span><span class="p">)</span>
+        
+        <span class="nb">super</span><span class="p">(</span><span class="n">ReportBuilderFFT</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">distill</span><span class="p">(</span>
+            <span class="n">A</span><span class="p">[</span><span class="n">O</span><span class="p">],</span>
+            <span class="n">outputNamePrefix</span><span class="o">=</span><span class="s">&#39;fft-sample.angle.&#39;</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s">&#39;FFT angle for {0} random sample sequences&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sampleSize</span><span class="p">),</span>
+            <span class="n">xlabel</span><span class="o">=</span><span class="s">&#39;Frequency&#39;</span><span class="p">,</span>
+            <span class="n">ylabel</span><span class="o">=</span><span class="s">&#39;Read n&#39;</span><span class="p">,</span>
+            <span class="n">axisOff</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+</div></div>
+<div class="viewcode-block" id="ReportBuilderPositionAverage"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.report_builder.ReportBuilderPositionAverage">[docs]</a><span class="k">class</span> <span class="nc">ReportBuilderPositionAverage</span><span class="p">(</span><span class="n">ReportBuilderBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Per position analysis builder.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    undecidedValue</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    ReportBuilderBase</span>
+<span class="sd">        Base class which implements some more attributes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">DEFAULT_REPORTS</span> <span class="o">=</span> <span class="p">(</span><span class="n">fseq</span><span class="o">.</span><span class="n">LinePlot</span><span class="p">,</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">reports</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        outputRoot: str, optional</span>
+<span class="sd">            Path to the directory where all reports should be put</span>
+
+<span class="sd">        outputNamePrefix: str, optional</span>
+<span class="sd">            Partial name to be added to all reports done by the builder</span>
+
+<span class="sd">        undecidedValue: int, optional</span>
+<span class="sd">            The value for which undecided items were encoded (so it</span>
+<span class="sd">            can be omited and calculated separately for 2 of 3 graphs).</span>
+<span class="sd">            (Default: 0.5)</span>
+
+<span class="sd">        *reports: objects, optional</span>
+<span class="sd">            Any number of reports to be added from start</span>
+<span class="sd">            (Default: fseq.LinePlot) </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">reports</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">reports</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">r</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_REPORTS</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">ReportBuilderPositionAverage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">reports</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">undecidedValue</span> <span class="o">=</span> <span class="s">&#39;undecidedValue&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> \
+            <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;undecidedValue&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="mf">0.5</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">undecidedValue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_undecidedValue</span>
+
+    <span class="nd">@undecidedValue.setter</span>
+<div class="viewcode-block" id="ReportBuilderPositionAverage.undecidedValue"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.report_builder.ReportBuilderPositionAverage.undecidedValue">[docs]</a>    <span class="k">def</span> <span class="nf">undecidedValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_undecidedValue</span> <span class="o">=</span> <span class="n">val</span>
+</div>
+    <span class="k">def</span> <span class="nf">_floatBin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span>
+
+        <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">C</span><span class="p">),</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,))))</span>
+
+    <span class="k">def</span> <span class="nf">_getF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">val</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">Y</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="n">X</span><span class="p">[</span><span class="n">Y</span><span class="p">[:</span><span class="n">X</span><span class="o">.</span><span class="n">size</span><span class="p">]</span> <span class="o">==</span> <span class="n">val</span><span class="p">]</span> <span class="o">/</span> <span class="n">X</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_getNotF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[:</span><span class="n">X</span><span class="o">.</span><span class="n">size</span><span class="p">]</span> <span class="o">!=</span> <span class="n">val</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">*</span> <span class="n">Y</span><span class="p">[</span><span class="n">pos</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">X</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ReportBuilderPositionAverage.distill"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.report_builder.ReportBuilderPositionAverage.distill">[docs]</a>    <span class="k">def</span> <span class="nf">distill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">undecidedValue</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The distiller will create reports for several position-type</span>
+<span class="sd">        informations.</span>
+
+<span class="sd">        Average Lacking Data Frequency</span>
+<span class="sd">            The number of undecided values.</span>
+
+<span class="sd">        Average Non-Lacking Data</span>
+<span class="sd">            The per position average for all non-lacking data values.</span>
+
+<span class="sd">        Average Combined Data</span>
+<span class="sd">            The per position average as encoded.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        data: numpy.ndarray</span>
+<span class="sd">            An array of numerically encoded sequence information</span>
+
+<span class="sd">        undecidedValue: float, optional</span>
+<span class="sd">            The value that undecided sequence positions are encoded as.</span>
+<span class="sd">            If not supplied, the previously set value of the class instance</span>
+<span class="sd">            will be used.</span>
+<span class="sd">            (Default: 0.5)</span>
+
+<span class="sd">        *args:</span>
+<span class="sd">            Any args will be passed to the `ReportBuilderBase.distill`</span>
+
+<span class="sd">        **kwargs:</span>
+<span class="sd">            Any kwargs will be passed to the `ReportBuilderBase.distill`</span>
+<span class="sd">            ..note:: `outputNamePrefix` will be overwritten/added</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        fseq.ReportBuilderPositionAverage</span>
+<span class="sd">            Returns `self`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="n">undecidedValue</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">undecidedValue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">undecidedValue</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">ReportBuilderPositionAverage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">distill</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">),</span>
+            <span class="n">outputNamePrefix</span><span class="o">=</span><span class="s">&#39;average.total.&#39;</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s">&#39;Average GC per position&#39;</span><span class="p">,</span>
+            <span class="n">xlabel</span><span class="o">=</span><span class="s">&#39;Read position&#39;</span><span class="p">,</span>
+            <span class="n">ylabel</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%G</span><span class="s">C&#39;</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">freqs</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_floatBin</span><span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="k">for</span> <span class="n">C</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+        <span class="n">undecidedV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">freqs</span><span class="p">)</span> <span class="o">*</span> <span class="n">undecidedValue</span>
+
+        <span class="n">lacking</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frompyfunc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_getF</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">ReportBuilderPositionAverage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">distill</span><span class="p">(</span>
+            <span class="n">lacking</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">undecidedV</span><span class="p">),</span>
+            <span class="n">title</span><span class="o">=</span><span class="s">&#39;Frequency of missing data per position&#39;</span><span class="p">,</span>
+            <span class="n">xlabel</span><span class="o">=</span><span class="s">&#39;Read position&#39;</span><span class="p">,</span>
+            <span class="n">ylabel</span><span class="o">=</span><span class="s">&#39;f&#39;</span><span class="p">,</span>
+            <span class="n">outputNamePrefix</span><span class="o">=</span><span class="s">&#39;average.lacking.&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    
+        <span class="n">notLacking</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frompyfunc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_getNotF</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">ReportBuilderPositionAverage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">distill</span><span class="p">(</span>
+            <span class="n">notLacking</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">undecidedV</span><span class="p">),</span>
+            <span class="n">title</span><span class="o">=</span><span class="s">&#39;Average GC per position, omitting uncertain&#39;</span><span class="p">,</span>
+            <span class="n">xlabel</span><span class="o">=</span><span class="s">&#39;Read position&#39;</span><span class="p">,</span>
+            <span class="n">ylabel</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%G</span><span class="s">C&#39;</span><span class="p">,</span>
+            <span class="n">outputNamePrefix</span><span class="o">=</span><span class="s">&#39;average.not-lacking.&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">fSeq 1.0.0a documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Martin Zackrisson.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
