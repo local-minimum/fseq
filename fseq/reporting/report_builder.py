@@ -332,7 +332,7 @@ class ReportBuilderPositionAverage(ReportBuilderBase):
             (Default: fseq.LinePlot) 
         """
 
-        if len(reports):
+        if len(reports) == 0:
             reports = (fseq.LinePlot(), )
 
         super(ReportBuilderPositionAverage, self).__init__(*reports, **kwargs)
