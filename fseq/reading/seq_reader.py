@@ -565,6 +565,11 @@ class SeqReader(object):
             args = (res, )
             for rb in self._reportBuilders:
 
+                if self.verbose:
+                    self._logger.info(
+                        "Reporting {0} with args={1}, kwargs={2}".format(
+                            type(rb), args, kwargs))
+
                 t = threading.Thread(
                     target=rb.distill,
                     args=args,
@@ -656,9 +661,6 @@ class SeqReader(object):
         if len(self) == 0 or self._idData == len(self):
             raise StopIteration()
 
-        if self.verbose:
-            self._logger.info("Reading started")
-
         E = self.seqEncoder
 
         if E is None:
@@ -674,6 +676,9 @@ class SeqReader(object):
             self._reportTargetBase = os.path.join(
                 os.path.dirname(source), self._dataTargetPaths[self._idData])
             self._idData += 1
+
+        if self.verbose:
+            self._logger.info("Reading: {0}".format(source))
 
         if self.resetSeqEncoder:
             E.reset()
@@ -765,6 +770,6 @@ class SeqReader(object):
         self._joinThreads(workers)
 
         if self.verbose:
-            self._logger.info("Reading done")
+            self._logger.info("Reading Complete: {0}".format(source))
 
         return D[:workingIndex]
