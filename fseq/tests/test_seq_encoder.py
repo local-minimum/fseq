@@ -3,6 +3,7 @@
 import unittest
 import random
 import os
+import numpy as np
 
 import fseq
 
@@ -459,6 +460,8 @@ class TestEncoder(unittest.TestCase):
 
         self.assertTrue(e.initiated)
 
+        self.assertNotEqual(e.sequenceLine, None)
+
     def test_reset(self):
 
         e = fseq.SeqEncoder(expectedInputFormat=fseq.FastQ())
@@ -474,6 +477,76 @@ class TestEncoder(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             fseq.SeqEncoder().parse(None, None, None)
         
+
+class TestEncoderQC(unittest.TestCase):
+
+    
+    def setUp(self):
+
+        self._eQC = fseq.SeqEncoderGC(
+            expectedInputFormat=fseq.FastaSingleline())
+
+        self._spoofHead=">Read1"
+        self._out = np.zeros((11, 101)) * -1
+
+    def test_putRightRow(self):
+
+        for row in (4, 3, 7, 0):
+
+            l = "".join(
+                [random.sample(['A', 'T', 'C', 'G', 'N'], 1)[0] for
+                    _ in range(101)])
+
+            self._eQC.parse([self._spoofHead, l], self._out, row)
+
+            for col, c in enumerate(l):
+                self.assertEqual(self._eQC.sequenceEncoding[c],
+                                 self._out[row, col])
+
+    def test_correctLengthG(self):
+
+        self._eQC.parse([self._spoofHead, 'G'*101], self._out, 0)
+        
+        np.testing.assert_allclose(self._out[0], 1)
+        
+    def test_shortLengthG(self):
+
+        l = 50
+        self._eQC.parse([self._spoofHead, 'G'*l], self._out, 6)
+        
+        np.testing.assert_allclose(self._out[6, :l], 1)
+        np.testing.assert_allclose(self._out[6, l:], -1)
+
+    def test_longLengthG(self):
+
+        l = 1000
+        self._eQC.parse([self._spoofHead, 'G'*l], self._out, 5)
+        
+        np.testing.assert_allclose(self._out[6], 1)
+
+    def test_C(self):
+
+        self._eQC.parse([self._spoofHead, 'C'*101], self._out, 1)
+        
+        np.testing.assert_allclose(self._out[1], 1)
+
+    def test_A(self):
+
+        self._eQC.parse([self._spoofHead, 'A'*101], self._out, 8)
+        
+        np.testing.assert_allclose(self._out[8], 0)
+
+    def test_T(self):
+
+        self._eQC.parse([self._spoofHead, 'T'*101], self._out, 9)
+        
+        np.testing.assert_allclose(self._out[9], 0)
+
+    def test_N(self):
+
+        self._eQC.parse([self._spoofHead, 'N'*101], self._out, 10)
+        
+        np.testing.assert_allclose(self._out[10], 0.5)
 
 
 if __name__ == '__main__':
