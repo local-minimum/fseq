@@ -1,0 +1,19 @@
+#!/usr/bin/env python
+"""Run-script for fast access to GC-analysis"""
+
+import argparse
+
+import fseq
+
+if __name__ == "__main__":
+
+    parser = ArgumentParser(description="fSeq -- a fourier view on Sequences")
+
+    parser.add_argument('-v', '--verbose', dest='verbose', type=bool,
+                        default=True, help="Increase status outputs")
+
+    parser.add_argument('files', type=str, nargs='+', help="paths to files")
+
+    args = parser.parse_args()
+
+    fseq.SeqReader(vebose=args.verbose, dataSourcePaths=args.files)

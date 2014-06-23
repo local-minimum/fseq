@@ -31,6 +31,7 @@ Reporting
     url='https://gitorious.org/fseq',
     packages=['fseq', 'fseq.reading', 'fseq.reporting'],
     licence='MIT',
+    scripts=[os.path.join("scripts", p) for p in ("fseq",)],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Science/Research',
