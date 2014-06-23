@@ -7,6 +7,8 @@ import numpy as np
 import scipy.spatial.distance as dist
 import scipy.cluster.hierarchy as hier
 
+import fseq
+
 
 class ReportBuilderBase(object):
     """Base class for common report builder features.
@@ -177,7 +179,12 @@ class ReportBuilderFFT(ReportBuilderBase):
 
         *reports: objects, optional
             Any number of reports to be added from start
+            (Default: A fseq.HeatMap)
         """
+
+        if len(reports) == 0:
+            reports = (fseq.HeatMap(), )
+
         super(ReportBuilderFFT, self).__init__(
             *reports, **kwargs)
 
@@ -322,7 +329,11 @@ class ReportBuilderPositionAverage(ReportBuilderBase):
 
         *reports: objects, optional
             Any number of reports to be added from start
+            (Default: fseq.LinePlot) 
         """
+
+        if len(reports):
+            reports = (fseq.LinePlot(), )
 
         super(ReportBuilderPositionAverage, self).__init__(*reports, **kwargs)
 
