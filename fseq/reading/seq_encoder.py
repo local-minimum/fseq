@@ -849,6 +849,8 @@ class SeqFormatDetector(object):
                 raise TypeError("{0} not a `SeqFormat`".format(forceFormat))
 
             self._possibleFormats = [forceFormat]
+            self._setFormat()
+
         else:
             self._possibleFormats = [f() for f in self.FORMATS]
 
@@ -985,6 +987,27 @@ class SeqFormatDetector(object):
         return ((not encoder.useSequence or self.hasSequence) and
                 (not encoder.useQuality or self.hasQuality))
 
+    def _setFormat(self):
+
+        f = self._possibleFormats[0]
+        if self._safetyCheck is None:
+            if f.itemSize is None:
+                self._safetyCheck = 0
+            else:
+                self._safetyCheck = f.itemSize
+        elif self._safetyCheck > 0:
+            self._safetyCheck -= 1
+
+        if self._testFormatInformative(f):
+            self._headerLine = f.HEADER_LINE
+            self._qualityLine = f.QUALITY_LINE
+            self._sequenceLine = f.SEQUENCE_LINE
+            self._itemSize = f.itemSize
+            self._hasSequence = f.hasSequence
+            self._hasQuality = f.hasQuality
+            self._qualityEncoding = f.qualityEncoding
+            self._format = f.name
+
     def feed(self, line):
         """Supply a new line to format detector.
 
@@ -1015,22 +1038,7 @@ class SeqFormatDetector(object):
             raise FormatUnknown(
                     "No known formats left, causing line\n{0}".format(line))
         elif l == 1:
-            f = self._possibleFormats[0]
-            if self._safetyCheck is None:
-                if f.itemSize is None:
-                    self._safetyCheck = 0
-                else:
-                    self._safetyCheck = f.itemSize
-            elif self._safetyCheck > 0:
-                self._safetyCheck -= 1
-            elif self._testFormatInformative(f):
-                self._headerLine = f.HEADER_LINE
-                self._qualityLine = f.QUALITY_LINE
-                self._sequenceLine = f.SEQUENCE_LINE
-                self._itemSize = f.itemSize
-                self._hasSequence = f.hasSequence
-                self._hasQuality = f.hasQuality
-                self._qualityEncoding = f.qualityEncoding
-                self._format = f.name
+
+            self._setFormat()
 
         return self
