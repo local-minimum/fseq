@@ -128,6 +128,8 @@ class ReportBase(object):
         if len(kwargs) == 0:
             kwargs = self.saveKwargs
 
+        print("Saving -> {0}".format(path))
+
         fig.savefig(path, *args, **kwargs)
 
         return self
