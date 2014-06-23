@@ -555,13 +555,13 @@ class SeqReader(object):
         """
 
         reporters = set()
-        kwargs = dict(outputRoot=self.reportDirectory)
         
         if self.verbose:
             self._logger.info("Has {0} jobs".format(len(self)))
 
         for res in self:
 
+            kwargs = dict(outputRoot=self.reportDirectory)
             args = (res, )
             for rb in self._reportBuilders:
 
