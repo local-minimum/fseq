@@ -23,6 +23,9 @@ class ReportBuilderBase(object):
     outputNamePrefix
 
     """
+
+    DEFAULT_REPORTS = tuple()
+
     def __init__(self, *reports, **kwargs):
         """
         Parameters
@@ -39,6 +42,10 @@ class ReportBuilderBase(object):
         """
 
         self._reports = set()
+
+        if len(reports) == 0:
+            reports = tuple(r() for r in self.DEFAULT_REPORTS)
+
         self.outputRoot='outputRoot' in kwargs and kwargs['outputRoot'] or None
         self.outputNamePrefix='outputNamePrefix' in kwargs and \
             kwargs['outputNamePrefix'] or None
@@ -158,6 +165,8 @@ class ReportBuilderFFT(ReportBuilderBase):
                'minkowski', 'rogerstanimoto', 'russellrao', 'seuclidean',
                'sokalmichener', 'sokalsneath', 'sqeuclidean', 'yule'}
 
+    DEFAULT_REPORTS = (fseq.HeatMap, )
+
     def __init__(self, *reports, **kwargs):
         """
         Parameters
@@ -183,7 +192,7 @@ class ReportBuilderFFT(ReportBuilderBase):
         """
 
         if len(reports) == 0:
-            reports = (fseq.HeatMap(), )
+            reports = tuple(r() for r in self.DEFAULT_REPORTS)
 
         super(ReportBuilderFFT, self).__init__(
             *reports, **kwargs)
@@ -311,6 +320,9 @@ class ReportBuilderPositionAverage(ReportBuilderBase):
     ReportBuilderBase
         Base class which implements some more attributes.
     """
+
+    DEFAULT_REPORTS = (fseq.LinePlot, )
+
     def __init__(self, *reports, **kwargs):
         """
         Parameters
@@ -333,7 +345,7 @@ class ReportBuilderPositionAverage(ReportBuilderBase):
         """
 
         if len(reports) == 0:
-            reports = (fseq.LinePlot(), )
+            reports = tuple(r() for r in self.DEFAULT_REPORTS)
 
         super(ReportBuilderPositionAverage, self).__init__(*reports, **kwargs)
 

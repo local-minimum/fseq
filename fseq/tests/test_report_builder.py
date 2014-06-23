@@ -9,7 +9,7 @@ class TestGenericBuilder(unittest.TestCase):
     def setUp(self):
 
         self._builderConstructor = fseq.ReportBuilderBase
-        self._startReports = 0
+        self._startReports = len(self._builderConstructor.DEFAULT_REPORTS)
 
     def test_empty(self):
 
@@ -79,7 +79,7 @@ class TestFFTBulder(TestGenericBuilder):
     def setUp(self):
 
         self._builderConstructor = fseq.ReportBuilderFFT
-        self._startReports = 1
+        self._startReports = len(self._builderConstructor.DEFAULT_REPORTS)
 
     def test_sampleSize(self):
 
@@ -111,7 +111,7 @@ class TestAverageBuilder(TestGenericBuilder):
     def setUp(self):
 
         self._builderConstructor = fseq.ReportBuilderPositionAverage
-        self._startReports = 1
+        self._startReports = len(self._builderConstructor.DEFAULT_REPORTS)
 
     def test_undecidedValue(self):
 

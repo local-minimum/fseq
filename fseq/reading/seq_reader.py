@@ -10,8 +10,6 @@ from time import sleep
 from collections import deque
 
 import fseq
-from fseq.reading.seq_encoder import SeqEncoder
-from fseq.reporting.report_builder import ReportBuilderBase as ReportBuilder
 
 
 class SeqReader(object):
@@ -316,7 +314,7 @@ class SeqReader(object):
     @seqEncoder.setter
     def seqEncoder(self, encoder):
 
-        if not isinstance(encoder, SeqEncoder):
+        if not isinstance(encoder, fseq.SeqEncoder):
 
             raise TypeError(
                 "Encoder {0} is not a `fseq.SeqEncoder`".format(encoder))
@@ -459,11 +457,11 @@ class SeqReader(object):
         """
 
         for reportBuilder in  reportBuilders:
-            if not isinstance(reportBuilder, ReportBuilder):
+            if not isinstance(reportBuilder, fseq.ReportBuilderBase):
 
                 raise TypeError(
                     "Report Builder {0} is not a `fseq.ReportBuilder`".format(
-                        ReportBuilder))
+                        fseq.ReportBuilderBase))
 
             else:
 

@@ -83,7 +83,7 @@ from fseq.reading.seq_encoder import \
     FormatError, FormatImplementationError, FormatUnknown, \
     SeqFormat, FastaMultiline, FastaSingleline, FastQ
 
+from fseq.reporting.reports import ReportBase, LinePlot, HeatMap
+
 from fseq.reporting.report_builder import ReportBuilderBase, \
     ReportBuilderPositionAverage, ReportBuilderFFT
-
-from fseq.reporting.reports import ReportBase, LinePlot, HeatMap
