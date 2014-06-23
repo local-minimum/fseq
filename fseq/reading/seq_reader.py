@@ -568,7 +568,13 @@ class SeqReader(object):
                 if self.verbose:
                     self._logger.info(
                         "Reporting {0} with args={1}, kwargs={2}".format(
-                            type(rb), args, kwargs))
+                            type(rb),
+                            tuple((
+                                isinstance(a, np.a) and
+                                "{0}.shape={1}".format(type(a), a.shape) or
+                                a)
+                                for a in args),
+                            kwargs))
 
                 t = threading.Thread(
                     target=rb.distill,
