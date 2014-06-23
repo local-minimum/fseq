@@ -27,13 +27,13 @@ def inheritDocFromSeqFormat(f):
 class SeqEncoder(object):
 
     def __init__(self, expectedInputFormat=None, useSequence=True,
-            useQuality=False, seqenceEncoding=None, qualityEncoding=None):
+            useQuality=False, sequenceEncoding=None, qualityEncoding=None):
         """
         Paramters
         ---------
 
         expectedInputFormat: SeqFormatDetector or SeqFormat, optional
-            A seqence format expected in the input.
+            A sequence format expected in the input.
             (Default: Letting encoder guess format from input)
 
         useSequence: bool
@@ -42,7 +42,7 @@ class SeqEncoder(object):
         useQuality: bool
             If encoder will be using the quality information
 
-        seqenceEncoding: dict or object implementing __getitem__
+        sequenceEncoding: dict or object implementing __getitem__
             Translation map from input to output
 
         qualityEncoding: dict or object implementing __getitem__
@@ -60,8 +60,8 @@ class SeqEncoder(object):
         self.useSequence = useSequence
         self.useQuality = useQuality
 
-        if seqenceEncoding:
-            self.seqenceEncoding = seqenceEncoding
+        if sequenceEncoding:
+            self.sequenceEncoding = sequenceEncoding
         if qualityEncoding:
             self.qualityEncoding = qualityEncoding
 
@@ -196,7 +196,7 @@ class SeqEncoder(object):
             self._qualityEncoding = val
 
     @property
-    def seqenceEncoding(self):
+    def sequenceEncoding(self):
         """Map for translating sequence chars to numeric values.
 
         Returns
@@ -212,8 +212,8 @@ class SeqEncoder(object):
         """
         return self._sequenceEncoding
 
-    @seqenceEncoding.setter
-    def seqenceEncoding(self, val):
+    @sequenceEncoding.setter
+    def sequenceEncoding(self, val):
 
         if not hasattr(val, "__getitem__") and val is not None:
 
@@ -393,36 +393,36 @@ class SeqEncoder(object):
             If base class parse not overwritten or base class used directly
         """
 
-        raise NotImplemented("`SeqEncoder.parse` should be overwritten")
+        raise NotImplementedError("`SeqEncoder.parse` should be overwritten")
 
 
 class SeqEncoderGC(SeqEncoder):
 
-    def __init__(self, expectedInputFormat=None, seqenceEncoding=None):
+    def __init__(self, expectedInputFormat=None, sequenceEncoding=None):
         """
         Parameters
         ----------
 
         expectedInputFormat: SeqFormatDetector or SeqFormat, optional
-            A seqence format expected in the input.
+            A sequence format expected in the input.
             (Default: Letting encoder guess format from input)
     
-        seqenceEncoding: dict or object implementing __getitem__, optional
+        sequenceEncoding: dict or object implementing __getitem__, optional
             (Default: Any G or C value 1; A and T get 0;
             Unknown values such as N get 0.5)
         """
-        if seqenceEncoding is None:
-            seqenceEncoding = {'G': 1.0, 'C': 1.0, 'A': 0, 'T': 0, ' ': 0.5,
+        if sequenceEncoding is None:
+            sequenceEncoding = {'G': 1.0, 'C': 1.0, 'A': 0, 'T': 0, ' ': 0.5,
                     'N': 0.5}
 
         super(SeqEncoderGC, self).__init__(
             expectedInputFormat=expectedInputFormat, useSequence=True,
-            useQuality=False, seqenceEncoding=seqenceEncoding,
+            useQuality=False, sequenceEncoding=sequenceEncoding,
             qualityEncoding=None)
 
     def parse(self, lines, out, outindex):
 
-        e = self.seqenceEncoding
+        e = self.sequenceEncoding
 
         d = [e[char] for char in lines[self._sequenceLine]]
 
