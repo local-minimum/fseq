@@ -156,8 +156,7 @@ class ReportBuilderFFT(ReportBuilderBase):
                'minkowski', 'rogerstanimoto', 'russellrao', 'seuclidean',
                'sokalmichener', 'sokalsneath', 'sqeuclidean', 'yule'}
 
-    def __init__(self, outputRoot=None, outputNamePrefix=None,
-                 sampleSize=1000, distanceMetric='correlation', *reports):
+    def __init__(self, *reports, **kwargs):
         """
         Parameters
         ----------
@@ -180,11 +179,12 @@ class ReportBuilderFFT(ReportBuilderBase):
             Any number of reports to be added from start
         """
         super(ReportBuilderFFT, self).__init__(
-            outputRoot=outputRoot, outputNamePrefix=outputNamePrefix,
-            *reports)
+            *reports, **kwargs)
 
-        self.sampleSize = sampleSize
-        self.distanceMetric = distanceMetric
+        self.sampleSize = 'sampleSize' in kwargs and kwargs['sampleSize'] or \
+            1000
+        self.distanceMetric = 'distanceMetric' in kwargs and \
+            kwargs['distanceMetric'] or 'correlation'
 
     @property
     def distanceMetric(self):
@@ -304,8 +304,7 @@ class ReportBuilderPositionAverage(ReportBuilderBase):
     ReportBuilderBase
         Base class which implements some more attributes.
     """
-    def __init__(self, outputRoot=None, outputNamePrefix=None,
-                 undecidedValue=0.5, *reports):
+    def __init__(self, *reports, **kwargs):
         """
         Parameters
         ----------
@@ -325,11 +324,10 @@ class ReportBuilderPositionAverage(ReportBuilderBase):
             Any number of reports to be added from start
         """
 
-        super(ReportBuilderPositionAverage, self).__init__(
-            outputRoot=outputRoot, outputNamePrefix=outputNamePrefix,
-            *reports)
+        super(ReportBuilderPositionAverage, self).__init__(*reports, **kwargs)
 
-        self.undecidedValue = undecidedValue
+        self.undecidedValue = 'undecidedValue' in kwargs and \
+            kwargs['undecidedValue'] or 0.5
 
     @property
     def undecidedValue(self):
