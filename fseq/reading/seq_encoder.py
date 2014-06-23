@@ -385,6 +385,12 @@ class SeqEncoder(object):
             Index for where the parse output should be written in the `out`
             array such that `out[outIndex]` gives a sufficiently large array
             that the result of parsing will fit in it.
+
+        Raises
+        ------
+
+        NotImplemented
+            If base class parse not overwritten or base class used directly
         """
 
         raise NotImplemented("`SeqEncoder.parse` should be overwritten")
