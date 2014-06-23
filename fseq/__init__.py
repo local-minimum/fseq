@@ -87,4 +87,3 @@ from fseq.reporting.report_builder import ReportBuilderBase, \
     ReportBuilderPositionAverage, ReportBuilderFFT
 
 from fseq.reporting.reports import ReportBase, LinePlot, HeatMap
-
