@@ -375,5 +375,107 @@ class TestSeqFormatDetector(unittest.TestCase):
         self.assertFalse(d.compatible(e))
 
     
+class TestEncoder(unittest.TestCase):
+
+
+    def test_useSequence(self):
+
+        e = fseq.SeqEncoder()
+
+        self.assertTrue(e.useSequence)
+
+        e.useSequence = False
+
+        self.assertFalse(e.useSequence)
+
+        e.useSequence = True
+
+        self.assertTrue(e.useSequence)
+
+    def test_useQuality(self):
+
+        e = fseq.SeqEncoder()
+
+        self.assertFalse(e.useQuality)
+
+        e.useQuality = True
+
+        self.assertTrue(e.useQuality)
+
+        e.useQuality = False
+
+        self.assertFalse(e.useQuality)
+
+    def test_seqEncoding(self):
+
+        self.assertIs(fseq.SeqEncoder().sequenceEncoder, None)
+
+        se = {}
+
+        e = fseq.SeqEncoder(sequenceEncoder=se)
+
+        self.assertIs(e.sequenceEncoder, se)
+
+        se = {'A': 1}
+
+        e.sequenceEncoder = se
+
+        self.assertIs(e.sequenceEncoder, se)
+
+        with self.assertRaises(TypeError):
+            e.sequenceEncoder = []
+
+    def test_qualEncoding(self):
+
+        self.assertIs(fseq.SeqEncoder().qualityEncoding, None)
+
+        qe = {}
+        e = fseq.SeqEncoder(qualityEncoding=qe)
+
+        self.assertIs(e, qe)
+
+        qe = {'a': 1}
+
+        e.qualityEncoding = qe
+
+        self.assertIs(e, qe)
+
+        with self.assertRaises(TypeError):
+            e.qualityEncoding = []
+
+    def test_expectedFormat(self):
+
+        e = fseq.SeqEncoder()
+
+        self.assertIs(e.format, None)
+
+        f = fseq.FastQ()
+
+        e = fseq.SeqEncoder(expectedInputFormat=f)
+
+        self.assertIsInstance(e.format, fseq.SeqFormatDetector)
+
+        self.assertEqual(e.format.format, f.name)
+
+        self.assertTrue(e.initiated)
+
+    def test_reset(self):
+
+        e = fseq.SeqEncoder(expectedInputFormat=f)
+
+        e.reset()
+
+        self.assertFalse(e.initiated)
+
+        self.assertIs(e.format, None)
+
+    def test_parseRaises(self):
+
+        self.assertRaises(NotImplemented, fseq.SeqEncoder().parse,
+                          None, None, None)
+
+        
+
+
 if __name__ == '__main__':
     unittest.main()
