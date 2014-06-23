@@ -408,22 +408,22 @@ class TestEncoder(unittest.TestCase):
 
     def test_seqEncoding(self):
 
-        self.assertIs(fseq.SeqEncoder().sequenceEncoder, None)
+        self.assertIs(fseq.SeqEncoder().sequenceEncoding, None)
 
         se = {}
 
-        e = fseq.SeqEncoder(sequenceEncoder=se)
+        e = fseq.SeqEncoder(sequenceEncoding=se)
 
-        self.assertIs(e.sequenceEncoder, se)
+        self.assertIs(e.sequenceEncoding, se)
 
         se = {'A': 1}
 
-        e.sequenceEncoder = se
+        e.sequenceEncoding = se
 
-        self.assertIs(e.sequenceEncoder, se)
+        self.assertIs(e.sequenceEncoding, se)
 
         with self.assertRaises(TypeError):
-            e.sequenceEncoder = []
+            e.sequenceEncoding = []
 
     def test_qualEncoding(self):
 
@@ -461,7 +461,7 @@ class TestEncoder(unittest.TestCase):
 
     def test_reset(self):
 
-        e = fseq.SeqEncoder(expectedInputFormat=f)
+        e = fseq.SeqEncoder(expectedInputFormat=fseq.FastQ())
 
         e.reset()
 
@@ -471,9 +471,8 @@ class TestEncoder(unittest.TestCase):
 
     def test_parseRaises(self):
 
-        self.assertRaises(NotImplemented, fseq.SeqEncoder().parse,
-                          None, None, None)
-
+        with self.assertRaises(NotImplementedError):
+            fseq.SeqEncoder().parse(None, None, None)
         
 
 
