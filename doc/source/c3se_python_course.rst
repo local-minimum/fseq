@@ -5,9 +5,19 @@ Abstract
 --------
 
 *fSeq* was created for the C3SE Graduate Course [c3se]_, in part for want of
-suitable existing project or code base. Therefor only part of the course content
+suitable existing project or code base.
+Therefor only part of the course content
 could be covered -- ``numpy``, ``scipy``, ``matplotlib``, ``unittest`` and
 ``sphinx`` being the most prominent.
+It is a versitile and efficient tool to build future sequence analyses into.
+The package contains classes to do simple per base analysis of the data as is
+existing elsewere in e.g. [fastqc]_.
+However, it also extends sequence quality analysis with heatmaps of 
+clustered fourier data, which to the best of my knownledge, is novel to the
+field.
+These reflect previously identified issues of sequence data but also introduces
+new frequency features, which requires further investigation.
+
 
 Solution Method
 ---------------
