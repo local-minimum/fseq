@@ -29,11 +29,13 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.pardir, os.pardir)))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.autosummary',
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
     'sphinx.ext.coverage',
     'sphinx.ext.pngmath',
     'sphinx.ext.viewcode',
+    'numpydoc',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -99,6 +101,10 @@ pygments_style = 'sphinx'
 # If true, keep warnings as "system message" paragraphs in the built documents.
 #keep_warnings = False
 
+# In compliance with suggested soulution on
+# http://stackoverflow.com/questions/12206334/sphinx-autosummary-toctree-contains-reference-to-nonexisting-document-warnings
+# To resolove issues with autodoc and numpydoc
+numpydoc_show_class_members = False
 
 # -- Options for HTML output ----------------------------------------------
 

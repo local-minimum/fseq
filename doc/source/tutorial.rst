@@ -6,11 +6,11 @@ Installing
 
 The program is installed for current user by running::
 
-    python setup.py install --user
+    $ python setup.py install --user
 
 Or for all users by running::
 
-    sudo python setup.py install
+    $ sudo python setup.py install
 
 The following dependencies needs to be installed seperately::
 
@@ -18,14 +18,14 @@ The following dependencies needs to be installed seperately::
 
 On debian systems copy::
 
-    sudo apt-get update && sudo apt-get install python-numpy python-scipy python-matplotlib
+    $ sudo apt-get update && sudo apt-get install python-numpy python-scipy python-matplotlib
 
 Command Line Use
 ----------------
 
 The following example runs default analysis on two different files::
 
-    >fseq ~/Data/Mysc_24_ATCACG_L008_R1_001.fastq ~/Data/Mysc_74_GTTTCG_L008_R1_001.fastq
+    $ fseq ~/Data/Mysc_24_ATCACG_L008_R1_001.fastq ~/Data/Mysc_74_GTTTCG_L008_R1_001.fastq
     14-06-23 17:55 SeqReader    INFO     Has 2 jobs
     14-06-23 17:55 SeqReader    INFO     Reading: /home/martin/Data/Mysc_24_ATCACG_L008_R1_001.fastq
     14-06-23 17:57 SeqReader    INFO     Reading Complete: /home/martin/Data/Mysc_24_ATCACG_L008_R1_001.fastq
@@ -47,6 +47,14 @@ The following example runs default analysis on two different files::
     Saving -> /home/martin/Data/Mysc_74_GTTTCG_L008_R1_001.fastq.reports/average.lacking.line.pdf
     Saving -> /home/martin/Data/Mysc_74_GTTTCG_L008_R1_001.fastq.reports/average.not-lacking.line.pdf
     14-06-23 18:03 SeqReader    INFO     All jobs complete`
+
+**Note:** Running above consumes quite a lot of memory and cpu and takes about
+10 minutes.
+
+**Note:** If ``fseq`` is not found on your system, it usually is due to the 
+default target of scripts for user install is not in your PATH.
+To ammend this, check where install copied the file `scripts/fseq` and append
+that to your current PATH.
 
 Python Use
 ----------

@@ -1,0 +1,450 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fSeq Project Report for C3SE Graduate Course: Python and High Performance Computing 2014 &mdash; fSeq 1.0.0a documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="fSeq 1.0.0a documentation" href="index.html" />
+    <link rel="next" title="License" href="license.html" />
+    <link rel="prev" title="Developers" href="developers.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="license.html" title="License"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="developers.html" title="Developers"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">fSeq 1.0.0a documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="fseq-project-report-for-c3se-graduate-course-python-and-high-performance-computing-2014">
+<h1>fSeq Project Report for C3SE Graduate Course: Python and High Performance Computing 2014<a class="headerlink" href="#fseq-project-report-for-c3se-graduate-course-python-and-high-performance-computing-2014" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p><em>fSeq</em> was created for the C3SE Graduate Course <a class="reference internal" href="#c3se" id="id1">[c3se]</a>, in part for want of
+suitable existing project or code base. Therefor only part of the course content
+could be covered &#8211; <tt class="docutils literal"><span class="pre">numpy</span></tt>, <tt class="docutils literal"><span class="pre">scipy</span></tt>, <tt class="docutils literal"><span class="pre">matplotlib</span></tt>, <tt class="docutils literal"><span class="pre">unittest</span></tt> and
+<tt class="docutils literal"><span class="pre">sphinx</span></tt> being the most prominent.</p>
+</div>
+<div class="section" id="solution-method">
+<h2>Solution Method<a class="headerlink" href="#solution-method" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="design-analysis">
+<h3>Design Analysis<a class="headerlink" href="#design-analysis" title="Permalink to this headline">¶</a></h3>
+<p>The task was split up into several well defined components:</p>
+<ul>
+<li><p class="first"><strong>Reading data</strong></p>
+<p>This feature can be held generic, it will need to be able to talk to
+both encoders and format detectors on one side as well as post-processing
+classes on the other.</p>
+<p>The class can do several parts in parallell:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Reading data from file</li>
+<li>Encoding chunks of data</li>
+<li>Reporting on encoded data</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Detecting input data format</strong></p>
+<p>To be able to support several formats and allow for future extension of
+formats supported, the task should be separated into <cite>selecting suitable
+detector</cite> among a collection of format collectors and <cite>detecting particular
+formats</cite>.</p>
+<p>The latter should have a common interface for the former to use, thus a
+base class that the detectors can subclass is suitable.</p>
+<p>The logic of the formats differ enough that making a factory design pattern
+would probably require more than is gained.</p>
+</li>
+<li><p class="first"><strong>Encoding input</strong></p>
+<p>Potentially there is an unknown number of ways to encode the data.</p>
+<p>The data reader needs an interface where objects can be sent such that
+no concurrency issues can arise, that is, it may not alter the state.
+This interface needs to be common to all encoders.</p>
+<p>To simplify the use, the encoder can manage its format detector</p>
+<p>The encoder can suggest default post-processors to be coupled with it in
+the reader.
+This will make the invocation less transparent, but greatly reduce the
+workload of the user.
+Thus the user must be able to override the default coupling, and this
+manner must be clear.</p>
+</li>
+<li><p class="first"><strong>Post-processing encoded input</strong></p>
+<p>One type of encoding can potentially be used for several downstream analyses.
+However, it is not inherently clear if some aspects should be done by the
+encoder directly or the post-processing class.</p>
+<p>The post-processing class should coordinate all outputs made from its data.</p>
+<p>It should assist in naming and annotation to clarify the contents of the
+report.</p>
+<p>Reports from one post-processor should be grouped by file name.</p>
+<p>Post-processors need to have a common interface that doesn&#8217;t alter the state
+for the reader to use.</p>
+</li>
+<li><p class="first"><strong>Producing outputs</strong></p>
+<p>Dependence on graphics libraries such as <tt class="docutils literal"><span class="pre">matplotlib</span></tt> should be restricted
+to the output generators.</p>
+<p>These classes also need to have a common interface for the post-processors
+and may not alter the state (due to concurrencies).</p>
+<p>An output producer should be reusable for several post-processors.</p>
+</li>
+</ul>
+<div class="section" id="general">
+<h4>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h4>
+<p>The default invokation of analysis should require a minimum of user input.
+For each deviation for what is considered <em>default</em>, a new set of default
+behaviours should exist.</p>
+<p>The interdependence of the classes should be kept simple and clean such that
+each class can be instatiated and as a maximum be needed as a parameter to
+one other class.</p>
+<p>The complete setup and configuration of a class should be possible via its
+constructor and methods returning <tt class="docutils literal"><span class="pre">self</span></tt> such that all imaginable
+combinations of settings can be setup and run in a single line.</p>
+</div>
+</div>
+<div class="section" id="parallellism">
+<h3>Parallellism<a class="headerlink" href="#parallellism" title="Permalink to this headline">¶</a></h3>
+<p>As described above, the main target for explicit coding of parallell computing
+is the reader object.</p>
+<p>To be able to easily share the data storing <tt class="docutils literal"><span class="pre">numpy.ndarray</span></tt>, <tt class="docutils literal"><span class="pre">treading</span></tt> was
+selected. Other considered modules were <tt class="docutils literal"><span class="pre">multiprocessing</span></tt> and <tt class="docutils literal"><span class="pre">pycuda</span></tt>,
+however due to limitations in implementation time the former was used.</p>
+<p>Still parallellism poses several issues, the size of the array cannot be
+changed without creating a new object, while the needed size cannot be known
+before the contents of the file has been read.
+If the whole file is scanned, reading is impossible due to the large amount of
+memory needed, a large benefit of threading would have been lost.</p>
+<p>Therefore, a design was opted for where the main thread creates a large array
+and several threads are used to fill that array up from data read from the
+source file.
+When the array is full, the main thread must pause, reading data and wait for
+all live theads to finnish, after which the array can be extended.
+Then, reading and threading can start again.</p>
+</div>
+<div class="section" id="unittesting">
+<h3>Unittesting<a class="headerlink" href="#unittesting" title="Permalink to this headline">¶</a></h3>
+<p>Test driven development <a class="reference internal" href="#tdd" id="id2">[tdd]</a> was considered, but as development and
+especially design time was exteremely limited, testing was decided to:</p>
+<ul class="simple">
+<li>Verify all isolated behaviours</li>
+<li>Verify all interdependent behaviours that don&#8217;t require running the
+entire analysis nor would produce files on the hard drive.</li>
+</ul>
+<p>The tests were decided to be placed inside the package but not be part
+of the distribution.</p>
+</div>
+<div class="section" id="documentation">
+<h3>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h3>
+<p>The documentation of the code should be compatible with <tt class="docutils literal"><span class="pre">sphinx</span></tt> <a class="reference internal" href="#sphinx" id="id3">[sphinx]</a>
+and follow the <tt class="docutils literal"><span class="pre">numpydoc</span></tt> <a class="reference internal" href="#npd" id="id4">[npd]</a> standard of restructured text <a class="reference internal" href="#rst" id="id5">[rst]</a>.</p>
+</div>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="package-structure">
+<h3>Package structure<a class="headerlink" href="#package-structure" title="Permalink to this headline">¶</a></h3>
+<p>The relevant folder tree for the package was devised as follows:</p>
+<ul>
+<li><p class="first">fseq (root of <em>git</em>-repository)</p>
+<blockquote>
+<div><ul>
+<li><p class="first">fseq (package/source root)</p>
+<blockquote>
+<div><ul class="simple">
+<li>reading</li>
+<li>reporting</li>
+<li>tests (testings modules, not included in distribution)</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">scripts (run-scripts installed)</p>
+</li>
+<li><p class="first">doc (sphinx-documentation)</p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>The <cite>setup.py</cite> file was structured so that the scripts in the script folder
+were installed as executionables so that the package can be run as a stand
+alone command line program.</p>
+<p>A <cite>MANIFEST.in</cite> was created in accordance with <tt class="docutils literal"><span class="pre">distutil</span></tt>&#8216;s recommendations
+<a class="reference internal" href="#distutil" id="id6">[distutil]</a> to allow for distrubution of packages via the <cite>setup.py</cite> file.
+The tests in the <cite>testing</cite> folder were purposely kept out of packaging as they
+were not considered part of the deployment code, but rather the development
+source code.</p>
+</div>
+<div class="section" id="design">
+<h3>Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h3>
+<p>The structure and interfaces of the classes kept as designed, making the
+following basic types:</p>
+<ul>
+<li><p class="first"><tt class="docutils literal"><span class="pre">SeqReader</span></tt></p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">SeqEncoder</span></tt> to encode data and manage format detection if not predefined.</p>
+<p>A specific subclass <tt class="docutils literal"><span class="pre">SeqEncoderGC</span></tt> was made to fulfill the goal of doing
+GC-analysis</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">SeqFormat</span></tt> the object that detects specific formats for which three
+different formats are supported <tt class="docutils literal"><span class="pre">FastaSingleline</span></tt>, <tt class="docutils literal"><span class="pre">FastaMultiline</span></tt>,
+and <tt class="docutils literal"><span class="pre">FastQ</span></tt></p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">SeqFormatDetector</span></tt> to select which format an imput stream is.</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">ReportBuilderBase</span></tt> the post-processing coordinator, for which two
+specific post-processors were created to allow <tt class="docutils literal"><span class="pre">fseq</span></tt> to produce usable
+fourier reports: <tt class="docutils literal"><span class="pre">ReportBuilderFFT</span></tt> and <tt class="docutils literal"><span class="pre">ReportBuilderPositionAverage</span></tt>.</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">ReportBase</span></tt> conforms with output producer, for which two specific
+graph producers (<tt class="docutils literal"><span class="pre">LinePlot</span></tt> and <tt class="docutils literal"><span class="pre">HeatMap</span></tt>) were created.</p>
+</li>
+</ul>
+<p>To comply with the general design criteria, all relevant classes are imported
+into the package root such that the user only needs to use <tt class="docutils literal"><span class="pre">import</span> <span class="pre">fseq</span></tt>.</p>
+<p>Default behaviour is simple as the following is sufficient:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fseq</span><span class="o">.</span><span class="n">SeqReader</span><span class="p">(</span><span class="n">dataSourcePaths</span><span class="o">=</span><span class="s">&quot;some/path/to/file.fastq&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Further, full customization can be performed and expressed in a single line.
+The expression can also be split to severao lines increase readability.</p>
+</div>
+<div class="section" id="unittests">
+<h3>Unittests<a class="headerlink" href="#unittests" title="Permalink to this headline">¶</a></h3>
+<p>In total 78 different tests were created in four different files.
+Each file corresponding to one of the four modules in the package.
+A test exclusively tested one aspect of the functionality, but many of the tests
+asserted more than one behaviour for that aspect.</p>
+<p>For example, <tt class="docutils literal"><span class="pre">TestSeqFormatDetector.test_FormatUnknown</span></tt> that ascertains that
+an exception is raised for when the detector runs out of available formats both
+when it was initiated with and without a forced format.</p>
+</div>
+<div class="section" id="id7">
+<h3>Documentation<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>All classes were fully documented as decided and several <tt class="docutils literal"><span class="pre">sphinx</span></tt> used to
+produce a complete documentation with several supporting extra documents.</p>
+</div>
+</div>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="technical-results">
+<h3>Technical results<a class="headerlink" href="#technical-results" title="Permalink to this headline">¶</a></h3>
+<p>A run took less than 10 minutes on a standard Intel i5 desktop with 4GB
+RAM and a 2TB HDD. Typically more than 100% CPU was used, though during
+resizing of the array, a dipping of CPU was clear due to main thread waiting
+for all threads to join. The memory usage peaked around 75% when using 16-bit
+float point precision, in <cite>numpy</cite>.
+With default settings, five report pdf:s were created for each file analysed.</p>
+<p>The unittests typically ran for a fraction of a second and succeded in reporting
+previously undetected errors as well as allerting to inconsistencies caused by
+minor changes of interfaces during development.</p>
+</div>
+<div class="section" id="analysis-of-two-files">
+<h3>Analysis of two files<a class="headerlink" href="#analysis-of-two-files" title="Permalink to this headline">¶</a></h3>
+<p>Two real data files were analysed <cite>Mysc_24_ATCACG_L008_R1_001.fastq</cite> and
+<cite>Mysc_74_GTTTCG_L008_R1_001.fastq</cite>.
+The two files were multiplexed in the same Illumina MiSeq lane, but are two
+distinct species.
+Therefore, technical aspects of the sequencing can possibly be seen as
+recurring features in the two, while aspects pertaining to the DNA in each
+sample should be private.</p>
+<p>As an example, the occurancy of undecided nucleotides is highly concurrent in
+both data files:
+<a class="reference download internal" href="_downloads/average.lacking.line.pdf"><tt class="xref download docutils literal"><span class="pre">Mysc</span> <span class="pre">24</span></tt></a>
+<a class="reference download internal" href="_downloads/average.lacking.line1.pdf"><tt class="xref download docutils literal"><span class="pre">Mysc</span> <span class="pre">74</span></tt></a></p>
+<p>While the GC bias over the two files are distictly different:
+<a class="reference download internal" href="_downloads/average.not-lacking.line.pdf"><tt class="xref download docutils literal"><span class="pre">Mysc</span> <span class="pre">24</span></tt></a>
+<a class="reference download internal" href="_downloads/average.not-lacking.line1.pdf"><tt class="xref download docutils literal"><span class="pre">Mysc</span> <span class="pre">74</span></tt></a></p>
+<p>The <cite>Myst 24</cite> having a highly structured bias as averaged over the ~5M reads.</p>
+<p>The random sample of 1000 reads, Fourier Transformed and clustered based on
+their amplitudes show little obvious structure in their angles:</p>
+<p><a class="reference download internal" href="_downloads/fft-sample.angle.heatmap.pdf"><tt class="xref download docutils literal"><span class="pre">Mysc</span> <span class="pre">24</span></tt></a>
+<a class="reference download internal" href="_downloads/fft-sample.angle.heatmap1.pdf"><tt class="xref download docutils literal"><span class="pre">Mysc</span> <span class="pre">74</span></tt></a></p>
+<p>While the corresponding amplitudes for the same 1000 reads share two clear
+features. First, for the 0-frequency, an obvious large spread in overall GC
+bias is evident with a small subset of around 90% GC a majority around 40-50
+and another smaller cluster close to 0%. The second feature, which shows clearly
+in both is that the 1/34 frequency and its neighbours behave distinctively.</p>
+<p><a class="reference download internal" href="_downloads/fft-sample.abs.heatmap.pdf"><tt class="xref download docutils literal"><span class="pre">Mysc</span> <span class="pre">24</span></tt></a>
+<a class="reference download internal" href="_downloads/fft-sample.abs.heatmap1.pdf"><tt class="xref download docutils literal"><span class="pre">Mysc</span> <span class="pre">74</span></tt></a></p>
+</div>
+</div>
+<div class="section" id="discussion">
+<h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this headline">¶</a></h2>
+<p>todo</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<table class="docutils citation" frame="void" id="c3se" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[c3se]</a></td><td><a class="reference external" href="http://www.c3se.chalmers.se/index.php/Python_and_High_Performance_Computing_2014">http://www.c3se.chalmers.se/index.php/Python_and_High_Performance_Computing_2014</a></td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="distutil" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[distutil]</a></td><td><a class="reference external" href="https://docs.python.org/2/distutils/sourcedist.html#the-manifest-in-template">https://docs.python.org/2/distutils/sourcedist.html#the-manifest-in-template</a></td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="tdd" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[tdd]</a></td><td><a class="reference external" href="http://en.wikipedia.org/wiki/Test-driven_development">http://en.wikipedia.org/wiki/Test-driven_development</a></td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="npd" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[npd]</a></td><td><a class="reference external" href="https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt#common-rest-concepts">https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt#common-rest-concepts</a></td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="sphinx" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[sphinx]</a></td><td><a class="reference external" href="http://sphinx-doc.org/">http://sphinx-doc.org/</a></td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="rst" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[rst]</a></td><td><a class="reference external" href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#bullet-lists">http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#bullet-lists</a></td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="appendix-a-project-plan">
+<h2>Appendix A: Project Plan<a class="headerlink" href="#appendix-a-project-plan" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference download internal" href="_downloads/projectPlan.pdf"><tt class="xref download docutils literal"><span class="pre">project</span> <span class="pre">plan</span></tt></a> submitted for the project.</p>
+</div>
+<div class="section" id="appendix-b-code">
+<h2>Appendix B: Code<a class="headerlink" href="#appendix-b-code" title="Permalink to this headline">¶</a></h2>
+<p>The current code is accessible from <em>Gitorious</em> at:</p>
+<p><a class="reference external" href="https://gitorious.org/fseq">https://gitorious.org/fseq</a></p>
+<p>Alternatively</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">fSeq Project Report for C3SE Graduate Course: Python and High Performance Computing 2014</a><ul>
+<li><a class="reference internal" href="#abstract">Abstract</a></li>
+<li><a class="reference internal" href="#solution-method">Solution Method</a><ul>
+<li><a class="reference internal" href="#design-analysis">Design Analysis</a><ul>
+<li><a class="reference internal" href="#general">General</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#parallellism">Parallellism</a></li>
+<li><a class="reference internal" href="#unittesting">Unittesting</a></li>
+<li><a class="reference internal" href="#documentation">Documentation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#implementation">Implementation</a><ul>
+<li><a class="reference internal" href="#package-structure">Package structure</a></li>
+<li><a class="reference internal" href="#design">Design</a></li>
+<li><a class="reference internal" href="#unittests">Unittests</a></li>
+<li><a class="reference internal" href="#id7">Documentation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#results">Results</a><ul>
+<li><a class="reference internal" href="#technical-results">Technical results</a></li>
+<li><a class="reference internal" href="#analysis-of-two-files">Analysis of two files</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#discussion">Discussion</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+<li><a class="reference internal" href="#appendix-a-project-plan">Appendix A: Project Plan</a></li>
+<li><a class="reference internal" href="#appendix-b-code">Appendix B: Code</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="developers.html"
+                        title="previous chapter">Developers</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="license.html"
+                        title="next chapter">License</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/c3se_python_course.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="license.html" title="License"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="developers.html" title="Developers"
+             >previous</a> |</li>
+        <li><a href="index.html">fSeq 1.0.0a documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Martin Zackrisson.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

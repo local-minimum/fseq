@@ -59,8 +59,54 @@
 <p>Base class for common report builder features.</p>
 <p>Most prominently, the distill-method needs to be implemented in
 subclasses to make much sence in most use cases.</p>
-<p>outputRoot
-outputNamePrefix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>outputRoot: str, optional</strong></p>
+<blockquote>
+<div><p>Path to the directory where all reports should be put</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+</div></blockquote>
+<p><strong>outputNamePrefix: str, optional</strong></p>
+<blockquote>
+<div><p>Partial name to be added to all reports done by the builder</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+</div></blockquote>
+<p><strong>*reports: objects, optional</strong></p>
+<blockquote class="last">
+<div><p>Any number of reports to be added from start</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reporting.report_builder.ReportBuilderBase.outputRoot" title="fseq.reporting.report_builder.ReportBuilderBase.outputRoot"><tt class="xref py py-obj docutils literal"><span class="pre">outputRoot</span></tt></a></td>
+<td>The base for saving out reports: str</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#fseq.reporting.report_builder.ReportBuilderBase.outputNamePrefix" title="fseq.reporting.report_builder.ReportBuilderBase.outputNamePrefix"><tt class="xref py py-obj docutils literal"><span class="pre">outputNamePrefix</span></tt></a></td>
+<td>Partial file name to prepend the individual reports: str</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="60%" />
+<col width="40%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>DEFAULT_REPORTS</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
 <dl class="attribute">
 <dt id="fseq.reporting.report_builder.ReportBuilderBase.DEFAULT_REPORTS">
 <tt class="descname">DEFAULT_REPORTS</tt><em class="property"> = ()</em><a class="headerlink" href="#fseq.reporting.report_builder.ReportBuilderBase.DEFAULT_REPORTS" title="Permalink to this definition">¶</a></dt>
@@ -71,15 +117,27 @@ outputNamePrefix</p>
 <tt class="descname">addReports</tt><big>(</big><em>*reports</em><big>)</big><a class="reference internal" href="_modules/fseq/reporting/report_builder.html#ReportBuilderBase.addReports"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reporting.report_builder.ReportBuilderBase.addReports" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds any number of reports given that the reports exposes a 
 distill method.</p>
-<p><a href="#id1"><span class="problematic" id="id2">*</span></a>reports: objects, optional</p>
-<dl class="docutils">
-<dt>fseq.ReportBuilderBase</dt>
-<dd>Returns <cite>self</cite></dd>
-</dl>
-<dl class="docutils">
-<dt>ValueError</dt>
-<dd>If a report lacks a method named <cite>distill</cite> or can&#8217;t be hashed</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>*reports: objects, optional</strong></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">fseq.ReportBuilderBase</p>
+<blockquote>
+<div><p>Returns <tt class="docutils literal"><span class="pre">self</span></tt></p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>ValueError</strong></p>
+<blockquote class="last">
+<div><p>If a report lacks a method named <tt class="docutils literal"><span class="pre">distill</span></tt> or can&#8217;t be hashed</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -88,13 +146,21 @@ distill method.</p>
 <dd><p>The base distiller will not process any data passed to it,
 it will send all arguments and keyword arguments to the individual
 reports.</p>
-<p>If either <cite>outputRoot</cite> or <cite>outputNamePrefix</cite> are passed as kwargs,
+<p>If either <tt class="docutils literal"><span class="pre">outputRoot</span></tt> or <tt class="docutils literal"><span class="pre">outputNamePrefix</span></tt> are passed as kwargs,
 the corresponding values preset in the system will be added to the
 kwargs sent to the subreports.</p>
-<dl class="docutils">
-<dt>fseq.ReportBuilderBase</dt>
-<dd>Returns <cite>self</cite></dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">fseq.ReportBuilderBase</p>
+<blockquote class="last">
+<div><p>Returns <tt class="docutils literal"><span class="pre">self</span></tt></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -116,12 +182,62 @@ kwargs sent to the subreports.</p>
 <em class="property">class </em><tt class="descclassname">fseq.reporting.report_builder.</tt><tt class="descname">ReportBuilderFFT</tt><big>(</big><em>*reports</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/fseq/reporting/report_builder.html#ReportBuilderFFT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reporting.report_builder.ReportBuilderFFT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#fseq.reporting.report_builder.ReportBuilderBase" title="fseq.reporting.report_builder.ReportBuilderBase"><tt class="xref py py-class docutils literal"><span class="pre">fseq.reporting.report_builder.ReportBuilderBase</span></tt></a></p>
 <p>Samples part of data set and performs FFT-based analysis on it.</p>
-<p>distanceMetric
-sampleSize</p>
-<dl class="docutils">
-<dt>ReportBuilderBase</dt>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>outputRoot: str, optional</strong></p>
+<blockquote>
+<div><p>Path to the directory where all reports should be put</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+</div></blockquote>
+<p><strong>outputNamePrefix: str, optional</strong></p>
+<blockquote>
+<div><p>Partial name to be added to all reports done by the builder</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+</div></blockquote>
+<p><strong>sampleSize: int, optional</strong></p>
+<blockquote>
+<div><p>Size of sample to be randomly drawn</p>
+<p>(Default: 1000)</p>
+</div></blockquote>
+<p><strong>distanceMetric: str, optional</strong></p>
+<blockquote>
+<div><p>Name of distance metric to be used.
+See <tt class="docutils literal"><span class="pre">METRICS</span></tt>-attribute for allowed metrics.</p>
+<p>(Default: &#8216;correlation&#8217;)</p>
+</div></blockquote>
+<p><strong>*reports: objects, optional</strong></p>
+<blockquote class="last">
+<div><p>Any number of reports to be added from start</p>
+<p>(Default: A fseq.HeatMap)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="#fseq.reporting.report_builder.ReportBuilderBase" title="fseq.reporting.report_builder.ReportBuilderBase"><tt class="xref py py-obj docutils literal"><span class="pre">ReportBuilderBase</span></tt></a></dt>
 <dd>Base class implementing more attributes.</dd>
 </dl>
+</div>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reporting.report_builder.ReportBuilderFFT.distanceMetric" title="fseq.reporting.report_builder.ReportBuilderFFT.distanceMetric"><tt class="xref py py-obj docutils literal"><span class="pre">distanceMetric</span></tt></a></td>
+<td>The ReportBuilderFFT.METRIC used: str</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#fseq.reporting.report_builder.ReportBuilderFFT.sampleSize" title="fseq.reporting.report_builder.ReportBuilderFFT.sampleSize"><tt class="xref py py-obj docutils literal"><span class="pre">sampleSize</span></tt></a></td>
+<td>Size of data subsample to analyze: int</td>
+</tr>
+</tbody>
+</table>
 <dl class="attribute">
 <dt id="fseq.reporting.report_builder.ReportBuilderFFT.DEFAULT_REPORTS">
 <tt class="descname">DEFAULT_REPORTS</tt><em class="property"> = (&lt;class 'fseq.reporting.reports.HeatMap'&gt;,)</em><a class="headerlink" href="#fseq.reporting.report_builder.ReportBuilderFFT.DEFAULT_REPORTS" title="Permalink to this definition">¶</a></dt>
@@ -135,7 +251,8 @@ sampleSize</p>
 <dl class="attribute">
 <dt id="fseq.reporting.report_builder.ReportBuilderFFT.distanceMetric">
 <tt class="descname">distanceMetric</tt><a class="reference internal" href="_modules/fseq/reporting/report_builder.html#ReportBuilderFFT.distanceMetric"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reporting.report_builder.ReportBuilderFFT.distanceMetric" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The ReportBuilderFFT.METRIC used: str</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="fseq.reporting.report_builder.ReportBuilderFFT.distill">
@@ -148,22 +265,36 @@ sampleSize</p>
 <dt>Angle evaluation</dt>
 <dd>A clustered FFT-angle analysis</dd>
 </dl>
-<dl class="docutils">
-<dt>data: numpy.ndarray</dt>
-<dd>The 2D-array of data given</dd>
-<dt>distanceMetric: str, optional</dt>
-<dd>A distance metric to overwrite the default one of the instance.</dd>
-<dt>clusterOnAbsOnly: bool, optional</dt>
-<dd>If clustering should be performed only on the amplitude (abs-values)
-or if amplitude and angle be clustered independently.
-(Default: Cluster only on amplitude)</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data: numpy.ndarray</strong></p>
+<blockquote>
+<div><p>The 2D-array of data given</p>
+</div></blockquote>
+<p><strong>distanceMetric: str, optional</strong></p>
+<blockquote>
+<div><p>A distance metric to overwrite the default one of the instance.</p>
+<p>(Default: Value of <tt class="docutils literal"><span class="pre">self.distanceMetric</span></tt>)</p>
+</div></blockquote>
+<p><strong>clusterOnAbsOnly: bool, optional</strong></p>
+<blockquote class="last">
+<div><p>If clustering should be performed only on the amplitude (abs-values)
+or if amplitude and angle be clustered independently.</p>
+<p>(Default: Cluster only on amplitude)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="fseq.reporting.report_builder.ReportBuilderFFT.sampleSize">
 <tt class="descname">sampleSize</tt><a class="reference internal" href="_modules/fseq/reporting/report_builder.html#ReportBuilderFFT.sampleSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reporting.report_builder.ReportBuilderFFT.sampleSize" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Size of data subsample to analyze: int</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -172,11 +303,54 @@ or if amplitude and angle be clustered independently.
 <em class="property">class </em><tt class="descclassname">fseq.reporting.report_builder.</tt><tt class="descname">ReportBuilderPositionAverage</tt><big>(</big><em>*reports</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/fseq/reporting/report_builder.html#ReportBuilderPositionAverage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reporting.report_builder.ReportBuilderPositionAverage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#fseq.reporting.report_builder.ReportBuilderBase" title="fseq.reporting.report_builder.ReportBuilderBase"><tt class="xref py py-class docutils literal"><span class="pre">fseq.reporting.report_builder.ReportBuilderBase</span></tt></a></p>
 <p>Per position analysis builder.</p>
-<p>undecidedValue</p>
-<dl class="docutils">
-<dt>ReportBuilderBase</dt>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>outputRoot: str, optional</strong></p>
+<blockquote>
+<div><p>Path to the directory where all reports should be put</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+</div></blockquote>
+<p><strong>outputNamePrefix: str, optional</strong></p>
+<blockquote>
+<div><p>Partial name to be added to all reports done by the builder</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+</div></blockquote>
+<p><strong>undecidedValue: int, optional</strong></p>
+<blockquote>
+<div><p>The value for which undecided items were encoded (so it
+can be omited and calculated separately for 2 of 3 graphs).</p>
+<p>(Default: 0.5)</p>
+</div></blockquote>
+<p><strong>*reports: objects, optional</strong></p>
+<blockquote class="last">
+<div><p>Any number of reports to be added from start</p>
+<p>(Default: fseq.LinePlot)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="#fseq.reporting.report_builder.ReportBuilderBase" title="fseq.reporting.report_builder.ReportBuilderBase"><tt class="xref py py-obj docutils literal"><span class="pre">ReportBuilderBase</span></tt></a></dt>
 <dd>Base class which implements some more attributes.</dd>
 </dl>
+</div>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="58%" />
+<col width="42%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>undecidedValue</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
 <dl class="attribute">
 <dt id="fseq.reporting.report_builder.ReportBuilderPositionAverage.DEFAULT_REPORTS">
 <tt class="descname">DEFAULT_REPORTS</tt><em class="property"> = (&lt;class 'fseq.reporting.reports.LinePlot'&gt;,)</em><a class="headerlink" href="#fseq.reporting.report_builder.ReportBuilderPositionAverage.DEFAULT_REPORTS" title="Permalink to this definition">¶</a></dt>
@@ -195,24 +369,40 @@ informations.</p>
 <dt>Average Combined Data</dt>
 <dd>The per position average as encoded.</dd>
 </dl>
-<dl class="docutils">
-<dt>data: numpy.ndarray</dt>
-<dd>An array of numerically encoded sequence information</dd>
-<dt>undecidedValue: float, optional</dt>
-<dd>The value that undecided sequence positions are encoded as.
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data: numpy.ndarray</strong></p>
+<blockquote>
+<div><p>An array of numerically encoded sequence information</p>
+</div></blockquote>
+<p><strong>undecidedValue: float, optional</strong></p>
+<blockquote>
+<div><p>The value that undecided sequence positions are encoded as.
 If not supplied, the previously set value of the class instance
 will be used.
-(Default: 0.5)</dd>
-<dt><a href="#id3"><span class="problematic" id="id4">*</span></a>args:</dt>
-<dd>Any args will be passed to the <cite>ReportBuilderBase.distill</cite></dd>
-<dt><a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs:</dt>
-<dd>Any kwargs will be passed to the <cite>ReportBuilderBase.distill</cite>
-..note:: <cite>outputNamePrefix</cite> will be overwritten/added</dd>
-</dl>
-<dl class="docutils">
-<dt>fseq.ReportBuilderPositionAverage</dt>
-<dd>Returns <cite>self</cite></dd>
-</dl>
+(Default: 0.5)</p>
+</div></blockquote>
+<p><strong>*args:</strong></p>
+<blockquote>
+<div><p>Any args will be passed to the <tt class="docutils literal"><span class="pre">ReportBuilderBase.distill</span></tt></p>
+</div></blockquote>
+<p><strong>**kwargs:</strong></p>
+<blockquote>
+<div><p>Any kwargs will be passed to the <tt class="docutils literal"><span class="pre">ReportBuilderBase.distill</span></tt></p>
+<p><strong>Note:</strong> <tt class="docutils literal"><span class="pre">outputNamePrefix</span></tt> will be overwritten/added</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">fseq.ReportBuilderPositionAverage</p>
+<blockquote class="last">
+<div><p>Returns <tt class="docutils literal"><span class="pre">self</span></tt></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -231,45 +421,119 @@ will be used.
 <em class="property">class </em><tt class="descclassname">fseq.reporting.reports.</tt><tt class="descname">HeatMap</tt><big>(</big><em>name='heatmap.pdf'</em>, <em>saveArgs=()</em>, <em>saveKwargs={}</em><big>)</big><a class="reference internal" href="_modules/fseq/reporting/reports.html#HeatMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reporting.reports.HeatMap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#fseq.reporting.reports.ReportBase" title="fseq.reporting.reports.ReportBase"><tt class="xref py py-class docutils literal"><span class="pre">fseq.reporting.reports.ReportBase</span></tt></a></p>
 <p>Makes heatmaps from data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>name: str, optional</strong></p>
+<blockquote>
+<div><p>A specific name of the report</p>
+<p>(Default: &#8220;heatmap.pdf&#8221;)</p>
+</div></blockquote>
+<p><strong>saveArgs: tuple or list, optional</strong></p>
+<blockquote>
+<div><p>Any args to be passed to <tt class="docutils literal"><span class="pre">matplotlib.savefig</span></tt> after the figure</p>
+<p>(Default: Empty tuple)</p>
+</div></blockquote>
+<p><strong>saveKwargs: dict, optional</strong></p>
+<blockquote class="last">
+<div><p>Any keyword args to be passed to <tt class="docutils literal"><span class="pre">matplotlib.savefig</span></tt></p>
+<p>(Default: Empty dict)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="fseq.reporting.reports.HeatMap.distill">
-<tt class="descname">distill</tt><big>(</big><em>data</em>, <em>name=None</em>, <em>outputRoot=None</em>, <em>outputNamePrefix=None</em>, <em>title=None</em>, <em>text=None</em>, <em>ylabel=None</em>, <em>xlabel=None</em>, <em>saveArgs=()</em>, <em>saveKwargs={}</em>, <em>vmin=None</em>, <em>vmax=None</em>, <em>aspect='auto'</em>, <em>axisOff=True</em>, <em>cmap=&lt;matplotlib.colors.LinearSegmentedColormap object at 0x2b9d0743ad90&gt;</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/fseq/reporting/reports.html#HeatMap.distill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reporting.reports.HeatMap.distill" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">distill</tt><big>(</big><em>data</em>, <em>name=None</em>, <em>outputRoot=None</em>, <em>outputNamePrefix=None</em>, <em>title=None</em>, <em>text=None</em>, <em>ylabel=None</em>, <em>xlabel=None</em>, <em>saveArgs=()</em>, <em>saveKwargs={}</em>, <em>vmin=None</em>, <em>vmax=None</em>, <em>aspect='auto'</em>, <em>axisOff=True</em>, <em>cmap=&lt;matplotlib.colors.LinearSegmentedColormap object at 0x2ba74cd0ac90&gt;</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/fseq/reporting/reports.html#HeatMap.distill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reporting.reports.HeatMap.distill" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates the actual heatmap.</p>
-<dl class="docutils">
-<dt>data: numpy.ndarray</dt>
-<dd>The data to be plotted</dd>
-<dt>name: str, optional</dt>
-<dd>If the default name of the HeatMap instance should be overwritten</dd>
-<dt>outputRoot: str, optional</dt>
-<dd>The directory in which to place the report</dd>
-<dt>outputNamePrefix: str, optional</dt>
-<dd>A prefix to prepend the name when saving the output.</dd>
-<dt>title: str, optional</dt>
-<dd>A title to be put over the heatmap</dd>
-<dt>text: str, optional</dt>
-<dd>An explanatory text to put under the plot</dd>
-<dt>ylabel: str, optional</dt>
-<dd>A label for the y-axis</dd>
-<dt>xlabel: str, optional</dt>
-<dd>A label for the x-axis</dd>
-<dt>saveArgs: tuple or list, optional</dt>
-<dd>A set of arguments to overwrite the instance&#8217;s default save args</dd>
-<dt>saveKwargs: dict, optional</dt>
-<dd>A set of keyword arguments to overwrite the instanc&#8217;s default</dd>
-<dt>vmin: number, optional</dt>
-<dd>To set a minimum color-scale number for the heatmap</dd>
-<dt>vmax: number, optional</dt>
-<dd>To set a maximum color-scale number for the heatmap</dd>
-<dt>aspect: str, optional</dt>
-<dd>The aspect ratio of the blocks/pixels in the heatmap, default
-is &#8216;auto&#8217;, which allows for rectangular pixels.</dd>
-<dt>axisOff: bool, optional</dt>
-<dd>If the axis of the plot should not be rendered
-(Default: True)</dd>
-<dt>cmap: matplotlib.cmap, optional</dt>
-<dd>A colormap to be used when plotting.
-(Default: Red &#8211; Blue)</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data: numpy.ndarray</strong></p>
+<blockquote>
+<div><p>The data to be plotted</p>
+</div></blockquote>
+<p><strong>name: str, optional</strong></p>
+<blockquote>
+<div><p>If the default name of the HeatMap instance should be overwritten</p>
+<p>(Default: Use the value of <tt class="docutils literal"><span class="pre">self.name</span></tt>)</p>
+</div></blockquote>
+<p><strong>outputRoot: str, optional</strong></p>
+<blockquote>
+<div><p>The directory in which to place the report</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+</div></blockquote>
+<p><strong>outputNamePrefix: str, optional</strong></p>
+<blockquote>
+<div><p>A prefix to prepend the name when saving the output.
+Typically set by the builder to indicate what post-processing
+was done to the data shown in the report.</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+</div></blockquote>
+<p><strong>title: str, optional</strong></p>
+<blockquote>
+<div><p>A title to be put over the heatmap
+(Default: <tt class="docutils literal"><span class="pre">None</span></tt>, value automatically scaled by matplotlib)</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+</div></blockquote>
+<p><strong>text: str, optional</strong></p>
+<blockquote>
+<div><p>An explanatory text to put under the plot</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+<p><strong>Note:</strong> This feature has not been implemented yet.</p>
+</div></blockquote>
+<p><strong>ylabel: str, optional</strong></p>
+<blockquote>
+<div><p>A label for the y-axis</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+</div></blockquote>
+<p><strong>xlabel: str, optional</strong></p>
+<blockquote>
+<div><p>A label for the x-axis</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+</div></blockquote>
+<p><strong>saveArgs: tuple or list, optional</strong></p>
+<blockquote>
+<div><p>A set of arguments to overwrite the instance&#8217;s default save args</p>
+<p>(Default: empty tuple)</p>
+</div></blockquote>
+<p><strong>saveKwargs: dict, optional</strong></p>
+<blockquote>
+<div><p>A set of keyword arguments to overwrite the instanc&#8217;s default</p>
+<p>(Default: empty dict)</p>
+</div></blockquote>
+<p><strong>vmin: number, optional</strong></p>
+<blockquote>
+<div><p>To set a minimum color-scale number for the heatmap</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>, value automatically scaled by matplotlib)</p>
+</div></blockquote>
+<p><strong>vmax: number, optional</strong></p>
+<blockquote>
+<div><p>To set a maximum color-scale number for the heatmap</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>, value automatically scaled by matplotlib)</p>
+</div></blockquote>
+<p><strong>aspect: str, optional</strong></p>
+<blockquote>
+<div><p>The aspect ratio of the blocks/pixels in the heatmap</p>
+<p>(Default: &#8216;auto&#8217;, which allows for rectangular pixels)</p>
+</div></blockquote>
+<p><strong>axisOff: bool, optional</strong></p>
+<blockquote>
+<div><p>If the axis of the plot should not be rendered</p>
+<p>(Default: True)</p>
+</div></blockquote>
+<p><strong>cmap: matplotlib.cmap, optional</strong></p>
+<blockquote class="last">
+<div><p>A colormap to be used when plotting.</p>
+<p>(Default: Red &#8211; Blue)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -279,42 +543,119 @@ is &#8216;auto&#8217;, which allows for rectangular pixels.</dd>
 <em class="property">class </em><tt class="descclassname">fseq.reporting.reports.</tt><tt class="descname">LinePlot</tt><big>(</big><em>name='line.pdf'</em>, <em>saveArgs=()</em>, <em>saveKwargs={}</em><big>)</big><a class="reference internal" href="_modules/fseq/reporting/reports.html#LinePlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reporting.reports.LinePlot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#fseq.reporting.reports.ReportBase" title="fseq.reporting.reports.ReportBase"><tt class="xref py py-class docutils literal"><span class="pre">fseq.reporting.reports.ReportBase</span></tt></a></p>
 <p>Makes lines from data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>name: str, optional</strong></p>
+<blockquote>
+<div><p>A specific name of the report</p>
+<p>(Default: &#8220;line.pdf&#8221;)</p>
+</div></blockquote>
+<p><strong>saveArgs: tuple or list, optional</strong></p>
+<blockquote>
+<div><p>Any args to be passed to <tt class="docutils literal"><span class="pre">matplotlib.savefig</span></tt> after the figure</p>
+<p>(Default: Empty tuple)</p>
+</div></blockquote>
+<p><strong>saveKwargs: dict, optional</strong></p>
+<blockquote class="last">
+<div><p>Any keyword args to be passed to <tt class="docutils literal"><span class="pre">matplotlib.savefig</span></tt></p>
+<p>(Default: Empty dict)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="fseq.reporting.reports.LinePlot.distill">
 <tt class="descname">distill</tt><big>(</big><em>data</em>, <em>name=None</em>, <em>outputRoot=None</em>, <em>outputNamePrefix=None</em>, <em>title=None</em>, <em>text=None</em>, <em>ylabel=None</em>, <em>xlabel=None</em>, <em>saveArgs=()</em>, <em>saveKwargs={}</em>, <em>logX=False</em>, <em>logY=False</em>, <em>basex=None</em>, <em>basey=None</em>, <em>labels=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/fseq/reporting/reports.html#LinePlot.distill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reporting.reports.LinePlot.distill" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates the actual heatmap.</p>
-<dl class="docutils">
-<dt>data: numpy.ndarray</dt>
-<dd>The data to be plotted</dd>
-<dt>name: str, optional</dt>
-<dd>If the default name of the HeatMap instance should be overwritten</dd>
-<dt>outputRoot: str, optional</dt>
-<dd>The directory in which to place the report</dd>
-<dt>outputNamePrefix: str, optional</dt>
-<dd>A prefix to prepend the name when saving the output.</dd>
-<dt>title: str, optional</dt>
-<dd>A title to be put over the heatmap</dd>
-<dt>text: str, optional</dt>
-<dd>An explanatory text to put under the plot</dd>
-<dt>ylabel: str, optional</dt>
-<dd>A label for the y-axis</dd>
-<dt>xlabel: str, optional</dt>
-<dd>A label for the x-axis</dd>
-<dt>saveArgs: tuple or list, optional</dt>
-<dd>A set of arguments to overwrite the instance&#8217;s default save args</dd>
-<dt>saveKwargs: dict, optional</dt>
-<dd>A set of keyword arguments to overwrite the instanc&#8217;s default</dd>
-<dt>logX: bool, optional</dt>
-<dd>If X-axis should be logged</dd>
-<dt>logY: bool, optional</dt>
-<dd>If Y-axis should be logged</dd>
-<dt>basex: number, optional</dt>
-<dd>To specify other then 10-base logging</dd>
-<dt>basey: number, optional</dt>
-<dd>To specify other than 10-base logging</dd>
-<dt>labels: str, optional</dt>
-<dd>To name the line plotted and thus add a legend to the plot.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data: numpy.ndarray</strong></p>
+<blockquote>
+<div><p>The data to be plotted</p>
+</div></blockquote>
+<p><strong>name: str, optional</strong></p>
+<blockquote>
+<div><p>If the default name of the HeatMap instance should be overwritten</p>
+<p>(Default: Use the value of <tt class="docutils literal"><span class="pre">self.name</span></tt>)</p>
+</div></blockquote>
+<p><strong>outputRoot: str, optional</strong></p>
+<blockquote>
+<div><p>The directory in which to place the report</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+</div></blockquote>
+<p><strong>outputNamePrefix: str, optional</strong></p>
+<blockquote>
+<div><p>A prefix to prepend the name when saving the output.
+Typically set by the builder to indicate what post-processing
+was done to the data shown in the report.</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+</div></blockquote>
+<p><strong>title: str, optional</strong></p>
+<blockquote>
+<div><p>A title to be put over the heatmap
+(Default: <tt class="docutils literal"><span class="pre">None</span></tt>, value automatically scaled by matplotlib)</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+</div></blockquote>
+<p><strong>text: str, optional</strong></p>
+<blockquote>
+<div><p>An explanatory text to put under the plot</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+<p><strong>Note:</strong> This feature has not been implemented yet.</p>
+</div></blockquote>
+<p><strong>ylabel: str, optional</strong></p>
+<blockquote>
+<div><p>A label for the y-axis</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+</div></blockquote>
+<p><strong>xlabel: str, optional</strong></p>
+<blockquote>
+<div><p>A label for the x-axis</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+</div></blockquote>
+<p><strong>saveArgs: tuple or list, optional</strong></p>
+<blockquote>
+<div><p>A set of arguments to overwrite the instance&#8217;s default save args</p>
+<p>(Default: empty <tt class="docutils literal"><span class="pre">tuple</span></tt>)</p>
+</div></blockquote>
+<p><strong>saveKwargs: dict, optional</strong></p>
+<blockquote>
+<div><p>A set of keyword arguments to overwrite the instanc&#8217;s default</p>
+<p>(Default: empty <tt class="docutils literal"><span class="pre">dict</span></tt>)</p>
+</div></blockquote>
+<p><strong>logX: bool, optional</strong></p>
+<blockquote>
+<div><p>If X-axis should be logged</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">False</span></tt>)</p>
+</div></blockquote>
+<p><strong>logY: bool, optional</strong></p>
+<blockquote>
+<div><p>If Y-axis should be logged</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">False</span></tt>)</p>
+</div></blockquote>
+<p><strong>basex: number, optional</strong></p>
+<blockquote>
+<div><p>To specify other then 10-base logging</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>, uses 10-base)</p>
+</div></blockquote>
+<p><strong>basey: number, optional</strong></p>
+<blockquote>
+<div><p>To specify other than 10-base logging</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>, uses 10-base)</p>
+</div></blockquote>
+<p><strong>labels: str, optional</strong></p>
+<blockquote class="last">
+<div><p>To name the line plotted and thus add a legend to the plot.</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -326,72 +667,157 @@ is &#8216;auto&#8217;, which allows for rectangular pixels.</dd>
 <p>Base class for simple report creations.</p>
 <p>Main purpose is to make a common interface for figure saving using
 matplotlib figures.</p>
-<p>name
-saveArgs
-saveKwargs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>name: str, optional</strong></p>
+<blockquote>
+<div><p>A specific name of the report</p>
+<p>(Default: <tt class="docutils literal"><span class="pre">None</span></tt>)</p>
+</div></blockquote>
+<p><strong>saveArgs: tuple or list, optional</strong></p>
+<blockquote>
+<div><p>Any args to be passed to <tt class="docutils literal"><span class="pre">matplotlib.savefig</span></tt> after the figure</p>
+<p>(Default: Empty <tt class="docutils literal"><span class="pre">tuple</span></tt>)</p>
+</div></blockquote>
+<p><strong>saveKwargs: dict, optional</strong></p>
+<blockquote class="last">
+<div><p>Any keyword args to be passed to <tt class="docutils literal"><span class="pre">matplotlib.savefig</span></tt></p>
+<p>(Default: Empty <tt class="docutils literal"><span class="pre">dict</span></tt>)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reporting.reports.ReportBase.name" title="fseq.reporting.reports.ReportBase.name"><tt class="xref py py-obj docutils literal"><span class="pre">name</span></tt></a></td>
+<td>Name of the plot, used to name the file: str</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#fseq.reporting.reports.ReportBase.saveArgs" title="fseq.reporting.reports.ReportBase.saveArgs"><tt class="xref py py-obj docutils literal"><span class="pre">saveArgs</span></tt></a></td>
+<td>Save args passed to <tt class="docutils literal"><span class="pre">matplotlib.pyplot.figure.savefig</span></tt>: tuple</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reporting.reports.ReportBase.saveKwargs" title="fseq.reporting.reports.ReportBase.saveKwargs"><tt class="xref py py-obj docutils literal"><span class="pre">saveKwargs</span></tt></a></td>
+<td>Save keyword args passed to <tt class="docutils literal"><span class="pre">matplotlib.pyplot.figure.savefig</span></tt>:</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="fseq.reporting.reports.ReportBase.distill">
 <tt class="descname">distill</tt><big>(</big><em>data</em>, <em>outputRoot=None</em>, <em>outputNamePrefix=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/fseq/reporting/reports.html#ReportBase.distill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reporting.reports.ReportBase.distill" title="Permalink to this definition">¶</a></dt>
 <dd><p>Placeholder distill interface not to be used.</p>
-<dl class="docutils">
-<dt>NotImplementedError</dt>
-<dd>Always raises this exception</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>NotImplementedError</strong></p>
+<blockquote class="last">
+<div><p>Always raises this exception</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="fseq.reporting.reports.ReportBase.name">
 <tt class="descname">name</tt><a class="reference internal" href="_modules/fseq/reporting/reports.html#ReportBase.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reporting.reports.ReportBase.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Name of the plot, used to name the file: str</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="fseq.reporting.reports.ReportBase.saveArgs">
 <tt class="descname">saveArgs</tt><a class="reference internal" href="_modules/fseq/reporting/reports.html#ReportBase.saveArgs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reporting.reports.ReportBase.saveArgs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Save args passed to <tt class="docutils literal"><span class="pre">matplotlib.pyplot.figure.savefig</span></tt>: tuple</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="fseq.reporting.reports.ReportBase.saveFig">
 <tt class="descname">saveFig</tt><big>(</big><em>fig</em>, <em>outputRoot</em>, <em>outputNamePrefix</em>, <em>name=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/fseq/reporting/reports.html#ReportBase.saveFig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reporting.reports.ReportBase.saveFig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves a figure and creates directories if needed.</p>
-<dl class="docutils">
-<dt>fig: matplotlib.figure</dt>
-<dd>The figure to be saved</dd>
-<dt>outputRoot: str</dt>
-<dd>The root directory for reports</dd>
-<dt>outputNamePrefix: str</dt>
-<dd>If the name of the file should be prepended by some string.
-Normally added by the <em>Report Builder</em></dd>
-<dt>name: str, optional</dt>
-<dd>A specific name for this figure-file.
-If none supplied the default name for the report will be used,
-if no such has been set <cite>ValueError</cite> is raised.</dd>
-<dt><a href="#id7"><span class="problematic" id="id8">*</span></a>args:</dt>
-<dd>Any arguments to be sent to <cite>matplotlib.Figure.save</cite>.
-If none added the <cite>ReportBase.saveArgs</cite> will be used.</dd>
-<dt><a href="#id9"><span class="problematic" id="id10">**</span></a>kwargs:</dt>
-<dd>Any keyword arguments to be sent to <cite>matplotlib.Figure.save</cite>.
-If notn addd the <cite>ReportBase.saveKwargs</cite> will be used.</dd>
-</dl>
-<dl class="docutils">
-<dt>ReportBase</dt>
-<dd>Returns <cite>self</cite></dd>
-</dl>
-<dl class="docutils">
-<dt>ValueError</dt>
-<dd>If no name has been given.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>fig: matplotlib.figure</strong></p>
+<blockquote>
+<div><p>The figure to be saved</p>
+</div></blockquote>
+<p><strong>outputRoot: str</strong></p>
+<blockquote>
+<div><p>The root directory for reports</p>
+</div></blockquote>
+<p><strong>outputNamePrefix: str</strong></p>
+<blockquote>
+<div><p>If the name of the file should be prepended by some string.
+Normally added by the <em>Report Builder</em></p>
+</div></blockquote>
+<p><strong>name: str, optional</strong></p>
+<blockquote>
+<div><p>A specific name for this figure-file.
+If none supplied the default name for the report will be used,</p>
+<p>(Default: Use the <tt class="docutils literal"><span class="pre">self.name</span></tt> of the instance)</p>
+<p><strong>Note:</strong> If none supplied and none set for instance,
+<tt class="docutils literal"><span class="pre">ValueError</span></tt> is raised.</p>
+</div></blockquote>
+<p><strong>*args:</strong></p>
+<blockquote>
+<div><p>Any arguments to be sent to <tt class="docutils literal"><span class="pre">matplotlib.Figure.save</span></tt>.
+If none added the <tt class="docutils literal"><span class="pre">ReportBase.saveArgs</span></tt> will be used.</p>
+</div></blockquote>
+<p><strong>**kwargs:</strong></p>
+<blockquote>
+<div><p>Any keyword arguments to be sent to <tt class="docutils literal"><span class="pre">matplotlib.Figure.save</span></tt>.
+If notn addd the <tt class="docutils literal"><span class="pre">ReportBase.saveKwargs</span></tt> will be used.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ReportBase</p>
+<blockquote>
+<div><p>Returns <tt class="docutils literal"><span class="pre">self</span></tt></p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>ValueError</strong></p>
+<blockquote class="last">
+<div><p>If no name has been given.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="fseq.reporting.reports.ReportBase.saveKwargs">
 <tt class="descname">saveKwargs</tt><a class="reference internal" href="_modules/fseq/reporting/reports.html#ReportBase.saveKwargs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reporting.reports.ReportBase.saveKwargs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Save keyword args passed to <tt class="docutils literal"><span class="pre">matplotlib.pyplot.figure.savefig</span></tt>:
+dict</p>
+</dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="module-fseq.reporting">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-fseq.reporting" title="Permalink to this headline">¶</a></h2>
+<p>Reporting-related modules of fseq.</p>
+<p>The sub-package contains <cite>report_builder</cite> which post-processes data and
+sends it off to make various <cite>reports</cite>.</p>
+<p>The builders contains no graphics information, but simply prepares data.
+A new builder should be written if a new type of analysis is needed based
+on an abstraction of the data that is not already present in any of the
+previous builders.</p>
+<p>A report makes an image from data sent to it from the builder.
+Purpose of breaking this out is to allow for changing library that produces
+the reports and to allow for quick reuse with similar graphics for identical
+types of graphs for several report-builders.</p>
 </div>
 </div>
 
@@ -405,7 +831,9 @@ If notn addd the <cite>ReportBase.saveKwargs</cite> will be used.</dd>
   <ul>
 <li><a class="reference internal" href="#">fseq.reporting package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-fseq.reporting.report_builder">fseq.reporting.report_builder module</a></li>
+<li><a class="reference internal" href="#module-fseq.reporting.report_builder">fseq.reporting.report_builder module</a><ul>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-fseq.reporting.reports">fseq.reporting.reports module</a></li>
 <li><a class="reference internal" href="#module-fseq.reporting">Module contents</a></li>
 </ul>

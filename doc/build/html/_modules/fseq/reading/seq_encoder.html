@@ -57,8 +57,8 @@
 
 
 <div class="viewcode-block" id="inheritDocFromSeqFormat"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.inheritDocFromSeqFormat">[docs]</a><span class="k">def</span> <span class="nf">inheritDocFromSeqFormat</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;This decorator will copy the docstring from `SeqFormat` for the</span>
-<span class="sd">    matching function `f` if such exists and no docstring has been added</span>
+    <span class="sd">&quot;&quot;&quot;This decorator will copy the docstring from ``SeqFormat`` for the</span>
+<span class="sd">    matching function ``f`` if such exists and no docstring has been added</span>
 <span class="sd">    manually.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">__doc__</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -76,6 +76,31 @@
 
 </div>
 <div class="viewcode-block" id="SeqEncoder"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqEncoder">[docs]</a><span class="k">class</span> <span class="nc">SeqEncoder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for managing encoding of raw input data.</span>
+
+<span class="sd">    The encoder coordinates detection of raw data format and then</span>
+<span class="sd">    extracts the information that the encoder is tasked to extract, </span>
+<span class="sd">    convering it into suitable encoding.</span>
+
+<span class="sd">    **Note:** The base class is not intended to be used directly, but</span>
+<span class="sd">    to be extended.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    format</span>
+<span class="sd">    initiated</span>
+<span class="sd">    itemSize</span>
+<span class="sd">    qualityEncoding</span>
+<span class="sd">    sequenceEncoding</span>
+<span class="sd">    useQuality</span>
+<span class="sd">    useSequence</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    SeqEncoderGC: GC encoder</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expectedInputFormat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">useSequence</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
             <span class="n">useQuality</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">sequenceEncoding</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">qualityEncoding</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
@@ -94,10 +119,10 @@
 <span class="sd">        useQuality: bool</span>
 <span class="sd">            If encoder will be using the quality information</span>
 
-<span class="sd">        sequenceEncoding: dict or object implementing __getitem__</span>
+<span class="sd">        sequenceEncoding: dict or object implementing ``__getitem__``</span>
 <span class="sd">            Translation map from input to output</span>
 
-<span class="sd">        qualityEncoding: dict or object implementing __getitem__</span>
+<span class="sd">        qualityEncoding: dict or object implementing ``__getitem__``</span>
 <span class="sd">            Translation map from input to output</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -132,7 +157,7 @@
 
 <span class="sd">        TypeError</span>
 <span class="sd">            If attempting to set format with object not derived from</span>
-<span class="sd">            `SeqFormatDetector` or `SeqFormat`</span>
+<span class="sd">            ``SeqFormatDetector`` or ``SeqFormat``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span>
@@ -145,7 +170,7 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">SeqFormatDetector</span><span class="p">):</span>
 
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;Format {0} is not a `SeqFormatDetector`&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;Format {0} is not a ``SeqFormatDetector``&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">val</span><span class="p">))</span>
 
         <span class="k">else</span><span class="p">:</span>
@@ -249,7 +274,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 
-<span class="sd">        Object with key-lookup (implementing __getitem__)</span>
+<span class="sd">        Object with key-lookup (implementing ``__getitem__``)</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -287,7 +312,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 
-<span class="sd">        Object with key-lookup (implementing __getitem__)</span>
+<span class="sd">        Object with key-lookup (implementing ``__getitem__``)</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -364,7 +389,7 @@
 <span class="sd">        -------</span>
 
 <span class="sd">        fseq.SeqEncoder</span>
-<span class="sd">            Returns `self`</span>
+<span class="sd">            Returns ``self``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_detectFeed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
@@ -377,7 +402,7 @@
 <span class="sd">        -------</span>
 
 <span class="sd">        fseq.SeqEncoder</span>
-<span class="sd">            Returns `self`</span>
+<span class="sd">            Returns ``self``</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -437,7 +462,7 @@
 <span class="sd">        -------</span>
 
 <span class="sd">        fseq.SeqEncoder</span>
-<span class="sd">            Returns `self`</span>
+<span class="sd">            Returns ``self``</span>
 
 <span class="sd">        See also</span>
 <span class="sd">        --------</span>
@@ -463,15 +488,15 @@
 <span class="sd">        ----------</span>
 
 <span class="sd">        lines: iterable of str</span>
-<span class="sd">            Iterable of length equal to `self.itemSize` containing the</span>
+<span class="sd">            Iterable of length equal to ``self.itemSize`` containing the</span>
 <span class="sd">            raw data for one item</span>
 
 <span class="sd">        out: numpy.ndarray</span>
 <span class="sd">            Array that will have values written to it</span>
 
 <span class="sd">        outIndex: object</span>
-<span class="sd">            Index for where the parse output should be written in the `out`</span>
-<span class="sd">            array such that `out[outIndex]` gives a sufficiently large array</span>
+<span class="sd">            Index for where the parse output should be written in the ``out``</span>
+<span class="sd">            array such that ``out[outIndex]`` gives a sufficiently large array</span>
 <span class="sd">            that the result of parsing will fit in it.</span>
 
 <span class="sd">        Raises</span>
@@ -481,10 +506,28 @@
 <span class="sd">            If base class parse not overwritten or base class used directly</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;`SeqEncoder.parse` should be overwritten&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;``SeqEncoder.parse`` should be overwritten&quot;</span><span class="p">)</span>
 
 </div></div>
 <div class="viewcode-block" id="SeqEncoderGC"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqEncoderGC">[docs]</a><span class="k">class</span> <span class="nc">SeqEncoderGC</span><span class="p">(</span><span class="n">SeqEncoder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;GC Encoder, but useful for any sequence to numerical value encoding.</span>
+
+<span class="sd">    The encoder uses the sequence information of the raw data and encodes</span>
+<span class="sd">    the data according to the following:</span>
+
+<span class="sd">    +-------+----------+</span>
+<span class="sd">    | Input | Encoding |</span>
+<span class="sd">    +=======+==========+</span>
+<span class="sd">    | G / C + 1.0      |</span>
+<span class="sd">    +-------+----------+</span>
+<span class="sd">    | A / T | 0.0      |</span>
+<span class="sd">    +-------+----------+</span>
+<span class="sd">    | N     | 0.5      |</span>
+<span class="sd">    +-------+----------+</span>
+
+<span class="sd">    To change this behaviour, simply submit a new mappable object such as</span>
+<span class="sd">    e.g. a ``dict`` as the ``sequenceEncoding``-parameter.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expectedInputFormat</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sequenceEncoding</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -511,6 +554,31 @@
                             <span class="n">fseq</span><span class="o">.</span><span class="n">ReportBuilderPositionAverage</span><span class="p">))</span>
 
 <div class="viewcode-block" id="SeqEncoderGC.parse"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqEncoderGC.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">outindex</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Encoder of suitable aspects of ``lines`` into ``out``.</span>
+
+<span class="sd">        The sequence line of ``lines`` will be encoded onto the index</span>
+<span class="sd">        ``outindex`` of ``out``.</span>
+<span class="sd">        If the sequence line is shorter than the data structure of</span>
+<span class="sd">        ``out[outindex]``, the remainder of ``out[outindex]`` will be left</span>
+<span class="sd">        untouched.</span>
+<span class="sd">        If the line is longer, it will only encode up until the the length</span>
+<span class="sd">        of ``out[outindex]``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        lines: iterable of str</span>
+<span class="sd">            Iterable of length equal to ``self.itemSize`` containing the</span>
+<span class="sd">            raw data for one item</span>
+
+<span class="sd">        out: numpy.ndarray</span>
+<span class="sd">            Array that will have values written to it</span>
+
+<span class="sd">        outIndex: object</span>
+<span class="sd">            Index for where the parse output should be written in the ``out``</span>
+<span class="sd">            array such that ``out[outIndex]`` gives a sufficiently large array</span>
+<span class="sd">            that the result of parsing will fit in it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequenceEncoding</span>
 
@@ -551,7 +619,7 @@
 
 <span class="sd">    The attributes present in subclass should overwrite the</span>
 <span class="sd">    parent properties. All subclasses must also overwrite the</span>
-<span class="sd">    `SeqFormat.expects(line)`.</span>
+<span class="sd">    ``SeqFormat.expects(line)``.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -561,12 +629,28 @@
 <span class="sd">    hasSequence</span>
 <span class="sd">    hasQuality</span>
 <span class="sd">    qualityEncoding</span>
+<span class="sd">    MATCH_AA</span>
+<span class="sd">    MATCH_AA_S</span>
+<span class="sd">    MATCH_NT</span>
+<span class="sd">    MATCH_NT_S</span>
+<span class="sd">    HEADER_LINE</span>
+<span class="sd">    SEUENCE_LINE</span>
+<span class="sd">    QUALITY_LINE</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">MATCH_NT</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;^[ATCG]+$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+    <span class="n">MATCH_NT</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;^[ATCGN]+$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Matches any complete line of only A T C G or N&quot;&quot;&quot;</span>
+
     <span class="n">MATCH_AA</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;^[A-Z]+[*]?$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Matches any complete line of A-Z characters allowing for asterisc at</span>
+<span class="sd">    end.&quot;&quot;&quot;</span>
+
     <span class="n">MATCH_NT_S</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;^[ATCG ]+$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Matches as ``MATCH_NT`` but extends to include space&quot;&quot;&quot;</span>
+
     <span class="n">MATCH_AA_S</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;^[A-Z ]+[*]?$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Matches as ``MATCH_AA_S`` but extends to include space&quot;&quot;&quot;</span>
 
     <span class="n">HEADER_LINE</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">SEQUENCE_LINE</span> <span class="o">=</span> <span class="bp">None</span>
@@ -633,6 +717,12 @@
 <div class="viewcode-block" id="SeqFormat.expects"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormat.expects">[docs]</a>    <span class="k">def</span> <span class="nf">expects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Test for if line fits into required pattern for the format</span>
 
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        line: str</span>
+<span class="sd">            A line as read from file</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 
@@ -642,7 +732,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        </span>
 <span class="sd">        FormatImplementationError</span>
-<span class="sd">            If `SeqFormat.expects` (the base class method) is called.</span>
+<span class="sd">            If ``SeqFormat.expects`` (the base class method) is called.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">raise</span> <span class="n">FormatImplementationError</span><span class="p">(</span><span class="s">&quot;This method should be overwritten&quot;</span><span class="p">)</span>
@@ -651,8 +741,15 @@
 <div class="viewcode-block" id="FastaMultiline"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FastaMultiline">[docs]</a><span class="k">class</span> <span class="nc">FastaMultiline</span><span class="p">(</span><span class="n">SeqFormat</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Detector of multi-line FASTA</span>
 
-<span class="sd">    ..note:: This format is not supported in the current implementation</span>
+<span class="sd">    **Note:** This format is not supported in the current implementation</span>
 <span class="sd">        as it has no predictable item-size.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    HEADER_LINE</span>
+<span class="sd">    SEUENCE_LINE</span>
+<span class="sd">    QUALITY_LINE</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -741,6 +838,13 @@
 <div class="viewcode-block" id="FastaSingleline"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FastaSingleline">[docs]</a><span class="k">class</span> <span class="nc">FastaSingleline</span><span class="p">(</span><span class="n">FastaMultiline</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Detector of single-line FASTA format.</span>
 
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    HEADER_LINE</span>
+<span class="sd">    SEUENCE_LINE</span>
+<span class="sd">    QUALITY_LINE</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
@@ -794,8 +898,15 @@
 <div class="viewcode-block" id="FastQ"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.FastQ">[docs]</a><span class="k">class</span> <span class="nc">FastQ</span><span class="p">(</span><span class="n">SeqFormat</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Detector of FASTQ format</span>
 
-<span class="sd">    ..note:: This class can be subclassed to detect the different</span>
+<span class="sd">    **Note:** This class can be subclassed to detect the different</span>
 <span class="sd">        quality-encoding schemes in the future.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    HEADER_LINE</span>
+<span class="sd">    SEUENCE_LINE</span>
+<span class="sd">    QUALITY_LINE</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -887,6 +998,11 @@
 <div class="viewcode-block" id="SeqFormatDetector"><a class="viewcode-back" href="../../../fseq.reading.html#fseq.reading.seq_encoder.SeqFormatDetector">[docs]</a><span class="k">class</span> <span class="nc">SeqFormatDetector</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Detection of data-format manager</span>
 
+<span class="sd">    Given a set of initially specified formats the detector feeds them lines</span>
+<span class="sd">    of data until only one remains ``True``.</span>
+<span class="sd">    It then further continues a little while to be more certain that it</span>
+<span class="sd">    was not a mere fluke.</span>
+
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 
@@ -902,7 +1018,14 @@
 <span class="sd">    headerLine</span>
 <span class="sd">    sequenceLine</span>
 <span class="sd">    qualityLine</span>
+<span class="sd">    FORMATS</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    SeqFormat: Base class for formats that can be detected.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">FORMATS</span> <span class="o">=</span> <span class="p">[</span><span class="n">FastaSingleline</span><span class="p">,</span> <span class="n">FastaMultiline</span><span class="p">,</span> <span class="n">FastQ</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forceFormat</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -918,8 +1041,8 @@
 <span class="sd">        ------</span>
 
 <span class="sd">        TypeError</span>
-<span class="sd">            If `forceFormat` is submitted and not a class derived from</span>
-<span class="sd">            `SeqFormat`</span>
+<span class="sd">            If ``forceFormat`` is submitted and not a class derived from</span>
+<span class="sd">            ``SeqFormat``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_safetyCheck</span> <span class="o">=</span> <span class="bp">None</span>
@@ -936,7 +1059,7 @@
 
         <span class="k">if</span> <span class="n">forceFormat</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">forceFormat</span><span class="p">,</span> <span class="n">SeqFormat</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;{0} not a `SeqFormat`&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">forceFormat</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;{0} not a ``SeqFormat``&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">forceFormat</span><span class="p">))</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_possibleFormats</span> <span class="o">=</span> <span class="p">[</span><span class="n">forceFormat</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_setFormat</span><span class="p">()</span>
@@ -1111,7 +1234,7 @@
 <span class="sd">        -------</span>
 
 <span class="sd">        fseq.SeqEncoder</span>
-<span class="sd">            Returns `self`</span>
+<span class="sd">            Returns ``self``</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>

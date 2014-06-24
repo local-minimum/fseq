@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to fSeq's documentation!
-================================
+Welcome to fSeq!
+================
 
 fSeq is an extensible toolkit aimed at fast reading of sequence data with a
 common interface for all types of sequences.
@@ -23,16 +23,25 @@ Contents
    :maxdepth: 2
 
    tutorial
-   reading
-   reporting
+   developers
    c3se_python_course
    license
 
 
-Indices and tables
-------------------
+Indices
+-------
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search`
+
+Contact
+-------
+
+The package was written and is maintained by Martin Zackrisson.
+
+Developers, please use *Gitorious*  (see Develoers_)
+
+For end-users, questions can be addressed to the e-mail:
+
+    martin[dot]zackrisson[at]gu[dot]se
 

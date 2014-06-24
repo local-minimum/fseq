@@ -65,12 +65,28 @@
 <span class="sd">    Most prominently, the distill-method needs to be implemented in</span>
 <span class="sd">    subclasses to make much sence in most use cases.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    outputRoot: str, optional</span>
+<span class="sd">        Path to the directory where all reports should be put</span>
+
+<span class="sd">        (Default: ``None``)</span>
+
+<span class="sd">    outputNamePrefix: str, optional</span>
+<span class="sd">        Partial name to be added to all reports done by the builder</span>
+
+<span class="sd">        (Default: ``None``)</span>
+
+<span class="sd">    *reports: objects, optional</span>
+<span class="sd">        Any number of reports to be added from start</span>
+
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 
 <span class="sd">    outputRoot</span>
 <span class="sd">    outputNamePrefix</span>
-
+<span class="sd">    DEFAULT_REPORTS</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">DEFAULT_REPORTS</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
@@ -83,8 +99,12 @@
 <span class="sd">        outputRoot: str, optional</span>
 <span class="sd">            Path to the directory where all reports should be put</span>
 
+<span class="sd">            (Default: ``None``)</span>
+
 <span class="sd">        outputNamePrefix: str, optional</span>
 <span class="sd">            Partial name to be added to all reports done by the builder</span>
+
+<span class="sd">            (Default: ``None``)</span>
 
 <span class="sd">        *reports: objects, optional</span>
 <span class="sd">            Any number of reports to be added from start</span>
@@ -146,13 +166,13 @@
 <span class="sd">        -------</span>
 
 <span class="sd">        fseq.ReportBuilderBase</span>
-<span class="sd">            Returns `self`</span>
+<span class="sd">            Returns ``self``</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 
 <span class="sd">        ValueError</span>
-<span class="sd">            If a report lacks a method named `distill` or can&#39;t be hashed</span>
+<span class="sd">            If a report lacks a method named ``distill`` or can&#39;t be hashed</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">reports</span><span class="p">:</span>
@@ -173,7 +193,7 @@
 <span class="sd">        it will send all arguments and keyword arguments to the individual</span>
 <span class="sd">        reports.</span>
 
-<span class="sd">        If either `outputRoot` or `outputNamePrefix` are passed as kwargs,</span>
+<span class="sd">        If either ``outputRoot`` or ``outputNamePrefix`` are passed as kwargs,</span>
 <span class="sd">        the corresponding values preset in the system will be added to the</span>
 <span class="sd">        kwargs sent to the subreports.</span>
 
@@ -181,7 +201,7 @@
 <span class="sd">        -------</span>
 
 <span class="sd">        fseq.ReportBuilderBase</span>
-<span class="sd">            Returns `self`</span>
+<span class="sd">            Returns ``self``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;outputRoot&#39;</span><span class="p">,</span> <span class="s">&#39;outputNamePrefix&#39;</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
@@ -194,6 +214,35 @@
 </div></div>
 <div class="viewcode-block" id="ReportBuilderFFT"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.report_builder.ReportBuilderFFT">[docs]</a><span class="k">class</span> <span class="nc">ReportBuilderFFT</span><span class="p">(</span><span class="n">ReportBuilderBase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Samples part of data set and performs FFT-based analysis on it.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    outputRoot: str, optional</span>
+<span class="sd">        Path to the directory where all reports should be put</span>
+
+<span class="sd">        (Default: ``None``)</span>
+
+<span class="sd">    outputNamePrefix: str, optional</span>
+<span class="sd">        Partial name to be added to all reports done by the builder</span>
+
+<span class="sd">        (Default: ``None``)</span>
+
+<span class="sd">    sampleSize: int, optional</span>
+<span class="sd">        Size of sample to be randomly drawn</span>
+<span class="sd">        </span>
+<span class="sd">        (Default: 1000)</span>
+
+<span class="sd">    distanceMetric: str, optional</span>
+<span class="sd">        Name of distance metric to be used.</span>
+<span class="sd">        See ``METRICS``-attribute for allowed metrics.</span>
+
+<span class="sd">        (Default: &#39;correlation&#39;)</span>
+
+<span class="sd">    *reports: objects, optional</span>
+<span class="sd">        Any number of reports to be added from start</span>
+
+<span class="sd">        (Default: A fseq.HeatMap)</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -224,19 +273,27 @@
 <span class="sd">        outputRoot: str, optional</span>
 <span class="sd">            Path to the directory where all reports should be put</span>
 
+<span class="sd">            (Default: ``None``)</span>
+
 <span class="sd">        outputNamePrefix: str, optional</span>
 <span class="sd">            Partial name to be added to all reports done by the builder</span>
 
+<span class="sd">            (Default: ``None``)</span>
+
 <span class="sd">        sampleSize: int, optional</span>
-<span class="sd">            Size of sample to be randomly drawn (Default: 1000)</span>
+<span class="sd">            Size of sample to be randomly drawn</span>
+<span class="sd">            </span>
+<span class="sd">            (Default: 1000)</span>
 
 <span class="sd">        distanceMetric: str, optional</span>
 <span class="sd">            Name of distance metric to be used.</span>
-<span class="sd">            See `ReportBuilderFFT.METRICS` for allowed metrics.</span>
+<span class="sd">            See ``ReportBuilderFFT.METRICS``_ for allowed metrics.</span>
+
 <span class="sd">            (Default: &#39;correlation&#39;)</span>
 
 <span class="sd">        *reports: objects, optional</span>
 <span class="sd">            Any number of reports to be added from start</span>
+
 <span class="sd">            (Default: A fseq.HeatMap)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -253,7 +310,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">distanceMetric</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
+        <span class="sd">&quot;&quot;&quot;The ReportBuilderFFT.METRIC used: str&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distanceMetric</span>
 
     <span class="nd">@distanceMetric.setter</span>
@@ -268,7 +325,7 @@
 </div>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">sampleSize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
+        <span class="sd">&quot;&quot;&quot;Size of data subsample to analyze: int&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sampleSize</span>
 
     <span class="nd">@sampleSize.setter</span>
@@ -309,10 +366,13 @@
 
 <span class="sd">        distanceMetric: str, optional</span>
 <span class="sd">            A distance metric to overwrite the default one of the instance.</span>
+
+<span class="sd">            (Default: Value of ``self.distanceMetric``)</span>
 <span class="sd">            </span>
 <span class="sd">        clusterOnAbsOnly: bool, optional</span>
 <span class="sd">            If clustering should be performed only on the amplitude (abs-values)</span>
 <span class="sd">            or if amplitude and angle be clustered independently.</span>
+
 <span class="sd">            (Default: Cluster only on amplitude)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">distanceMetric</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -358,6 +418,30 @@
 <div class="viewcode-block" id="ReportBuilderPositionAverage"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.report_builder.ReportBuilderPositionAverage">[docs]</a><span class="k">class</span> <span class="nc">ReportBuilderPositionAverage</span><span class="p">(</span><span class="n">ReportBuilderBase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Per position analysis builder.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    outputRoot: str, optional</span>
+<span class="sd">        Path to the directory where all reports should be put</span>
+
+<span class="sd">        (Default: ``None``)</span>
+
+<span class="sd">    outputNamePrefix: str, optional</span>
+<span class="sd">        Partial name to be added to all reports done by the builder</span>
+
+<span class="sd">        (Default: ``None``)</span>
+
+<span class="sd">    undecidedValue: int, optional</span>
+<span class="sd">        The value for which undecided items were encoded (so it</span>
+<span class="sd">        can be omited and calculated separately for 2 of 3 graphs).</span>
+
+<span class="sd">        (Default: 0.5)</span>
+
+<span class="sd">    *reports: objects, optional</span>
+<span class="sd">        Any number of reports to be added from start</span>
+
+<span class="sd">        (Default: fseq.LinePlot) </span>
+
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 
@@ -380,16 +464,22 @@
 <span class="sd">        outputRoot: str, optional</span>
 <span class="sd">            Path to the directory where all reports should be put</span>
 
+<span class="sd">            (Default: ``None``)</span>
+
 <span class="sd">        outputNamePrefix: str, optional</span>
 <span class="sd">            Partial name to be added to all reports done by the builder</span>
+
+<span class="sd">            (Default: ``None``)</span>
 
 <span class="sd">        undecidedValue: int, optional</span>
 <span class="sd">            The value for which undecided items were encoded (so it</span>
 <span class="sd">            can be omited and calculated separately for 2 of 3 graphs).</span>
+
 <span class="sd">            (Default: 0.5)</span>
 
 <span class="sd">        *reports: objects, optional</span>
 <span class="sd">            Any number of reports to be added from start</span>
+
 <span class="sd">            (Default: fseq.LinePlot) </span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -453,17 +543,18 @@
 <span class="sd">            (Default: 0.5)</span>
 
 <span class="sd">        *args:</span>
-<span class="sd">            Any args will be passed to the `ReportBuilderBase.distill`</span>
+<span class="sd">            Any args will be passed to the ``ReportBuilderBase.distill``</span>
 
 <span class="sd">        **kwargs:</span>
-<span class="sd">            Any kwargs will be passed to the `ReportBuilderBase.distill`</span>
-<span class="sd">            ..note:: `outputNamePrefix` will be overwritten/added</span>
+<span class="sd">            Any kwargs will be passed to the ``ReportBuilderBase.distill``</span>
+
+<span class="sd">            **Note:** ``outputNamePrefix`` will be overwritten/added</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 
 <span class="sd">        fseq.ReportBuilderPositionAverage</span>
-<span class="sd">            Returns `self`</span>
+<span class="sd">            Returns ``self``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="k">if</span> <span class="n">undecidedValue</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -498,8 +589,8 @@
             <span class="n">ylabel</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%G</span><span class="s">C&#39;</span><span class="p">,</span>
             <span class="n">outputNamePrefix</span><span class="o">=</span><span class="s">&#39;average.not-lacking.&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span></div></div>
-</pre></div>
+        <span class="k">return</span> <span class="bp">self</span>
+</pre></div></div></div>
 
           </div>
         </div>

@@ -57,9 +57,17 @@
 <dd><p>Bases: <a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormat" title="fseq.reading.seq_encoder.SeqFormat"><tt class="xref py py-class docutils literal"><span class="pre">fseq.reading.seq_encoder.SeqFormat</span></tt></a></p>
 <p>Detector of FASTQ format</p>
 <dl class="docutils">
-<dt>..note:: This class can be subclassed to detect the different</dt>
+<dt><strong>Note:</strong> This class can be subclassed to detect the different</dt>
 <dd>quality-encoding schemes in the future.</dd>
 </dl>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormat" title="fseq.reading.seq_encoder.SeqFormat"><tt class="xref py py-obj docutils literal"><span class="pre">SeqFormat</span></tt></a></dt>
+<dd>Base class for detectors</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
 <p>Valid format:</p>
 <div class="highlight-python"><div class="highlight"><pre>@Contig_1
 AACAATACGA
@@ -71,10 +79,24 @@ CCATTTACGA
 &gt;CCAGJDFGH
 </pre></div>
 </div>
-<dl class="docutils">
-<dt>SeqFormat</dt>
-<dd>Base class for detectors</dd>
-</dl>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="55%" />
+<col width="45%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>HEADER_LINE</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>SEUENCE_LINE</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>QUALITY_LINE</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
 <dl class="attribute">
 <dt id="fseq.reading.seq_encoder.FastQ.HEADER_LINE">
 <tt class="descname">HEADER_LINE</tt><em class="property"> = 0</em><a class="headerlink" href="#fseq.reading.seq_encoder.FastQ.HEADER_LINE" title="Permalink to this definition">¶</a></dt>
@@ -94,11 +116,27 @@ CCATTTACGA
 <dt id="fseq.reading.seq_encoder.FastQ.expects">
 <tt class="descname">expects</tt><big>(</big><em>line</em><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#FastQ.expects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.FastQ.expects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test for if line fits into required pattern for the format</p>
-<p>bool</p>
-<dl class="docutils">
-<dt>FormatImplementationError</dt>
-<dd>If <cite>SeqFormat.expects</cite> (the base class method) is called.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>line: str</strong></p>
+<blockquote>
+<div><p>A line as read from file</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">bool</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>FormatImplementationError</strong></p>
+<blockquote class="last">
+<div><p>If <tt class="docutils literal"><span class="pre">SeqFormat.expects</span></tt> (the base class method) is called.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -133,9 +171,19 @@ CCATTTACGA
 <dd><p>Bases: <a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormat" title="fseq.reading.seq_encoder.SeqFormat"><tt class="xref py py-class docutils literal"><span class="pre">fseq.reading.seq_encoder.SeqFormat</span></tt></a></p>
 <p>Detector of multi-line FASTA</p>
 <dl class="docutils">
-<dt>..note:: This format is not supported in the current implementation</dt>
+<dt><strong>Note:</strong> This format is not supported in the current implementation</dt>
 <dd>as it has no predictable item-size.</dd>
 </dl>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormat" title="fseq.reading.seq_encoder.SeqFormat"><tt class="xref py py-obj docutils literal"><span class="pre">SeqFormat</span></tt></a></dt>
+<dd>Base class for detectors</dd>
+<dt><a class="reference internal" href="#fseq.reading.seq_encoder.FastaSingleline" title="fseq.reading.seq_encoder.FastaSingleline"><tt class="xref py py-obj docutils literal"><span class="pre">FastaSingleline</span></tt></a></dt>
+<dd>Derived class, with more restricitons</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
 <p>Valid format:</p>
 <div class="highlight-python"><div class="highlight"><pre>&gt;Contig_1
 ACAATACA
@@ -148,12 +196,24 @@ CCAACACA
 ACAACCAC
 </pre></div>
 </div>
-<dl class="docutils">
-<dt>SeqFormat</dt>
-<dd>Base class for detectors</dd>
-<dt>FastaSingleline</dt>
-<dd>Derived class, with more restricitons</dd>
-</dl>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="55%" />
+<col width="45%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>HEADER_LINE</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>SEUENCE_LINE</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>QUALITY_LINE</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
 <dl class="attribute">
 <dt id="fseq.reading.seq_encoder.FastaMultiline.HEADER_LINE">
 <tt class="descname">HEADER_LINE</tt><em class="property"> = 0</em><a class="headerlink" href="#fseq.reading.seq_encoder.FastaMultiline.HEADER_LINE" title="Permalink to this definition">¶</a></dt>
@@ -173,11 +233,27 @@ ACAACCAC
 <dt id="fseq.reading.seq_encoder.FastaMultiline.expects">
 <tt class="descname">expects</tt><big>(</big><em>line</em><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#FastaMultiline.expects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.FastaMultiline.expects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test for if line fits into required pattern for the format</p>
-<p>bool</p>
-<dl class="docutils">
-<dt>FormatImplementationError</dt>
-<dd>If <cite>SeqFormat.expects</cite> (the base class method) is called.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>line: str</strong></p>
+<blockquote>
+<div><p>A line as read from file</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">bool</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>FormatImplementationError</strong></p>
+<blockquote class="last">
+<div><p>If <tt class="docutils literal"><span class="pre">SeqFormat.expects</span></tt> (the base class method) is called.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -205,6 +281,16 @@ ACAACCAC
 <em class="property">class </em><tt class="descclassname">fseq.reading.seq_encoder.</tt><tt class="descname">FastaSingleline</tt><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#FastaSingleline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.FastaSingleline" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#fseq.reading.seq_encoder.FastaMultiline" title="fseq.reading.seq_encoder.FastaMultiline"><tt class="xref py py-class docutils literal"><span class="pre">fseq.reading.seq_encoder.FastaMultiline</span></tt></a></p>
 <p>Detector of single-line FASTA format.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormat" title="fseq.reading.seq_encoder.SeqFormat"><tt class="xref py py-obj docutils literal"><span class="pre">SeqFormat</span></tt></a></dt>
+<dd>Base class for detectors</dd>
+<dt><a class="reference internal" href="#fseq.reading.seq_encoder.FastaMultiline" title="fseq.reading.seq_encoder.FastaMultiline"><tt class="xref py py-obj docutils literal"><span class="pre">FastaMultiline</span></tt></a></dt>
+<dd>Parent class</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
 <p>Valid format:</p>
 <div class="highlight-python"><div class="highlight"><pre>&gt;Contig_1
 AACAATACGA
@@ -212,12 +298,24 @@ AACAATACGA
 CCATTTACGA
 </pre></div>
 </div>
-<dl class="docutils">
-<dt>SeqFormat</dt>
-<dd>Base class for detectors</dd>
-<dt>FastaMultiline</dt>
-<dd>Parent class</dd>
-</dl>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="55%" />
+<col width="45%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>HEADER_LINE</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>SEUENCE_LINE</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>QUALITY_LINE</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
 <dl class="attribute">
 <dt id="fseq.reading.seq_encoder.FastaSingleline.HEADER_LINE">
 <tt class="descname">HEADER_LINE</tt><em class="property"> = 0</em><a class="headerlink" href="#fseq.reading.seq_encoder.FastaSingleline.HEADER_LINE" title="Permalink to this definition">¶</a></dt>
@@ -237,11 +335,27 @@ CCATTTACGA
 <dt id="fseq.reading.seq_encoder.FastaSingleline.expects">
 <tt class="descname">expects</tt><big>(</big><em>line</em><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#FastaSingleline.expects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.FastaSingleline.expects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test for if line fits into required pattern for the format</p>
-<p>bool</p>
-<dl class="docutils">
-<dt>FormatImplementationError</dt>
-<dd>If <cite>SeqFormat.expects</cite> (the base class method) is called.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>line: str</strong></p>
+<blockquote>
+<div><p>A line as read from file</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">bool</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>FormatImplementationError</strong></p>
+<blockquote class="last">
+<div><p>If <tt class="docutils literal"><span class="pre">SeqFormat.expects</span></tt> (the base class method) is called.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -286,48 +400,124 @@ in subclasses</p>
 <dt id="fseq.reading.seq_encoder.SeqEncoder">
 <em class="property">class </em><tt class="descclassname">fseq.reading.seq_encoder.</tt><tt class="descname">SeqEncoder</tt><big>(</big><em>expectedInputFormat=None</em>, <em>useSequence=True</em>, <em>useQuality=False</em>, <em>sequenceEncoding=None</em>, <em>qualityEncoding=None</em>, <em>requestReports=()</em><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Base class for managing encoding of raw input data.</p>
+<p>The encoder coordinates detection of raw data format and then
+extracts the information that the encoder is tasked to extract, 
+convering it into suitable encoding.</p>
+<p><strong>Note:</strong> The base class is not intended to be used directly, but
+to be extended.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="#fseq.reading.seq_encoder.SeqEncoderGC" title="fseq.reading.seq_encoder.SeqEncoderGC"><tt class="xref py py-obj docutils literal"><span class="pre">SeqEncoderGC</span></tt></a></dt>
+<dd>GC encoder</dd>
+</dl>
+</div>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqEncoder.format" title="fseq.reading.seq_encoder.SeqEncoder.format"><tt class="xref py py-obj docutils literal"><span class="pre">format</span></tt></a></td>
+<td>The input format currently expected.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqEncoder.initiated" title="fseq.reading.seq_encoder.SeqEncoder.initiated"><tt class="xref py py-obj docutils literal"><span class="pre">initiated</span></tt></a></td>
+<td>If the sequence encoder is ready to start parsing: bool</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqEncoder.itemSize" title="fseq.reading.seq_encoder.SeqEncoder.itemSize"><tt class="xref py py-obj docutils literal"><span class="pre">itemSize</span></tt></a></td>
+<td>The size in number of lines for each item in the source.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqEncoder.qualityEncoding" title="fseq.reading.seq_encoder.SeqEncoder.qualityEncoding"><tt class="xref py py-obj docutils literal"><span class="pre">qualityEncoding</span></tt></a></td>
+<td>Map for translating quality chars to numeric values.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqEncoder.sequenceEncoding" title="fseq.reading.seq_encoder.SeqEncoder.sequenceEncoding"><tt class="xref py py-obj docutils literal"><span class="pre">sequenceEncoding</span></tt></a></td>
+<td>Map for translating sequence chars to numeric values.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqEncoder.useQuality" title="fseq.reading.seq_encoder.SeqEncoder.useQuality"><tt class="xref py py-obj docutils literal"><span class="pre">useQuality</span></tt></a></td>
+<td>If quality-line is to be used by the encoder.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqEncoder.useSequence" title="fseq.reading.seq_encoder.SeqEncoder.useSequence"><tt class="xref py py-obj docutils literal"><span class="pre">useSequence</span></tt></a></td>
+<td>If sequence-line is to be used by the encoder</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="fseq.reading.seq_encoder.SeqEncoder.detectFormat">
 <tt class="descname">detectFormat</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqEncoder.detectFormat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqEncoder.detectFormat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detect format based on current input stream</p>
-<dl class="docutils">
-<dt>fseq.SeqEncoder</dt>
-<dd>Returns <cite>self</cite></dd>
-</dl>
-<dl class="docutils">
-<dt>FormatError</dt>
-<dd>If data is not compatible with information requested</dd>
-</dl>
-<dl class="docutils">
-<dt>SeqEncoder.detectFormat()</dt>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">fseq.SeqEncoder</p>
+<blockquote>
+<div><p>Returns <tt class="docutils literal"><span class="pre">self</span></tt></p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>FormatError</strong></p>
+<blockquote class="last">
+<div><p>If data is not compatible with information requested</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="#fseq.reading.seq_encoder.SeqEncoder.detectFormat" title="fseq.reading.seq_encoder.SeqEncoder.detectFormat"><tt class="xref py py-obj docutils literal"><span class="pre">SeqEncoder.detectFormat</span></tt></a></dt>
 <dd>Guessing</dd>
 </dl>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="fseq.reading.seq_encoder.SeqEncoder.feedDetection">
 <tt class="descname">feedDetection</tt><big>(</big><em>line</em><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqEncoder.feedDetection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqEncoder.feedDetection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Give detection a line to work with.</p>
-<dl class="docutils">
-<dt>line: str</dt>
-<dd>A line from the source file</dd>
-</dl>
-<dl class="docutils">
-<dt>fseq.SeqEncoder</dt>
-<dd>Returns <cite>self</cite></dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>line: str</strong></p>
+<blockquote>
+<div><p>A line from the source file</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">fseq.SeqEncoder</p>
+<blockquote class="last">
+<div><p>Returns <tt class="docutils literal"><span class="pre">self</span></tt></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="fseq.reading.seq_encoder.SeqEncoder.format">
 <tt class="descname">format</tt><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqEncoder.format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqEncoder.format" title="Permalink to this definition">¶</a></dt>
 <dd><p>The input format currently expected.</p>
-<p>SeqFormatDetector</p>
-<dl class="docutils">
-<dt>TypeError</dt>
-<dd>If attempting to set format with object not derived from
-<cite>SeqFormatDetector</cite> or <cite>SeqFormat</cite></dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">SeqFormatDetector</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>TypeError</strong></p>
+<blockquote class="last">
+<div><p>If attempting to set format with object not derived from
+<tt class="docutils literal"><span class="pre">SeqFormatDetector</span></tt> or <tt class="docutils literal"><span class="pre">SeqFormat</span></tt></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -340,51 +530,88 @@ in subclasses</p>
 <dt id="fseq.reading.seq_encoder.SeqEncoder.itemSize">
 <tt class="descname">itemSize</tt><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqEncoder.itemSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqEncoder.itemSize" title="Permalink to this definition">¶</a></dt>
 <dd><p>The size in number of lines for each item in the source.</p>
-<p>int</p>
-<dl class="docutils">
-<dt>fseq.FormatError</dt>
-<dd>If encoder is not fully initiated</dd>
-</dl>
-<dl class="docutils">
-<dt>SeqEncoder.initiated</dt>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>fseq.FormatError</strong></p>
+<blockquote class="last">
+<div><p>If encoder is not fully initiated</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="#fseq.reading.seq_encoder.SeqEncoder.initiated" title="fseq.reading.seq_encoder.SeqEncoder.initiated"><tt class="xref py py-obj docutils literal"><span class="pre">SeqEncoder.initiated</span></tt></a></dt>
 <dd>The initiation status</dd>
-<dt>SeqEncoder.detectFormat()</dt>
+<dt><a class="reference internal" href="#fseq.reading.seq_encoder.SeqEncoder.detectFormat" title="fseq.reading.seq_encoder.SeqEncoder.detectFormat"><tt class="xref py py-obj docutils literal"><span class="pre">SeqEncoder.detectFormat</span></tt></a></dt>
 <dd>Detecting the format</dd>
-<dt>SeqEncoder.format</dt>
+<dt><a class="reference internal" href="#fseq.reading.seq_encoder.SeqEncoder.format" title="fseq.reading.seq_encoder.SeqEncoder.format"><tt class="xref py py-obj docutils literal"><span class="pre">SeqEncoder.format</span></tt></a></dt>
 <dd>Manually setting the format</dd>
 </dl>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="fseq.reading.seq_encoder.SeqEncoder.parse">
 <tt class="descname">parse</tt><big>(</big><em>lines</em>, <em>out</em>, <em>outindex</em><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqEncoder.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqEncoder.parse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Placeholder parser overwritten when subclassing</p>
-<dl class="docutils">
-<dt>lines: iterable of str</dt>
-<dd>Iterable of length equal to <cite>self.itemSize</cite> containing the
-raw data for one item</dd>
-<dt>out: numpy.ndarray</dt>
-<dd>Array that will have values written to it</dd>
-<dt>outIndex: object</dt>
-<dd>Index for where the parse output should be written in the <cite>out</cite>
-array such that <cite>out[outIndex]</cite> gives a sufficiently large array
-that the result of parsing will fit in it.</dd>
-</dl>
-<dl class="docutils">
-<dt>NotImplemented</dt>
-<dd>If base class parse not overwritten or base class used directly</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>lines: iterable of str</strong></p>
+<blockquote>
+<div><p>Iterable of length equal to <tt class="docutils literal"><span class="pre">self.itemSize</span></tt> containing the
+raw data for one item</p>
+</div></blockquote>
+<p><strong>out: numpy.ndarray</strong></p>
+<blockquote>
+<div><p>Array that will have values written to it</p>
+</div></blockquote>
+<p><strong>outIndex: object</strong></p>
+<blockquote>
+<div><p>Index for where the parse output should be written in the <tt class="docutils literal"><span class="pre">out</span></tt>
+array such that <tt class="docutils literal"><span class="pre">out[outIndex]</span></tt> gives a sufficiently large array
+that the result of parsing will fit in it.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>NotImplemented</strong></p>
+<blockquote class="last">
+<div><p>If base class parse not overwritten or base class used directly</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="fseq.reading.seq_encoder.SeqEncoder.qualityEncoding">
 <tt class="descname">qualityEncoding</tt><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqEncoder.qualityEncoding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqEncoder.qualityEncoding" title="Permalink to this definition">¶</a></dt>
 <dd><p>Map for translating quality chars to numeric values.</p>
-<p>Object with key-lookup (implementing __getitem__)</p>
-<dl class="docutils">
-<dt>TypeError</dt>
-<dd>If attempting to set with object not having char key-lookup</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Object with key-lookup (implementing <tt class="docutils literal"><span class="pre">__getitem__</span></tt>)</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>TypeError</strong></p>
+<blockquote class="last">
+<div><p>If attempting to set with object not having char key-lookup</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -397,39 +624,74 @@ that the result of parsing will fit in it.</dd>
 <dt id="fseq.reading.seq_encoder.SeqEncoder.reset">
 <tt class="descname">reset</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqEncoder.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqEncoder.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clears the sequence format</p>
-<dl class="docutils">
-<dt>fseq.SeqEncoder</dt>
-<dd>Returns <cite>self</cite></dd>
-</dl>
-<dl class="docutils">
-<dt>SeqEncoder.detectFormat()</dt>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">fseq.SeqEncoder</p>
+<blockquote class="last">
+<div><p>Returns <tt class="docutils literal"><span class="pre">self</span></tt></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="#fseq.reading.seq_encoder.SeqEncoder.detectFormat" title="fseq.reading.seq_encoder.SeqEncoder.detectFormat"><tt class="xref py py-obj docutils literal"><span class="pre">SeqEncoder.detectFormat</span></tt></a></dt>
 <dd>Guessing</dd>
 </dl>
+</div>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="fseq.reading.seq_encoder.SeqEncoder.sequenceEncoding">
 <tt class="descname">sequenceEncoding</tt><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqEncoder.sequenceEncoding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqEncoder.sequenceEncoding" title="Permalink to this definition">¶</a></dt>
 <dd><p>Map for translating sequence chars to numeric values.</p>
-<p>Object with key-lookup (implementing __getitem__)</p>
-<dl class="docutils">
-<dt>TypeError</dt>
-<dd>If attempting to set with object not having char key-lookup</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Object with key-lookup (implementing <tt class="docutils literal"><span class="pre">__getitem__</span></tt>)</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>TypeError</strong></p>
+<blockquote class="last">
+<div><p>If attempting to set with object not having char key-lookup</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="fseq.reading.seq_encoder.SeqEncoder.useQuality">
 <tt class="descname">useQuality</tt><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqEncoder.useQuality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqEncoder.useQuality" title="Permalink to this definition">¶</a></dt>
 <dd><p>If quality-line is to be used by the encoder.</p>
-<p>bool</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="fseq.reading.seq_encoder.SeqEncoder.useSequence">
 <tt class="descname">useSequence</tt><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqEncoder.useSequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqEncoder.useSequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>If sequence-line is to be used by the encoder</p>
-<p>bool</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -438,10 +700,69 @@ that the result of parsing will fit in it.</dd>
 <dt id="fseq.reading.seq_encoder.SeqEncoderGC">
 <em class="property">class </em><tt class="descclassname">fseq.reading.seq_encoder.</tt><tt class="descname">SeqEncoderGC</tt><big>(</big><em>expectedInputFormat=None</em>, <em>sequenceEncoding=None</em><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqEncoderGC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqEncoderGC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#fseq.reading.seq_encoder.SeqEncoder" title="fseq.reading.seq_encoder.SeqEncoder"><tt class="xref py py-class docutils literal"><span class="pre">fseq.reading.seq_encoder.SeqEncoder</span></tt></a></p>
+<p>GC Encoder, but useful for any sequence to numerical value encoding.</p>
+<p>The encoder uses the sequence information of the raw data and encodes
+the data according to the following:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="41%" />
+<col width="59%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Input</th>
+<th class="head">Encoding</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td rowspan="2">G / C</td>
+<td rowspan="2">1.0</td>
+</tr>
+<tr class="row-odd"></tr>
+<tr class="row-even"><td>A / T</td>
+<td>0.0</td>
+</tr>
+<tr class="row-odd"><td>N</td>
+<td>0.5</td>
+</tr>
+</tbody>
+</table>
+<p>To change this behaviour, simply submit a new mappable object such as
+e.g. a <tt class="docutils literal"><span class="pre">dict</span></tt> as the <tt class="docutils literal"><span class="pre">sequenceEncoding</span></tt>-parameter.</p>
 <dl class="method">
 <dt id="fseq.reading.seq_encoder.SeqEncoderGC.parse">
 <tt class="descname">parse</tt><big>(</big><em>lines</em>, <em>out</em>, <em>outindex</em><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqEncoderGC.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqEncoderGC.parse" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Encoder of suitable aspects of <tt class="docutils literal"><span class="pre">lines</span></tt> into <tt class="docutils literal"><span class="pre">out</span></tt>.</p>
+<p>The sequence line of <tt class="docutils literal"><span class="pre">lines</span></tt> will be encoded onto the index
+<tt class="docutils literal"><span class="pre">outindex</span></tt> of <tt class="docutils literal"><span class="pre">out</span></tt>.
+If the sequence line is shorter than the data structure of
+<tt class="docutils literal"><span class="pre">out[outindex]</span></tt>, the remainder of <tt class="docutils literal"><span class="pre">out[outindex]</span></tt> will be left
+untouched.
+If the line is longer, it will only encode up until the the length
+of <tt class="docutils literal"><span class="pre">out[outindex]</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>lines: iterable of str</strong></p>
+<blockquote>
+<div><p>Iterable of length equal to <tt class="docutils literal"><span class="pre">self.itemSize</span></tt> containing the
+raw data for one item</p>
+</div></blockquote>
+<p><strong>out: numpy.ndarray</strong></p>
+<blockquote>
+<div><p>Array that will have values written to it</p>
+</div></blockquote>
+<p><strong>outIndex: object</strong></p>
+<blockquote class="last">
+<div><p>Index for where the parse output should be written in the <tt class="docutils literal"><span class="pre">out</span></tt>
+array such that <tt class="docutils literal"><span class="pre">out[outIndex]</span></tt> gives a sufficiently large array
+that the result of parsing will fit in it.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
@@ -452,12 +773,60 @@ that the result of parsing will fit in it.</dd>
 <p>Base Class for implementing data format detectors.</p>
 <p>The attributes present in subclass should overwrite the
 parent properties. All subclasses must also overwrite the
-<cite>SeqFormat.expects(line)</cite>.</p>
-<p>name
-itemSize
-hasSequence
-hasQuality
-qualityEncoding</p>
+<tt class="docutils literal"><span class="pre">SeqFormat.expects(line)</span></tt>.</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormat.name" title="fseq.reading.seq_encoder.SeqFormat.name"><tt class="xref py py-obj docutils literal"><span class="pre">name</span></tt></a></td>
+<td>Human readable description of format: str</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormat.itemSize" title="fseq.reading.seq_encoder.SeqFormat.itemSize"><tt class="xref py py-obj docutils literal"><span class="pre">itemSize</span></tt></a></td>
+<td>The size (lines) of each entry: int</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormat.hasSequence" title="fseq.reading.seq_encoder.SeqFormat.hasSequence"><tt class="xref py py-obj docutils literal"><span class="pre">hasSequence</span></tt></a></td>
+<td>If format has sequence information: bool</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormat.hasQuality" title="fseq.reading.seq_encoder.SeqFormat.hasQuality"><tt class="xref py py-obj docutils literal"><span class="pre">hasQuality</span></tt></a></td>
+<td>If format quality information: bool</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormat.qualityEncoding" title="fseq.reading.seq_encoder.SeqFormat.qualityEncoding"><tt class="xref py py-obj docutils literal"><span class="pre">qualityEncoding</span></tt></a></td>
+<td>If format comes with a known encoding of quality.</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="55%" />
+<col width="45%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>MATCH_AA</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>MATCH_AA_S</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>MATCH_NT</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>MATCH_NT_S</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>HEADER_LINE</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>SEUENCE_LINE</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>QUALITY_LINE</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
 <dl class="attribute">
 <dt id="fseq.reading.seq_encoder.SeqFormat.HEADER_LINE">
 <tt class="descname">HEADER_LINE</tt><em class="property"> = 0</em><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormat.HEADER_LINE" title="Permalink to this definition">¶</a></dt>
@@ -465,23 +834,28 @@ qualityEncoding</p>
 
 <dl class="attribute">
 <dt id="fseq.reading.seq_encoder.SeqFormat.MATCH_AA">
-<tt class="descname">MATCH_AA</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x2b9d05200f08&gt;</em><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormat.MATCH_AA" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">MATCH_AA</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x2ba74be30e40&gt;</em><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormat.MATCH_AA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matches any complete line of A-Z characters allowing for asterisc at
+end.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="fseq.reading.seq_encoder.SeqFormat.MATCH_AA_S">
-<tt class="descname">MATCH_AA_S</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x2b9d069c21d0&gt;</em><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormat.MATCH_AA_S" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">MATCH_AA_S</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x2ba74be1eac0&gt;</em><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormat.MATCH_AA_S" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matches as <tt class="docutils literal"><span class="pre">MATCH_AA_S</span></tt> but extends to include space</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="fseq.reading.seq_encoder.SeqFormat.MATCH_NT">
-<tt class="descname">MATCH_NT</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x2b9d05200e40&gt;</em><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormat.MATCH_NT" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">MATCH_NT</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x2ba74be30d78&gt;</em><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormat.MATCH_NT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matches any complete line of only A T C G or N</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="fseq.reading.seq_encoder.SeqFormat.MATCH_NT_S">
-<tt class="descname">MATCH_NT_S</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x2b9d069cd030&gt;</em><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormat.MATCH_NT_S" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">MATCH_NT_S</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x2ba74be30f08&gt;</em><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormat.MATCH_NT_S" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matches as <tt class="docutils literal"><span class="pre">MATCH_NT</span></tt> but extends to include space</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="fseq.reading.seq_encoder.SeqFormat.QUALITY_LINE">
@@ -497,11 +871,27 @@ qualityEncoding</p>
 <dt id="fseq.reading.seq_encoder.SeqFormat.expects">
 <tt class="descname">expects</tt><big>(</big><em>line</em><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqFormat.expects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormat.expects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test for if line fits into required pattern for the format</p>
-<p>bool</p>
-<dl class="docutils">
-<dt>FormatImplementationError</dt>
-<dd>If <cite>SeqFormat.expects</cite> (the base class method) is called.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>line: str</strong></p>
+<blockquote>
+<div><p>A line as read from file</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">bool</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>FormatImplementationError</strong></p>
+<blockquote class="last">
+<div><p>If <tt class="docutils literal"><span class="pre">SeqFormat.expects</span></tt> (the base class method) is called.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -511,10 +901,18 @@ qualityEncoding</p>
 matching.</p>
 <p>The purpose is to be able to promote more restricted formats that
 represents a subset of the more general</p>
-<dl class="docutils">
-<dt>bool</dt>
-<dd>The status</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">bool</p>
+<blockquote class="last">
+<div><p>The status</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -545,10 +943,13 @@ represents a subset of the more general</p>
 <dt id="fseq.reading.seq_encoder.SeqFormat.qualityEncoding">
 <tt class="descname">qualityEncoding</tt><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqFormat.qualityEncoding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormat.qualityEncoding" title="Permalink to this definition">¶</a></dt>
 <dd><p>If format comes with a known encoding of quality.</p>
-<dl class="docutils">
-<dt>SeqEncoder.qualityEncoding</dt>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="#fseq.reading.seq_encoder.SeqEncoder.qualityEncoding" title="fseq.reading.seq_encoder.SeqEncoder.qualityEncoding"><tt class="xref py py-obj docutils literal"><span class="pre">SeqEncoder.qualityEncoding</span></tt></a></dt>
 <dd>Setter of encoder quality.</dd>
 </dl>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -558,18 +959,73 @@ represents a subset of the more general</p>
 <em class="property">class </em><tt class="descclassname">fseq.reading.seq_encoder.</tt><tt class="descname">SeqFormatDetector</tt><big>(</big><em>forceFormat=None</em><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqFormatDetector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormatDetector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Detection of data-format manager</p>
-<p>detecting
-format
-itemSize
-hasSequence
-hasQuality
-qualityEncoding
-headerLine
-sequenceLine
-qualityLine
-headerLine
-sequenceLine
-qualityLine</p>
+<p>Given a set of initially specified formats the detector feeds them lines
+of data until only one remains <tt class="docutils literal"><span class="pre">True</span></tt>.
+It then further continues a little while to be more certain that it
+was not a mere fluke.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormat" title="fseq.reading.seq_encoder.SeqFormat"><tt class="xref py py-obj docutils literal"><span class="pre">SeqFormat</span></tt></a></dt>
+<dd>Base class for formats that can be detected.</dd>
+</dl>
+</div>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormatDetector.detecting" title="fseq.reading.seq_encoder.SeqFormatDetector.detecting"><tt class="xref py py-obj docutils literal"><span class="pre">detecting</span></tt></a></td>
+<td>If attempting to detect: bool</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormatDetector.format" title="fseq.reading.seq_encoder.SeqFormatDetector.format"><tt class="xref py py-obj docutils literal"><span class="pre">format</span></tt></a></td>
+<td>The format name of the detected format: str</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormatDetector.itemSize" title="fseq.reading.seq_encoder.SeqFormatDetector.itemSize"><tt class="xref py py-obj docutils literal"><span class="pre">itemSize</span></tt></a></td>
+<td>The size (lines) of each entry: int</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormatDetector.hasSequence" title="fseq.reading.seq_encoder.SeqFormatDetector.hasSequence"><tt class="xref py py-obj docutils literal"><span class="pre">hasSequence</span></tt></a></td>
+<td>If format has sequence information: bool</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormatDetector.hasQuality" title="fseq.reading.seq_encoder.SeqFormatDetector.hasQuality"><tt class="xref py py-obj docutils literal"><span class="pre">hasQuality</span></tt></a></td>
+<td>If format quality information: bool</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormatDetector.qualityEncoding" title="fseq.reading.seq_encoder.SeqFormatDetector.qualityEncoding"><tt class="xref py py-obj docutils literal"><span class="pre">qualityEncoding</span></tt></a></td>
+<td>If format comes with a known encoding of quality.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormatDetector.headerLine" title="fseq.reading.seq_encoder.SeqFormatDetector.headerLine"><tt class="xref py py-obj docutils literal"><span class="pre">headerLine</span></tt></a></td>
+<td>The line index in the item for the header</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormatDetector.sequenceLine" title="fseq.reading.seq_encoder.SeqFormatDetector.sequenceLine"><tt class="xref py py-obj docutils literal"><span class="pre">sequenceLine</span></tt></a></td>
+<td>The line index in the item for the sequence</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormatDetector.qualityLine" title="fseq.reading.seq_encoder.SeqFormatDetector.qualityLine"><tt class="xref py py-obj docutils literal"><span class="pre">qualityLine</span></tt></a></td>
+<td>The line index in the item for the quality</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormatDetector.headerLine" title="fseq.reading.seq_encoder.SeqFormatDetector.headerLine"><tt class="xref py py-obj docutils literal"><span class="pre">headerLine</span></tt></a></td>
+<td>The line index in the item for the header</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormatDetector.sequenceLine" title="fseq.reading.seq_encoder.SeqFormatDetector.sequenceLine"><tt class="xref py py-obj docutils literal"><span class="pre">sequenceLine</span></tt></a></td>
+<td>The line index in the item for the sequence</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#fseq.reading.seq_encoder.SeqFormatDetector.qualityLine" title="fseq.reading.seq_encoder.SeqFormatDetector.qualityLine"><tt class="xref py py-obj docutils literal"><span class="pre">qualityLine</span></tt></a></td>
+<td>The line index in the item for the quality</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="41%" />
+<col width="59%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>FORMATS</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
 <dl class="attribute">
 <dt id="fseq.reading.seq_encoder.SeqFormatDetector.FORMATS">
 <tt class="descname">FORMATS</tt><em class="property"> = [&lt;class 'fseq.reading.seq_encoder.FastaSingleline'&gt;, &lt;class 'fseq.reading.seq_encoder.FastaMultiline'&gt;, &lt;class 'fseq.reading.seq_encoder.FastQ'&gt;]</em><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormatDetector.FORMATS" title="Permalink to this definition">¶</a></dt>
@@ -579,14 +1035,24 @@ qualityLine</p>
 <dt id="fseq.reading.seq_encoder.SeqFormatDetector.compatible">
 <tt class="descname">compatible</tt><big>(</big><em>encoder</em><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqFormatDetector.compatible"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormatDetector.compatible" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluates if encoder is compatible with the detected format</p>
-<dl class="docutils">
-<dt>bool</dt>
-<dd>Compatibility</dd>
-</dl>
-<dl class="docutils">
-<dt>FormatError</dt>
-<dd>If attempting to test compatibility before format is detected</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">bool</p>
+<blockquote>
+<div><p>Compatibility</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>FormatError</strong></p>
+<blockquote class="last">
+<div><p>If attempting to test compatibility before format is detected</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -599,18 +1065,30 @@ qualityLine</p>
 <dt id="fseq.reading.seq_encoder.SeqFormatDetector.feed">
 <tt class="descname">feed</tt><big>(</big><em>line</em><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqFormatDetector.feed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormatDetector.feed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Supply a new line to format detector.</p>
-<dl class="docutils">
-<dt>line: str</dt>
-<dd>The next line in the data</dd>
-</dl>
-<dl class="docutils">
-<dt>fseq.SeqEncoder</dt>
-<dd>Returns <cite>self</cite></dd>
-</dl>
-<dl class="docutils">
-<dt>FormatUnknown</dt>
-<dd>If no known formatters are left</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>line: str</strong></p>
+<blockquote>
+<div><p>The next line in the data</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">fseq.SeqEncoder</p>
+<blockquote>
+<div><p>Returns <tt class="docutils literal"><span class="pre">self</span></tt></p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>FormatUnknown</strong></p>
+<blockquote class="last">
+<div><p>If no known formatters are left</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -635,11 +1113,21 @@ qualityLine</p>
 <dt id="fseq.reading.seq_encoder.SeqFormatDetector.headerLine">
 <tt class="descname">headerLine</tt><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqFormatDetector.headerLine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormatDetector.headerLine" title="Permalink to this definition">¶</a></dt>
 <dd><p>The line index in the item for the header</p>
-<p>int</p>
-<dl class="docutils">
-<dt>FormatError</dt>
-<dd>If attempting to use before format is detected</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>FormatError</strong></p>
+<blockquote class="last">
+<div><p>If attempting to use before format is detected</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -652,32 +1140,55 @@ qualityLine</p>
 <dt id="fseq.reading.seq_encoder.SeqFormatDetector.qualityEncoding">
 <tt class="descname">qualityEncoding</tt><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqFormatDetector.qualityEncoding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormatDetector.qualityEncoding" title="Permalink to this definition">¶</a></dt>
 <dd><p>If format comes with a known encoding of quality.</p>
-<dl class="docutils">
-<dt>SeqEncoder.qualityEncoding</dt>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="#fseq.reading.seq_encoder.SeqEncoder.qualityEncoding" title="fseq.reading.seq_encoder.SeqEncoder.qualityEncoding"><tt class="xref py py-obj docutils literal"><span class="pre">SeqEncoder.qualityEncoding</span></tt></a></dt>
 <dd>Setter of encoder quality.</dd>
 </dl>
+</div>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="fseq.reading.seq_encoder.SeqFormatDetector.qualityLine">
 <tt class="descname">qualityLine</tt><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqFormatDetector.qualityLine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormatDetector.qualityLine" title="Permalink to this definition">¶</a></dt>
 <dd><p>The line index in the item for the quality</p>
-<p>int</p>
-<dl class="docutils">
-<dt>FormatError</dt>
-<dd>If attempting to use before format is detected</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>FormatError</strong></p>
+<blockquote class="last">
+<div><p>If attempting to use before format is detected</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="fseq.reading.seq_encoder.SeqFormatDetector.sequenceLine">
 <tt class="descname">sequenceLine</tt><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#SeqFormatDetector.sequenceLine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.SeqFormatDetector.sequenceLine" title="Permalink to this definition">¶</a></dt>
 <dd><p>The line index in the item for the sequence</p>
-<p>int</p>
-<dl class="docutils">
-<dt>FormatError</dt>
-<dd>If attempting to use before format is detected</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>FormatError</strong></p>
+<blockquote class="last">
+<div><p>If attempting to use before format is detected</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -685,8 +1196,8 @@ qualityLine</p>
 <dl class="function">
 <dt id="fseq.reading.seq_encoder.inheritDocFromSeqFormat">
 <tt class="descclassname">fseq.reading.seq_encoder.</tt><tt class="descname">inheritDocFromSeqFormat</tt><big>(</big><em>f</em><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_encoder.html#inheritDocFromSeqFormat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_encoder.inheritDocFromSeqFormat" title="Permalink to this definition">¶</a></dt>
-<dd><p>This decorator will copy the docstring from <cite>SeqFormat</cite> for the
-matching function <cite>f</cite> if such exists and no docstring has been added
+<dd><p>This decorator will copy the docstring from <tt class="docutils literal"><span class="pre">SeqFormat</span></tt> for the
+matching function <tt class="docutils literal"><span class="pre">f</span></tt> if such exists and no docstring has been added
 manually.</p>
 </dd></dl>
 
@@ -702,29 +1213,73 @@ manually.</p>
 <p>The length of the sequence reader reflects the number of inputs to be
 processed.</p>
 <p>The entire stack of inputs can be processed in bulk by invoking
-<cite>SeqReader.run()</cite> but the results of each encoding, omitting any
+<tt class="docutils literal"><span class="pre">SeqReader.run()</span></tt> but the results of each encoding, omitting any
 report building can also be produced iteratively as shown in the examples.</p>
-<p>dataArrayConstructor
-dataWidth
-dataType
-popDataSources
-popEncodingResults
-jobQueue
-reportBuilders
-reportDirectory
-SeqEncoder
-resetSeqEncoder
-results</p>
-<p>To invoke the reader it can either be run :
-&gt;&gt;&gt; seqReader.run()
-&lt;fseq.reading.seq_reader.SeqReader at 0x7faf6970fd10&gt;</p>
-<p>or if more control is required, it can be iterated over:
-&gt;&gt;&gt; for res in seqReader:
-...    reportBuilder.distill(res, dirname=seqReader.reportDirectory)</p>
+<p class="rubric">Examples</p>
+<p>To invoke the reader it can either be run :</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">seqReader</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="go">&lt;fseq.reading.seq_reader.SeqReader at 0x7faf6970fd10&gt;</span>
+</pre></div>
+</div>
+<p>or if more control is required, it can be iterated over:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">seqReader</span><span class="p">:</span>
+<span class="gp">... </span>   <span class="n">reportBuilder</span><span class="o">.</span><span class="n">distill</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">dirname</span><span class="o">=</span><span class="n">seqReader</span><span class="o">.</span><span class="n">reportDirectory</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Both methods above yielding the same result with the difference that
-the first may store results in <cite>seqReader.results</cite> depending on the
-<cite>seqReader.popEncodingResults</cite> settings while the latter never keeps
+the first may store results in <tt class="docutils literal"><span class="pre">seqReader.results</span></tt> depending on the
+<tt class="docutils literal"><span class="pre">seqReader.popEncodingResults</span></tt> settings while the latter never keeps
 the results in the state of the instance.</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reading.seq_reader.SeqReader.popDataSources" title="fseq.reading.seq_reader.SeqReader.popDataSources"><tt class="xref py py-obj docutils literal"><span class="pre">popDataSources</span></tt></a></td>
+<td>If sequence reader should remove data sources from list of sources when they have been read.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#fseq.reading.seq_reader.SeqReader.popEncodingResults" title="fseq.reading.seq_reader.SeqReader.popEncodingResults"><tt class="xref py py-obj docutils literal"><span class="pre">popEncodingResults</span></tt></a></td>
+<td>If the outcome of an encoding should be remove from memory as soon as report as been produced or iteration completed.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reading.seq_reader.SeqReader.jobQueue" title="fseq.reading.seq_reader.SeqReader.jobQueue"><tt class="xref py py-obj docutils literal"><span class="pre">jobQueue</span></tt></a></td>
+<td>The data sources to be read and their respective targets.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#fseq.reading.seq_reader.SeqReader.reportBuilders" title="fseq.reading.seq_reader.SeqReader.reportBuilders"><tt class="xref py py-obj docutils literal"><span class="pre">reportBuilders</span></tt></a></td>
+<td>The report builders associated with the reader.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reading.seq_reader.SeqReader.reportDirectory" title="fseq.reading.seq_reader.SeqReader.reportDirectory"><tt class="xref py py-obj docutils literal"><span class="pre">reportDirectory</span></tt></a></td>
+<td>The directory where reports for the last made encoding should go.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#fseq.reading.seq_reader.SeqReader.resetSeqEncoder" title="fseq.reading.seq_reader.SeqReader.resetSeqEncoder"><tt class="xref py py-obj docutils literal"><span class="pre">resetSeqEncoder</span></tt></a></td>
+<td>If each data source will detect format anew or if all files are</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#fseq.reading.seq_reader.SeqReader.results" title="fseq.reading.seq_reader.SeqReader.results"><tt class="xref py py-obj docutils literal"><span class="pre">results</span></tt></a></td>
+<td>A list of the results of the encodings.</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="67%" />
+<col width="33%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>dataArrayConstructor</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>dataWidth</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>dataType</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>SeqEncoder</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
 <dl class="attribute">
 <dt id="fseq.reading.seq_reader.SeqReader.DATA_INITIAL_SIZE">
 <tt class="descname">DATA_INITIAL_SIZE</tt><em class="property"> = 100000</em><a class="headerlink" href="#fseq.reading.seq_reader.SeqReader.DATA_INITIAL_SIZE" title="Permalink to this definition">¶</a></dt>
@@ -744,66 +1299,111 @@ the results in the state of the instance.</p>
 <dt id="fseq.reading.seq_reader.SeqReader.addData">
 <tt class="descname">addData</tt><big>(</big><em>sourcePaths</em>, <em>targetPaths=None</em><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_reader.html#SeqReader.addData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_reader.SeqReader.addData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a data source path to be analysed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sourcePaths: string or iterable object</strong></p>
+<blockquote>
+<div><p>Either a path string or a collection of paths to data files</p>
+</div></blockquote>
+<p><strong>targetPaths: string or iterable object, optional</strong></p>
+<blockquote>
+<div><p>Either a relative path string or collection of relative paths.
+The path is relative to the respective data source.</p>
+<p>(Default: will create a folder in the same directory as the 
+data source with the same name as the input suffixed by
+<tt class="docutils literal"><span class="pre">.reports</span></tt>.)</p>
 <dl class="docutils">
-<dt>sourcePaths: string or iterable object</dt>
-<dd>Either a path string or a collection of paths to data files</dd>
-<dt>targetPaths: string or iterable object, optional</dt>
-<dd><p class="first">Either a relative path string or collection of relative paths.
-The path is relative to the respective data source.
-(Default: will create a folder in the same directory as the 
-data source with the same name as the input suffixed by <cite>.reports</cite>.)
-..note:: If supplied, must reflect equal number of outputs as</p>
-<blockquote class="last">
-<div>inputs in <cite>sourcePaths</cite></div></blockquote>
+<dt><strong>Note:</strong> If supplied, must reflect equal number of outputs as</dt>
+<dd><p class="first last">inputs in <tt class="docutils literal"><span class="pre">sourcePaths</span></tt></p>
 </dd>
 </dl>
-<dl class="docutils">
-<dt>fset.SeqReader</dt>
-<dd>Returns <cite>self</cite></dd>
-</dl>
-<dl class="docutils">
-<dt>ValueError</dt>
-<dd>If target paths are supplied but don&#8217;t match in lenght with the
-number of source-paths</dd>
-</dl>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">fseq.SeqReader</p>
+<blockquote>
+<div><p>Returns <tt class="docutils literal"><span class="pre">self</span></tt></p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>ValueError</strong></p>
+<blockquote class="last">
+<div><p>If target paths are supplied but don&#8217;t match in lenght with the
+number of source-paths</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="fseq.reading.seq_reader.SeqReader.addReportBuilders">
 <tt class="descname">addReportBuilders</tt><big>(</big><em>*reportBuilders</em><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_reader.html#SeqReader.addReportBuilders"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_reader.SeqReader.addReportBuilders" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a report builder to the set of reports done upon analysis.</p>
-<dl class="docutils">
-<dt>reportBuilders: fseq.ReportBuilder, optional</dt>
-<dd>Any number of report builder to be added</dd>
-</dl>
-<dl class="docutils">
-<dt>fset.SeqReader</dt>
-<dd>Returns <cite>self</cite></dd>
-</dl>
-<dl class="docutils">
-<dt>TypeError</dt>
-<dd>If an item in <cite>reportBuilders</cite> is not a valid <cite>fseq.ReportBuilder</cite></dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>reportBuilders: fseq.ReportBuilder, optional</strong></p>
+<blockquote>
+<div><p>Any number of report builder to be added</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">fseq.SeqReader</p>
+<blockquote>
+<div><p>Returns <tt class="docutils literal"><span class="pre">self</span></tt></p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>TypeError</strong></p>
+<blockquote class="last">
+<div><p>If an item in <tt class="docutils literal"><span class="pre">reportBuilders</span></tt> is not a valid
+<tt class="docutils literal"><span class="pre">fseq.ReportBuilder</span></tt></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="fseq.reading.seq_reader.SeqReader.clearJobQueue">
 <tt class="descname">clearJobQueue</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_reader.html#SeqReader.clearJobQueue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_reader.SeqReader.clearJobQueue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes all jobs in the queue.</p>
-<dl class="docutils">
-<dt>fset.SeqReader</dt>
-<dd>Returns <cite>self</cite></dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">fseq.SeqReader</p>
+<blockquote class="last">
+<div><p>Returns <tt class="docutils literal"><span class="pre">self</span></tt></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="fseq.reading.seq_reader.SeqReader.clearResults">
 <tt class="descname">clearResults</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_reader.html#SeqReader.clearResults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_reader.SeqReader.clearResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes all stored results of encodings</p>
-<dl class="docutils">
-<dt>fset.SeqReader</dt>
-<dd>Returns <cite>self</cite></dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">fseq.SeqReader</p>
+<blockquote class="last">
+<div><p>Returns <tt class="docutils literal"><span class="pre">self</span></tt></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -825,10 +1425,18 @@ number of source-paths</dd>
 <dt id="fseq.reading.seq_reader.SeqReader.jobQueue">
 <tt class="descname">jobQueue</tt><a class="reference internal" href="_modules/fseq/reading/seq_reader.html#SeqReader.jobQueue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_reader.SeqReader.jobQueue" title="Permalink to this definition">¶</a></dt>
 <dd><p>The data sources to be read and their respective targets.</p>
-<dl class="docutils">
-<dt>list of tuples</dt>
-<dd>Each tuple representing a source - target pair.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of tuples</p>
+<blockquote class="last">
+<div><p>Each tuple representing a source - target pair.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -836,16 +1444,28 @@ number of source-paths</dd>
 <tt class="descname">next</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_reader.html#SeqReader.next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_reader.SeqReader.next" title="Permalink to this definition">¶</a></dt>
 <dd><p>Part of iter interface, produces the encoding of the next
 data-source.</p>
-<dl class="docutils">
-<dt>numpy.ndarray</dt>
-<dd>Encoding output.</dd>
-</dl>
-<dl class="docutils">
-<dt>ValueError</dt>
-<dd>If no encoder has been assigned.</dd>
-<dt>StopIteration</dt>
-<dd>If no more data-source exists.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">numpy.ndarray</p>
+<blockquote>
+<div><p>Encoding output.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>ValueError</strong></p>
+<blockquote>
+<div><p>If no encoder has been assigned.</p>
+</div></blockquote>
+<p><strong>StopIteration</strong></p>
+<blockquote class="last">
+<div><p>If no more data-source exists.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -853,10 +1473,17 @@ data-source.</p>
 <tt class="descname">popDataSources</tt><a class="reference internal" href="_modules/fseq/reading/seq_reader.html#SeqReader.popDataSources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_reader.SeqReader.popDataSources" title="Permalink to this definition">¶</a></dt>
 <dd><p>If sequence reader should remove data sources from list of sources
 when they have been read.</p>
-<p>The general use case is to set this to <cite>True</cite>, but omitting popping
+<p>The general use case is to set this to <tt class="docutils literal"><span class="pre">True</span></tt>, but omitting popping
 can be useful if data may be needed to be re-read with a different
 encoder.</p>
-<p>bool</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -864,9 +1491,16 @@ encoder.</p>
 <tt class="descname">popEncodingResults</tt><a class="reference internal" href="_modules/fseq/reading/seq_reader.html#SeqReader.popEncodingResults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_reader.SeqReader.popEncodingResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>If the outcome of an encoding should be remove from memory as soon
 as report as been produced or iteration completed.</p>
-<p>..note:: The process will require large amounts of memory if results
+<p><strong>Note:</strong> The process will require large amounts of memory if results
 are not popped and several large files analysed.</p>
-<p>bool</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -874,29 +1508,46 @@ are not popped and several large files analysed.</p>
 <tt class="descname">removeReportBuilders</tt><big>(</big><em>*builders</em><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_reader.html#SeqReader.removeReportBuilders"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_reader.SeqReader.removeReportBuilders" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes all builders supplied, or all builders if no specific
 builder is supplied.</p>
-<dl class="docutils">
-<dt><a href="#id1"><span class="problematic" id="id2">*</span></a>args: fseq.ReportBuilder, optional</dt>
-<dd>Any number of report builder references for report builders to
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>*args: fseq.ReportBuilder, optional</strong></p>
+<blockquote>
+<div><p>Any number of report builder references for report builders to
 be removed.
-If none is supplied, all report builders will be removed.</dd>
-</dl>
-<dl class="docutils">
-<dt>fset.SeqReader</dt>
-<dd>Returns <cite>self</cite></dd>
-</dl>
-<p>If current instance has three builders:
-&gt;&gt;&gt; tuple(seqEncoder.reportBuilders)
-(b1, b2, b3)</p>
-<p>The <cite>b2</cite> and <cite>b3</cite> can be removed by:
-&gt;&gt;&gt; seqEncoder.removeReportBuilders(b2, b3)
-&lt;fseq.reading.seq_reader.SeqReader at 0x7faf696e5810&gt;</p>
+If none is supplied, all report builders will be removed.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">fseq.SeqReader</p>
+<blockquote class="last">
+<div><p>Returns <tt class="docutils literal"><span class="pre">self</span></tt></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>If current instance has three builders:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">tuple</span><span class="p">(</span><span class="n">seqEncoder</span><span class="o">.</span><span class="n">reportBuilders</span><span class="p">)</span>
+<span class="go">(b1, b2, b3)</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">b2</span></tt> and <tt class="docutils literal"><span class="pre">b3</span></tt> can be removed by:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">seqEncoder</span><span class="o">.</span><span class="n">removeReportBuilders</span><span class="p">(</span><span class="n">b2</span><span class="p">,</span> <span class="n">b3</span><span class="p">)</span>
+<span class="go">&lt;fseq.reading.seq_reader.SeqReader at 0x7faf696e5810&gt;</span>
+</pre></div>
+</div>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">tuple</span><span class="p">(</span><span class="n">seqEncoder</span><span class="o">.</span><span class="n">reportBuilders</span><span class="p">)</span>
 <span class="go">(b1, )</span>
 </pre></div>
 </div>
-<p>Alternatively all builders can be removed by:
-&gt;&gt;&gt; seqEncoder.removeReportBuilders()
-&lt;fseq.reading.seq_reader.SeqReader at 0x7faf696e5810&gt;</p>
+<p>Alternatively all builders can be removed by:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">seqEncoder</span><span class="o">.</span><span class="n">removeReportBuilders</span><span class="p">()</span>
+<span class="go">&lt;fseq.reading.seq_reader.SeqReader at 0x7faf696e5810&gt;</span>
+</pre></div>
+</div>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">tuple</span><span class="p">(</span><span class="n">seqEncoder</span><span class="o">.</span><span class="n">reportBuilders</span><span class="p">)</span>
 <span class="go">()</span>
 </pre></div>
@@ -908,22 +1559,40 @@ If none is supplied, all report builders will be removed.</dd>
 <tt class="descname">reportBuilders</tt><a class="reference internal" href="_modules/fseq/reading/seq_reader.html#SeqReader.reportBuilders"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_reader.SeqReader.reportBuilders" title="Permalink to this definition">¶</a></dt>
 <dd><p>The report builders associated with the reader.</p>
 <p>If any, the reports will be destilled automatically at the end of
-<cite>SeqReader.run()</cite>.</p>
-<dl class="docutils">
-<dt>tuple</dt>
-<dd>The currently assigned report builders</dd>
-</dl>
-<dl class="docutils">
-<dt>fseq.ReportBuilder.distill</dt>
+<tt class="docutils literal"><span class="pre">SeqReader.run()</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">tuple</p>
+<blockquote class="last">
+<div><p>The currently assigned report builders</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><tt class="xref py py-obj docutils literal"><span class="pre">fseq.reporting.report_builder.ReportBuilder.distill</span></tt></dt>
 <dd>Method for distilling encoded data.</dd>
 </dl>
+</div>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="fseq.reading.seq_reader.SeqReader.reportDirectory">
 <tt class="descname">reportDirectory</tt><a class="reference internal" href="_modules/fseq/reading/seq_reader.html#SeqReader.reportDirectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_reader.SeqReader.reportDirectory" title="Permalink to this definition">¶</a></dt>
 <dd><p>The directory where reports for the last made encoding should go.</p>
-<p>str</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -931,18 +1600,35 @@ If none is supplied, all report builders will be removed.</dd>
 <tt class="descname">resetSeqEncoder</tt><a class="reference internal" href="_modules/fseq/reading/seq_reader.html#SeqReader.resetSeqEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_reader.SeqReader.resetSeqEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>If each data source will detect format anew or if all files are
 assumed to be of the same format</p>
-<p>bool</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="fseq.reading.seq_reader.SeqReader.results">
 <tt class="descname">results</tt><a class="reference internal" href="_modules/fseq/reading/seq_reader.html#SeqReader.results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_reader.SeqReader.results" title="Permalink to this definition">¶</a></dt>
 <dd><p>A list of the results of the encodings.</p>
-<p>list</p>
-<dl class="docutils">
-<dt>seqEncoder.clearResults</dt>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><tt class="xref py py-obj docutils literal"><span class="pre">SeqEncoder.clearResults</span></tt></dt>
 <dd>Clearing the list of results</dd>
 </dl>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -950,10 +1636,18 @@ assumed to be of the same format</p>
 <tt class="descname">run</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/fseq/reading/seq_reader.html#SeqReader.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_reader.SeqReader.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs through all sources and produces reports if such have been
 attached.</p>
-<dl class="docutils">
-<dt>fset.SeqReader</dt>
-<dd>Returns <cite>self</cite></dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">fseq.SeqReader</p>
+<blockquote class="last">
+<div><p>Returns <tt class="docutils literal"><span class="pre">self</span></tt></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -961,14 +1655,24 @@ attached.</p>
 <tt class="descname">seqEncoder</tt><a class="reference internal" href="_modules/fseq/reading/seq_reader.html#SeqReader.seqEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fseq.reading.seq_reader.SeqReader.seqEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>The encoder attached to the sequence reader that will parse the
 input strings into values.</p>
-<dl class="docutils">
-<dt>fseq.SeqEncoder</dt>
-<dd>Current encoder</dd>
-</dl>
-<dl class="docutils">
-<dt>TypeError</dt>
-<dd>If trying to assign object that is not a <cite>fseq.SeqEncoder</cite></dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">fseq.SeqEncoder</p>
+<blockquote>
+<div><p>Current encoder</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>TypeError</strong></p>
+<blockquote class="last">
+<div><p>If trying to assign object that is not a <tt class="docutils literal"><span class="pre">fseq.SeqEncoder</span></tt></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -981,6 +1685,16 @@ input strings into values.</p>
 </div>
 <div class="section" id="module-fseq.reading">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-fseq.reading" title="Permalink to this headline">¶</a></h2>
+<p>Reading-related modules of fseq.</p>
+<p>The reading package contains of two modules: <cite>seq_encoder</cite> and <cite>seq_reader</cite>.</p>
+<p>The reader contains the generic reader that coordinates actions and works as
+the mainframe of <cite>fseq</cite>.
+This module should need no extensions to increase the funcitonality of the
+<cite>fseq</cite>.</p>
+<p>The encoder-module contains both the different types of encoders available as
+well as the format-detectors for variaous types of input formats.
+Here further formats can be added and new encoders written to extend the 
+functionality of <cite>fseq</cite>.</p>
 </div>
 </div>
 
@@ -994,7 +1708,9 @@ input strings into values.</p>
   <ul>
 <li><a class="reference internal" href="#">fseq.reading package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-fseq.reading.seq_encoder">fseq.reading.seq_encoder module</a></li>
+<li><a class="reference internal" href="#module-fseq.reading.seq_encoder">fseq.reading.seq_encoder module</a><ul>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-fseq.reading.seq_reader">fseq.reading.seq_reader module</a></li>
 <li><a class="reference internal" href="#module-fseq.reading">Module contents</a></li>
 </ul>

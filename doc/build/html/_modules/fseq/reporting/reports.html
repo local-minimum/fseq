@@ -63,6 +63,24 @@
 <span class="sd">    Main purpose is to make a common interface for figure saving using</span>
 <span class="sd">    matplotlib figures.</span>
 
+<span class="sd">    Parameters </span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    name: str, optional</span>
+<span class="sd">        A specific name of the report</span>
+
+<span class="sd">        (Default: ``None``)</span>
+
+<span class="sd">    saveArgs: tuple or list, optional</span>
+<span class="sd">        Any args to be passed to ``matplotlib.savefig`` after the figure</span>
+
+<span class="sd">        (Default: Empty ``tuple``)</span>
+
+<span class="sd">    saveKwargs: dict, optional</span>
+<span class="sd">        Any keyword args to be passed to ``matplotlib.savefig``</span>
+
+<span class="sd">        (Default: Empty ``dict``)</span>
+
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 
@@ -73,17 +91,23 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">saveArgs</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(),</span> <span class="n">saveKwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Properties</span>
+<span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 
 <span class="sd">        name: str, optional</span>
 <span class="sd">            A specific name of the report</span>
 
+<span class="sd">            (Default: ``None``)</span>
+
 <span class="sd">        saveArgs: tuple or list, optional</span>
-<span class="sd">            Any args to be passed to `matplotlib.savefig` after the figure</span>
+<span class="sd">            Any args to be passed to ``matplotlib.savefig`` after the figure</span>
+
+<span class="sd">            (Default: Empty ``tuple``)</span>
 
 <span class="sd">        saveKwargs: dict, optional</span>
-<span class="sd">            Any keyword args to be passed to `matplotlib.savefig`</span>
+<span class="sd">            Any keyword args to be passed to ``matplotlib.savefig``</span>
+
+<span class="sd">            (Default: Empty ``dict``)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
@@ -92,6 +116,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Name of the plot, used to name the file: str&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
 
     <span class="nd">@name.setter</span>
@@ -100,7 +125,7 @@
 </div>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">saveArgs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
+        <span class="sd">&quot;&quot;&quot;Save args passed to ``matplotlib.pyplot.figure.savefig``: tuple&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_saveArgs</span>
 
     <span class="nd">@saveArgs.setter</span>
@@ -110,6 +135,9 @@
 </div>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">saveKwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save keyword args passed to ``matplotlib.pyplot.figure.savefig``:</span>
+<span class="sd">        dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_saveKwargs</span>
 
@@ -138,21 +166,25 @@
 <span class="sd">        name: str, optional</span>
 <span class="sd">            A specific name for this figure-file.</span>
 <span class="sd">            If none supplied the default name for the report will be used,</span>
-<span class="sd">            if no such has been set `ValueError` is raised.</span>
+
+<span class="sd">            (Default: Use the ``self.name`` of the instance)</span>
+
+<span class="sd">            **Note:** If none supplied and none set for instance,</span>
+<span class="sd">            ``ValueError`` is raised.</span>
 
 <span class="sd">        *args:</span>
-<span class="sd">            Any arguments to be sent to `matplotlib.Figure.save`.</span>
-<span class="sd">            If none added the `ReportBase.saveArgs` will be used.</span>
+<span class="sd">            Any arguments to be sent to ``matplotlib.Figure.save``.</span>
+<span class="sd">            If none added the ``ReportBase.saveArgs`` will be used.</span>
 
 <span class="sd">        **kwargs:</span>
-<span class="sd">            Any keyword arguments to be sent to `matplotlib.Figure.save`.</span>
-<span class="sd">            If notn addd the `ReportBase.saveKwargs` will be used.</span>
+<span class="sd">            Any keyword arguments to be sent to ``matplotlib.Figure.save``.</span>
+<span class="sd">            If notn addd the ``ReportBase.saveKwargs`` will be used.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 
 <span class="sd">        ReportBase</span>
-<span class="sd">            Returns `self`</span>
+<span class="sd">            Returns ``self``</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -200,22 +232,46 @@
 
 </div></div>
 <div class="viewcode-block" id="HeatMap"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.reports.HeatMap">[docs]</a><span class="k">class</span> <span class="nc">HeatMap</span><span class="p">(</span><span class="n">ReportBase</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Makes heatmaps from data&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Makes heatmaps from data</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    name: str, optional</span>
+<span class="sd">        A specific name of the report</span>
+
+<span class="sd">        (Default: &quot;heatmap.pdf&quot;)</span>
+
+<span class="sd">    saveArgs: tuple or list, optional</span>
+<span class="sd">        Any args to be passed to ``matplotlib.savefig`` after the figure</span>
+
+<span class="sd">        (Default: Empty tuple)</span>
+
+<span class="sd">    saveKwargs: dict, optional</span>
+<span class="sd">        Any keyword args to be passed to ``matplotlib.savefig``</span>
+
+<span class="sd">        (Default: Empty dict)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;heatmap.pdf&#39;</span><span class="p">,</span> <span class="n">saveArgs</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(),</span> <span class="n">saveKwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Properties</span>
+<span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 
 <span class="sd">        name: str, optional</span>
 <span class="sd">            A specific name of the report</span>
-<span class="sd">            (Default: &#39;heatmap.pdf&#39;)</span>
+
+<span class="sd">            (Default: &quot;heatmap.pdf&quot;)</span>
 
 <span class="sd">        saveArgs: tuple or list, optional</span>
-<span class="sd">            Any args to be passed to `matplotlib.savefig` after the figure</span>
+<span class="sd">            Any args to be passed to ``matplotlib.savefig`` after the figure</span>
+
+<span class="sd">            (Default: Empty tuple)</span>
 
 <span class="sd">        saveKwargs: dict, optional</span>
-<span class="sd">            Any keyword args to be passed to `matplotlib.savefig`</span>
+<span class="sd">            Any keyword args to be passed to ``matplotlib.savefig``</span>
+
+<span class="sd">            (Default: Empty dict)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">HeatMap</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">saveArgs</span><span class="o">=</span><span class="n">saveArgs</span><span class="p">,</span>
@@ -237,46 +293,76 @@
 <span class="sd">        name: str, optional</span>
 <span class="sd">            If the default name of the HeatMap instance should be overwritten</span>
 
+<span class="sd">            (Default: Use the value of ``self.name``)</span>
+
 <span class="sd">        outputRoot: str, optional</span>
 <span class="sd">            The directory in which to place the report</span>
 
+<span class="sd">            (Default: ``None``)</span>
+
 <span class="sd">        outputNamePrefix: str, optional</span>
 <span class="sd">            A prefix to prepend the name when saving the output.</span>
+<span class="sd">            Typically set by the builder to indicate what post-processing</span>
+<span class="sd">            was done to the data shown in the report.</span>
+
+<span class="sd">            (Default: ``None``)</span>
 
 <span class="sd">        title: str, optional</span>
 <span class="sd">            A title to be put over the heatmap</span>
+<span class="sd">            (Default: ``None``, value automatically scaled by matplotlib)</span>
+
+<span class="sd">            (Default: ``None``)</span>
 
 <span class="sd">        text: str, optional</span>
 <span class="sd">            An explanatory text to put under the plot</span>
 
+<span class="sd">            (Default: ``None``)</span>
+
+<span class="sd">            **Note:** This feature has not been implemented yet.</span>
+
 <span class="sd">        ylabel: str, optional</span>
 <span class="sd">            A label for the y-axis</span>
+
+<span class="sd">            (Default: ``None``)</span>
 
 <span class="sd">        xlabel: str, optional</span>
 <span class="sd">            A label for the x-axis</span>
 
+<span class="sd">            (Default: ``None``)</span>
+
 <span class="sd">        saveArgs: tuple or list, optional</span>
 <span class="sd">            A set of arguments to overwrite the instance&#39;s default save args</span>
+
+<span class="sd">            (Default: empty tuple)</span>
 
 <span class="sd">        saveKwargs: dict, optional</span>
 <span class="sd">            A set of keyword arguments to overwrite the instanc&#39;s default</span>
 
+<span class="sd">            (Default: empty dict)</span>
+
 <span class="sd">        vmin: number, optional</span>
 <span class="sd">            To set a minimum color-scale number for the heatmap</span>
+
+<span class="sd">            (Default: ``None``, value automatically scaled by matplotlib)</span>
 
 <span class="sd">        vmax: number, optional</span>
 <span class="sd">            To set a maximum color-scale number for the heatmap</span>
 
+<span class="sd">            (Default: ``None``, value automatically scaled by matplotlib)</span>
+
 <span class="sd">        aspect: str, optional</span>
-<span class="sd">            The aspect ratio of the blocks/pixels in the heatmap, default</span>
-<span class="sd">            is &#39;auto&#39;, which allows for rectangular pixels.</span>
+<span class="sd">            The aspect ratio of the blocks/pixels in the heatmap</span>
+<span class="sd">            </span>
+<span class="sd">            (Default: &#39;auto&#39;, which allows for rectangular pixels)</span>
 
 <span class="sd">        axisOff: bool, optional</span>
 <span class="sd">            If the axis of the plot should not be rendered</span>
+
 <span class="sd">            (Default: True)</span>
 <span class="sd">            </span>
 <span class="sd">        cmap: matplotlib.cmap, optional</span>
 <span class="sd">            A colormap to be used when plotting.</span>
+
 <span class="sd">            (Default: Red -- Blue)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -311,21 +397,46 @@
 
 </div></div>
 <div class="viewcode-block" id="LinePlot"><a class="viewcode-back" href="../../../fseq.reporting.html#fseq.reporting.reports.LinePlot">[docs]</a><span class="k">class</span> <span class="nc">LinePlot</span><span class="p">(</span><span class="n">ReportBase</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Makes lines from data&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Makes lines from data</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    name: str, optional</span>
+<span class="sd">        A specific name of the report</span>
+
+<span class="sd">        (Default: &quot;line.pdf&quot;)</span>
+
+<span class="sd">    saveArgs: tuple or list, optional</span>
+<span class="sd">        Any args to be passed to ``matplotlib.savefig`` after the figure</span>
+
+<span class="sd">        (Default: Empty tuple)</span>
+
+<span class="sd">    saveKwargs: dict, optional</span>
+<span class="sd">        Any keyword args to be passed to ``matplotlib.savefig``</span>
+
+<span class="sd">        (Default: Empty dict)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;line.pdf&quot;</span><span class="p">,</span> <span class="n">saveArgs</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(),</span> <span class="n">saveKwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Properties</span>
+<span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 
 <span class="sd">        name: str, optional</span>
 <span class="sd">            A specific name of the report</span>
 
+<span class="sd">            (Default: &quot;line.pdf&quot;)</span>
+
 <span class="sd">        saveArgs: tuple or list, optional</span>
-<span class="sd">            Any args to be passed to `matplotlib.savefig` after the figure</span>
+<span class="sd">            Any args to be passed to ``matplotlib.savefig`` after the figure</span>
+
+<span class="sd">            (Default: Empty tuple)</span>
 
 <span class="sd">        saveKwargs: dict, optional</span>
-<span class="sd">            Any keyword args to be passed to `matplotlib.savefig`</span>
+<span class="sd">            Any keyword args to be passed to ``matplotlib.savefig``</span>
+
+<span class="sd">            (Default: Empty dict)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">LinePlot</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">saveArgs</span><span class="o">=</span><span class="n">saveArgs</span><span class="p">,</span>
@@ -348,44 +459,77 @@
 <span class="sd">        name: str, optional</span>
 <span class="sd">            If the default name of the HeatMap instance should be overwritten</span>
 
+<span class="sd">            (Default: Use the value of ``self.name``)</span>
+
 <span class="sd">        outputRoot: str, optional</span>
 <span class="sd">            The directory in which to place the report</span>
 
+<span class="sd">            (Default: ``None``)</span>
+
 <span class="sd">        outputNamePrefix: str, optional</span>
 <span class="sd">            A prefix to prepend the name when saving the output.</span>
+<span class="sd">            Typically set by the builder to indicate what post-processing</span>
+<span class="sd">            was done to the data shown in the report.</span>
+
+<span class="sd">            (Default: ``None``)</span>
 
 <span class="sd">        title: str, optional</span>
 <span class="sd">            A title to be put over the heatmap</span>
+<span class="sd">            (Default: ``None``, value automatically scaled by matplotlib)</span>
+
+<span class="sd">            (Default: ``None``)</span>
 
 <span class="sd">        text: str, optional</span>
 <span class="sd">            An explanatory text to put under the plot</span>
 
+<span class="sd">            (Default: ``None``)</span>
+
+<span class="sd">            **Note:** This feature has not been implemented yet.</span>
+
 <span class="sd">        ylabel: str, optional</span>
 <span class="sd">            A label for the y-axis</span>
+
+<span class="sd">            (Default: ``None``)</span>
 
 <span class="sd">        xlabel: str, optional</span>
 <span class="sd">            A label for the x-axis</span>
 
+<span class="sd">            (Default: ``None``)</span>
+
 <span class="sd">        saveArgs: tuple or list, optional</span>
 <span class="sd">            A set of arguments to overwrite the instance&#39;s default save args</span>
 
+<span class="sd">            (Default: empty ``tuple``)</span>
+
 <span class="sd">        saveKwargs: dict, optional</span>
 <span class="sd">            A set of keyword arguments to overwrite the instanc&#39;s default</span>
-<span class="sd">        </span>
+
+<span class="sd">            (Default: empty ``dict``)</span>
+
 <span class="sd">        logX: bool, optional</span>
 <span class="sd">            If X-axis should be logged</span>
+
+<span class="sd">            (Default: ``False``)</span>
 
 <span class="sd">        logY: bool, optional</span>
 <span class="sd">            If Y-axis should be logged</span>
 
+<span class="sd">            (Default: ``False``)</span>
+
 <span class="sd">        basex: number, optional</span>
 <span class="sd">            To specify other then 10-base logging</span>
+
+<span class="sd">            (Default: ``None``, uses 10-base)</span>
 
 <span class="sd">        basey: number, optional</span>
 <span class="sd">            To specify other than 10-base logging</span>
 
+<span class="sd">            (Default: ``None``, uses 10-base)</span>
+
 <span class="sd">        labels: str, optional</span>
 <span class="sd">            To name the line plotted and thus add a legend to the plot.</span>
+
+<span class="sd">            (Default: ``None``)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;Unused arguments: {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>

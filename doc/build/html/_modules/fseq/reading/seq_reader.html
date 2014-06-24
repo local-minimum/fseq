@@ -68,7 +68,7 @@
 <span class="sd">    processed.</span>
 
 <span class="sd">    The entire stack of inputs can be processed in bulk by invoking</span>
-<span class="sd">    `SeqReader.run()` but the results of each encoding, omitting any</span>
+<span class="sd">    ``SeqReader.run()`` but the results of each encoding, omitting any</span>
 <span class="sd">    report building can also be produced iteratively as shown in the examples.</span>
 
 <span class="sd">    Attributes</span>
@@ -89,16 +89,18 @@
 <span class="sd">    --------</span>
 
 <span class="sd">    To invoke the reader it can either be run :</span>
+
 <span class="sd">    &gt;&gt;&gt; seqReader.run()</span>
 <span class="sd">    &lt;fseq.reading.seq_reader.SeqReader at 0x7faf6970fd10&gt;</span>
 
 <span class="sd">    or if more control is required, it can be iterated over:</span>
+
 <span class="sd">    &gt;&gt;&gt; for res in seqReader:</span>
 <span class="sd">    ...    reportBuilder.distill(res, dirname=seqReader.reportDirectory)</span>
 
 <span class="sd">    Both methods above yielding the same result with the difference that</span>
-<span class="sd">    the first may store results in `seqReader.results` depending on the</span>
-<span class="sd">    `seqReader.popEncodingResults` settings while the latter never keeps</span>
+<span class="sd">    the first may store results in ``seqReader.results`` depending on the</span>
+<span class="sd">    ``seqReader.popEncodingResults`` settings while the latter never keeps</span>
 <span class="sd">    the results in the state of the instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -118,55 +120,69 @@
 <span class="sd">        seqEncoder : fseq.SeqEncoder, optional</span>
 <span class="sd">            An instance of a sequence encoder that will be used to encode the</span>
 <span class="sd">            input strings</span>
-<span class="sd">            (Default: GC-encoder) </span>
+<span class="sd">            </span>
+<span class="sd">            (Default: ``fseq.SeqEncoderGC``) </span>
 
 <span class="sd">        dataSourcePaths: string or iterable object, optional</span>
 <span class="sd">            Either a path string or a collection of paths to data files</span>
+
 <span class="sd">            (Default: no input / added later)</span>
 
 <span class="sd">        dataTargetPaths: string or iterable object, optional</span>
 <span class="sd">            Either a relative path string or collection of relative paths.</span>
 <span class="sd">            The path is relative to the respective data source.</span>
+<span class="sd">            </span>
 <span class="sd">            (Default: will create a folder in the same directory as the </span>
-<span class="sd">            data source with the same name as the input suffixed by `.reports`.)</span>
-<span class="sd">            ..note:: If supplied, must reflect equal number of outputs as</span>
-<span class="sd">                inputs in `dataSourcePaths` </span>
+<span class="sd">            data source with the same name as the input suffixed by</span>
+<span class="sd">            ``.reports``.)</span>
+
+<span class="sd">            **Note:** If supplied, must reflect equal number of outputs as</span>
+<span class="sd">                inputs in ``dataSourcePaths`` </span>
 
 <span class="sd">        reportBuilders: fseq.ReportBuilder or tuple/list, optional</span>
 <span class="sd">            If a report should be automatically be built upon encoding</span>
 <span class="sd">            completion.</span>
 <span class="sd">            If a list or tuple, it should only contain report builders.</span>
+
 <span class="sd">            (Default: The report builders that the encoder requests or none)</span>
 
 <span class="sd">        popDataSources: bool, optional</span>
 <span class="sd">            If data sources should be removed from stack once encoded</span>
-<span class="sd">            (Default: `True`)</span>
+
+<span class="sd">            (Default: ``True``)</span>
 
 <span class="sd">        resetSeqEncoder: bool, optional</span>
 <span class="sd">            If sequence encoder should be reset between each source file or</span>
 <span class="sd">            if the encoder should expect all sources to be the same format.</span>
-<span class="sd">            (Default: `True`)</span>
+
+<span class="sd">            (Default: ``True``)</span>
 
 <span class="sd">        popEncodingResults: bool, optional</span>
 <span class="sd">            If encoding results should be popped after they have been processed.</span>
-<span class="sd">            (Default: `False` if initiated with exactly one source,</span>
-<span class="sd">            else `True`)</span>
+
+<span class="sd">            (Default: ``False`` if initiated with exactly one source,</span>
+<span class="sd">            else ``True``)</span>
 
 <span class="sd">        dataArrayConstructor: func, optional</span>
-<span class="sd">            The function used to create data storages, e.g. `np.zeros`,</span>
-<span class="sd">            `np.ones` or `np.empty`.</span>
-<span class="sd">            (Default: `np.zeros`)</span>
+<span class="sd">            The function used to create data storages, e.g. ``np.zeros``,</span>
+<span class="sd">            ``np.ones`` or ``np.empty``.</span>
+
+<span class="sd">            (Default: ``np.zeros``)</span>
 
 <span class="sd">        dataWidth: int, optional</span>
 <span class="sd">            Max length of sequences expected.</span>
+
 <span class="sd">            (Default: 101)</span>
 
 <span class="sd">        dataType: type, optional</span>
 <span class="sd">            Data type for the data array.</span>
-<span class="sd">            (Default: np.float16)</span>
+
+<span class="sd">            (Default: ``np.float16``)</span>
 
 <span class="sd">        verbose: bool, optional</span>
 <span class="sd">            If running will emit some status messages</span>
+
+<span class="sd">            (Default: ``False``)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_idData</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -271,7 +287,7 @@
         <span class="sd">&quot;&quot;&quot;If sequence reader should remove data sources from list of sources</span>
 <span class="sd">        when they have been read.</span>
 
-<span class="sd">        The general use case is to set this to `True`, but omitting popping</span>
+<span class="sd">        The general use case is to set this to ``True``, but omitting popping</span>
 <span class="sd">        can be useful if data may be needed to be re-read with a different</span>
 <span class="sd">        encoder.</span>
 <span class="sd">        </span>
@@ -294,7 +310,7 @@
         <span class="sd">&quot;&quot;&quot;If the outcome of an encoding should be remove from memory as soon</span>
 <span class="sd">        as report as been produced or iteration completed.</span>
 
-<span class="sd">        ..note:: The process will require large amounts of memory if results</span>
+<span class="sd">        **Note:** The process will require large amounts of memory if results</span>
 <span class="sd">        are not popped and several large files analysed.</span>
 
 <span class="sd">        Returns</span>
@@ -328,7 +344,7 @@
 <span class="sd">        See also</span>
 <span class="sd">        --------</span>
 <span class="sd">        </span>
-<span class="sd">        seqEncoder.clearResults</span>
+<span class="sd">        SeqEncoder.clearResults</span>
 <span class="sd">            Clearing the list of results</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -354,7 +370,7 @@
 <span class="sd">        ------</span>
 
 <span class="sd">        TypeError</span>
-<span class="sd">            If trying to assign object that is not a `fseq.SeqEncoder`</span>
+<span class="sd">            If trying to assign object that is not a ``fseq.SeqEncoder``</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -366,7 +382,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="n">fseq</span><span class="o">.</span><span class="n">SeqEncoder</span><span class="p">):</span>
 
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="s">&quot;Encoder {0} is not a `fseq.SeqEncoder`&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">encoder</span><span class="p">))</span>
+                <span class="s">&quot;Encoder {0} is not a ``fseq.SeqEncoder``&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">encoder</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_seqEncoder</span> <span class="o">=</span> <span class="n">encoder</span>
@@ -394,7 +410,7 @@
         <span class="sd">&quot;&quot;&quot;The report builders associated with the reader.</span>
 
 <span class="sd">        If any, the reports will be destilled automatically at the end of</span>
-<span class="sd">        `SeqReader.run()`.</span>
+<span class="sd">        ``SeqReader.run()``.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -405,7 +421,7 @@
 <span class="sd">        See also</span>
 <span class="sd">        --------</span>
 
-<span class="sd">        fseq.ReportBuilder.distill</span>
+<span class="sd">        fseq.reporting.report_builder.ReportBuilder.distill</span>
 <span class="sd">            Method for distilling encoded data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -444,16 +460,19 @@
 <span class="sd">        targetPaths: string or iterable object, optional</span>
 <span class="sd">            Either a relative path string or collection of relative paths.</span>
 <span class="sd">            The path is relative to the respective data source.</span>
+
 <span class="sd">            (Default: will create a folder in the same directory as the </span>
-<span class="sd">            data source with the same name as the input suffixed by `.reports`.)</span>
-<span class="sd">            ..note:: If supplied, must reflect equal number of outputs as</span>
-<span class="sd">                inputs in `sourcePaths` </span>
+<span class="sd">            data source with the same name as the input suffixed by</span>
+<span class="sd">            ``.reports``.)</span>
+
+<span class="sd">            **Note:** If supplied, must reflect equal number of outputs as</span>
+<span class="sd">                inputs in ``sourcePaths`` </span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 
-<span class="sd">        fset.SeqReader</span>
-<span class="sd">            Returns `self`</span>
+<span class="sd">        fseq.SeqReader</span>
+<span class="sd">            Returns ``self``</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -495,21 +514,22 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 
-<span class="sd">        fset.SeqReader</span>
-<span class="sd">            Returns `self`</span>
+<span class="sd">        fseq.SeqReader</span>
+<span class="sd">            Returns ``self``</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 
 <span class="sd">        TypeError</span>
-<span class="sd">            If an item in `reportBuilders` is not a valid `fseq.ReportBuilder`</span>
+<span class="sd">            If an item in ``reportBuilders`` is not a valid</span>
+<span class="sd">            ``fseq.ReportBuilder``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">reportBuilder</span> <span class="ow">in</span>  <span class="n">reportBuilders</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reportBuilder</span><span class="p">,</span> <span class="n">fseq</span><span class="o">.</span><span class="n">ReportBuilderBase</span><span class="p">):</span>
 
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                    <span class="s">&quot;Report Builder {0} is not a `fseq.ReportBuilder`&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="s">&quot;Report Builder {0} is not a ``fseq.ReportBuilder``&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="n">fseq</span><span class="o">.</span><span class="n">ReportBuilderBase</span><span class="p">))</span>
 
             <span class="k">else</span><span class="p">:</span>
@@ -524,8 +544,8 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 
-<span class="sd">        fset.SeqReader</span>
-<span class="sd">            Returns `self`</span>
+<span class="sd">        fseq.SeqReader</span>
+<span class="sd">            Returns ``self``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_dataSourcePaths</span> <span class="o">=</span> <span class="p">[]</span>
@@ -539,8 +559,8 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 
-<span class="sd">        fset.SeqReader</span>
-<span class="sd">            Returns `self`</span>
+<span class="sd">        fseq.SeqReader</span>
+<span class="sd">            Returns ``self``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_results</span> <span class="o">=</span> <span class="p">[]</span>
@@ -562,17 +582,19 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 
-<span class="sd">        fset.SeqReader</span>
-<span class="sd">            Returns `self`</span>
+<span class="sd">        fseq.SeqReader</span>
+<span class="sd">            Returns ``self``</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
 
 <span class="sd">        If current instance has three builders:</span>
+
 <span class="sd">        &gt;&gt;&gt; tuple(seqEncoder.reportBuilders)</span>
 <span class="sd">        (b1, b2, b3)</span>
 
-<span class="sd">        The `b2` and `b3` can be removed by:</span>
+<span class="sd">        The ``b2`` and ``b3`` can be removed by:</span>
+
 <span class="sd">        &gt;&gt;&gt; seqEncoder.removeReportBuilders(b2, b3)</span>
 <span class="sd">        &lt;fseq.reading.seq_reader.SeqReader at 0x7faf696e5810&gt;</span>
 
@@ -580,6 +602,7 @@
 <span class="sd">        (b1, )</span>
 
 <span class="sd">        Alternatively all builders can be removed by:</span>
+
 <span class="sd">        &gt;&gt;&gt; seqEncoder.removeReportBuilders()</span>
 <span class="sd">        &lt;fseq.reading.seq_reader.SeqReader at 0x7faf696e5810&gt;</span>
 
@@ -599,8 +622,8 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 
-<span class="sd">        fset.SeqReader</span>
-<span class="sd">            Returns `self`</span>
+<span class="sd">        fseq.SeqReader</span>
+<span class="sd">            Returns ``self``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">reporters</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>

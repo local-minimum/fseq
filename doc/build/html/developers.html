@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Developers &mdash; fSeq 1.0.0a documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="fSeq 1.0.0a documentation" href="index.html" />
+    <link rel="next" title="fSeq Project Report for C3SE Graduate Course: Python and High Performance Computing 2014" href="c3se_python_course.html" />
+    <link rel="prev" title="Tutorial" href="tutorial.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="c3se_python_course.html" title="fSeq Project Report for C3SE Graduate Course: Python and High Performance Computing 2014"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">fSeq 1.0.0a documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="developers">
+<h1>Developers<a class="headerlink" href="#developers" title="Permalink to this headline">¶</a></h1>
+<p><tt class="docutils literal"><span class="pre">fseq</span></tt> has been written to initially take care of a very limited set of
+analysis and sequence formats, while at the same time be written to be
+highly extensible.</p>
+<p>Some examples of suitable features to be included in the future:</p>
+<blockquote>
+<div><ul>
+<li><p class="first"><strong>FastQ SeqFormat Subclasses</strong></p>
+<p>Subclassing <tt class="docutils literal"><span class="pre">fseq.FastQ</span></tt> to automatically detect which quality encoding
+was used based on the range of values in the quality lines fed to the
+<tt class="docutils literal"><span class="pre">SeqFormat</span></tt>.</p>
+</li>
+<li><p class="first"><strong>SeqEncoderQaulity SeqEncoder Subclass</strong></p>
+<p>A subclass that encodes the qaulity line using the quality encoding
+supplied by the <tt class="docutils literal"><span class="pre">SeqFormat</span></tt> detected.</p>
+</li>
+</ul>
+</div></blockquote>
+<div class="section" id="git">
+<h2>Git<a class="headerlink" href="#git" title="Permalink to this headline">¶</a></h2>
+<p>The source code project is hosted at:</p>
+<p><a class="reference external" href="https://gitorious.org/fseq">https://gitorious.org/fseq</a></p>
+<p>For merge requests, the code is expected to:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Be documented in accordance with <tt class="docutils literal"><span class="pre">numpydoc</span></tt>-format
+(see <a class="reference external" href="https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt">https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt</a>)</li>
+<li>Code to be PEP8 compliant
+(see <a class="reference external" href="http://legacy.python.org/dev/peps/pep-0008/">http://legacy.python.org/dev/peps/pep-0008/</a>)</li>
+<li>Coding style in general to follow the style established in <cite>fseq</cite></li>
+<li>Git commits to in general be <em>informative</em> and have
+<em>one aspect changed per commit</em></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="reading">
+<h2>Reading<a class="headerlink" href="#reading" title="Permalink to this headline">¶</a></h2>
+<p>To extend the funcitonality by adding further encoders, these encoders should
+be derived from <tt class="docutils literal"><span class="pre">fseq.SeqEncoder</span></tt> and as a minimal requirement need to
+overwrite the <tt class="docutils literal"><span class="pre">fseq.SeqEncoder.parse</span></tt>-method.</p>
+<p>To extend the functionality by adding support for more input formats, classes
+should be derived from <tt class="docutils literal"><span class="pre">fseq.SeqFormat</span></tt> or any of the already implemented
+formats if they partially solve detection for the new format.
+Minimal requirement is overwriting the <tt class="docutils literal"><span class="pre">fseq.SeqFormat.expects</span></tt>-method, but
+typically many of the properties of the base class as well as the
+constructor needs replacing.</p>
+<div class="section" id="fseq-seqencoder-parse-self-lines-out-outindex-overwriting">
+<h3><tt class="docutils literal"><span class="pre">fseq.SeqEncoder.parse(self,</span> <span class="pre">lines,</span> <span class="pre">out,</span> <span class="pre">outindex)</span></tt> overwriting<a class="headerlink" href="#fseq-seqencoder-parse-self-lines-out-outindex-overwriting" title="Permalink to this headline">¶</a></h3>
+<p><strong>Important 1:</strong> The overwritten <tt class="docutils literal"><span class="pre">fseq.SeqEncoder.parse</span></tt> must have identical
+parameter set. If further information is needed, this should be dealt with
+during initiation or by seperate methods.</p>
+<p><strong>Important 2:</strong> The overwritten method may not throw any errors and should silently
+handle scenarios where the length of the information to be encoded mismatches
+the lenght of the corresponing slot of the <tt class="docutils literal"><span class="pre">out</span></tt> object.</p>
+<p>Example of how out the second important note can be achivied (adapted from
+<tt class="docutils literal"><span class="pre">fseq.SeqEncoderGC.parse</span></tt>):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#Point to line of interes</span>
+<span class="n">l</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_sequence_line</span><span class="p">]</span>
+
+<span class="c">#Put the contents of that line directly into out</span>
+<span class="n">out</span><span class="p">[</span><span class="n">outindex</span><span class="p">][:</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)]</span> <span class="o">=</span> <span class="n">l</span><span class="p">[:</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>The above example is quite useless as an encoder as it doesn&#8217;t translate
+the contents of the input in any way, but the <tt class="docutils literal"><span class="pre">[:len(l)]</span></tt> on <tt class="docutils literal"><span class="pre">out</span></tt>
+ensures the target slot of <tt class="docutils literal"><span class="pre">out</span></tt> is not too large, while the
+<tt class="docutils literal"><span class="pre">[:out.shape(1)]</span></tt> ensures that <cite>l</cite> is not loo large for the slot in <tt class="docutils literal"><span class="pre">out</span></tt>.</p>
+<p><strong>Important 3:</strong> The <tt class="docutils literal"><span class="pre">parse</span></tt>-method may use the state of the class instance
+(as in the above example), but due to concurrency issues, <em>it should not alter
+the state</em>.</p>
+</div>
+<div class="section" id="fseq-seqformat-subclassing">
+<h3><tt class="docutils literal"><span class="pre">fseq.SeqFormat</span></tt> subclassing<a class="headerlink" href="#fseq-seqformat-subclassing" title="Permalink to this headline">¶</a></h3>
+<p>** Important 1:** If a class is parent to further subclassings such that the
+class will conform to all data that the more specific subclass will do
+(e.g. FastQ will be expect all lines/return <tt class="docutils literal"><span class="pre">True</span></tt> for all scenarios that
+a FastQ_Q33-subclass that detects fastq-files with encoding starting at 33),
+then:</p>
+<blockquote>
+<div><ul class="simple">
+<li>The <em>parent</em> should implement the <tt class="docutils literal"><span class="pre">fseq.SeqFormat._decay</span></tt> method similar
+to the base class and have a suitable <tt class="docutils literal"><span class="pre">self._giveup</span></tt> set in its init.</li>
+<li>The specific <em>child</em> should overwrite the <tt class="docutils literal"><span class="pre">_decay</span></tt>-method so thta it
+never gives up <em>or alternatively</em> takes longer before it gives up by
+having ha higher number set to <tt class="docutils literal"><span class="pre">self._giveup</span></tt> in init.</li>
+</ul>
+</div></blockquote>
+<p>The <tt class="docutils literal"><span class="pre">self.expect(line)</span></tt> should return a boolean if the line fits what was
+expected as the next line, this method doesn&#8217;t need to continue
+reporting <tt class="docutils literal"><span class="pre">False</span></tt> after its first occurance.
+As soon as an <tt class="docutils literal"><span class="pre">expect</span></tt>-method returns a <tt class="docutils literal"><span class="pre">False</span></tt>, that <tt class="docutils literal"><span class="pre">SeqFormat</span></tt> is
+removed from possible formats by the <tt class="docutils literal"><span class="pre">SeqFormatDetector</span></tt>.</p>
+</div>
+</div>
+<div class="section" id="reporting">
+<h2>Reporting<a class="headerlink" href="#reporting" title="Permalink to this headline">¶</a></h2>
+<p>To extend the reportoar of available abstractions/analysis done to the encoded
+data, new derived <tt class="docutils literal"><span class="pre">ReportBuilderBase</span></tt> classes should be made.
+Typically the <tt class="docutils literal"><span class="pre">__init__</span></tt> and <tt class="docutils literal"><span class="pre">distill</span></tt> would be overwritten (but the super
+class methods called), and the <tt class="docutils literal"><span class="pre">DEFAULT_REPORTS</span></tt> attribute replaced.
+Potentailly the interface extended by more relevant methods and properties
+needed for user customization of the post-processing.</p>
+<p>For creating new reports any object having a <tt class="docutils literal"><span class="pre">distill</span></tt>-method will do, but
+using <tt class="docutils literal"><span class="pre">fseq.ReportBase</span></tt> will save some implementation by having implemented
+the common aspects of saving figures in <tt class="docutils literal"><span class="pre">matplotlib</span></tt>.</p>
+<div class="section" id="fseq-reportbuilderbase-subclassing">
+<h3><tt class="docutils literal"><span class="pre">fseq.ReportBuilderBase</span></tt> subclassing<a class="headerlink" href="#fseq-reportbuilderbase-subclassing" title="Permalink to this headline">¶</a></h3>
+<p>To maintain the constructor interface it is highly recommended that the init
+has the following structure:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">reports</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">reports</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">reports</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">r</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_REPORTS</span><span class="p">)</span>
+
+    <span class="nb">super</span><span class="p">(</span><span class="n">MyReportBuilder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">reports</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c">#Emulating default values for keywords is done by getting</span>
+    <span class="c">#the key with default values as follows</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">someKey</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;someKey&#39;</span><span class="p">,</span> <span class="n">defaultValue</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To push some data to all attached reports make a <tt class="docutils literal"><span class="pre">super</span></tt> call to
+<tt class="docutils literal"><span class="pre">ReportBuilderBase.distill</span></tt>.</p>
+</div>
+<div class="section" id="fseq-reportbase-subclassing-or-not">
+<h3><tt class="docutils literal"><span class="pre">fseq.ReportBase</span></tt> subclassing or not<a class="headerlink" href="#fseq-reportbase-subclassing-or-not" title="Permalink to this headline">¶</a></h3>
+<p>Using <tt class="docutils literal"><span class="pre">ReportBase</span></tt> to create new reports is entirely optional, but if the
+report is a matplotlib-report, then it is probably useful.</p>
+<p>If subclassing, then the <tt class="docutils literal"><span class="pre">ReportBase.distill</span></tt> must be overwritten and
+subclass should use a call to the inherited <tt class="docutils literal"><span class="pre">saveFig</span></tt>-method to do the
+actually saving once the figure has been setup within the <tt class="docutils literal"><span class="pre">distill</span></tt> method.</p>
+<p>If using other modules than <tt class="docutils literal"><span class="pre">matplotlib</span></tt> and thereby not subclassing
+<tt class="docutils literal"><span class="pre">ReportBase</span></tt>, the report should as a minimal requirement have a
+<tt class="docutils literal"><span class="pre">distill</span></tt> method that takes the main data as the first argument and that
+accepts any number of argument and keyword arguments by having something like
+<tt class="docutils literal"><span class="pre">*args,</span> <span class="pre">**kwargs</span></tt> at the end of the parameter list.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Developers</a><ul>
+<li><a class="reference internal" href="#git">Git</a></li>
+<li><a class="reference internal" href="#reading">Reading</a><ul>
+<li><a class="reference internal" href="#fseq-seqencoder-parse-self-lines-out-outindex-overwriting"><tt class="docutils literal"><span class="pre">fseq.SeqEncoder.parse(self,</span> <span class="pre">lines,</span> <span class="pre">out,</span> <span class="pre">outindex)</span></tt> overwriting</a></li>
+<li><a class="reference internal" href="#fseq-seqformat-subclassing"><tt class="docutils literal"><span class="pre">fseq.SeqFormat</span></tt> subclassing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#reporting">Reporting</a><ul>
+<li><a class="reference internal" href="#fseq-reportbuilderbase-subclassing"><tt class="docutils literal"><span class="pre">fseq.ReportBuilderBase</span></tt> subclassing</a></li>
+<li><a class="reference internal" href="#fseq-reportbase-subclassing-or-not"><tt class="docutils literal"><span class="pre">fseq.ReportBase</span></tt> subclassing or not</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial.html"
+                        title="previous chapter">Tutorial</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="c3se_python_course.html"
+                        title="next chapter">fSeq Project Report for C3SE Graduate Course: Python and High Performance Computing 2014</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/developers.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="c3se_python_course.html" title="fSeq Project Report for C3SE Graduate Course: Python and High Performance Computing 2014"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             >previous</a> |</li>
+        <li><a href="index.html">fSeq 1.0.0a documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Martin Zackrisson.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
