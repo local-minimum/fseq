@@ -6,18 +6,31 @@
 Welcome to fSeq's documentation!
 ================================
 
-Contents:
+fSeq is an extensible toolkit aimed at fast reading of sequence data with a
+common interface for all types of sequences.
+Upon that, the ability to encode the contents of the data into suitable numeric
+formats prepares for the second part.
+
+After reading contents *fSeq* allows for post-processing and report-making as
+integral parts of its framework. 
+*fSeq* comes with a small set of report builders and report makers, but these
+have equally been designed to allow fast development of further capabilities.
+
+Contents
+--------
 
 .. toctree::
    :maxdepth: 2
 
    tutorial
-   project_plan
-   report
+   reading
+   reporting
+   c3se_python_course
+   license
 
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
