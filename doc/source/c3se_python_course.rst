@@ -309,6 +309,7 @@ References
 .. [npd] https://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt#common-rest-concepts
 .. [sphinx] http://sphinx-doc.org/
 .. [rst] http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#bullet-lists
+.. [fastqc] http://www.bioinformatics.babraham.ac.uk/projects/fastqc/
 
 Appendix A: Project Plan
 ------------------------
