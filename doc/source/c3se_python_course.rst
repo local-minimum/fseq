@@ -9,7 +9,6 @@ suitable existing project or code base.
 Therefor only part of the course content
 could be covered -- ``numpy``, ``scipy``, ``matplotlib``, ``unittest`` and
 ``sphinx`` being the most prominent.
-It is a versatile and efficient tool to build future sequence analyses into.
 The package contains classes to do simple per base analysis of the data as is
 existing elsewhere in e.g. [fastqc]_.
 However, it also extends sequence quality analysis with heat maps of 
