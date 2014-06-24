@@ -312,4 +312,34 @@ The current code is accessible from *Gitorious* at:
 
 https://gitorious.org/fseq
 
-Alternatively 
+Alternatively, each class implementation can be accessed here:
+
+- :class:`fseq.reading`
+
+    :class:`fseq.reading.seq_reader.SeqReader`
+
+    :class:`fseq.reading.seq_encoder.SeqEncoder`
+
+    :class:`fseq.reading.seq_encoder.SeqFormat`
+
+        :class:`fseq.reading.seq_encoder.FastQ`
+
+        :class:`fseq.reading.seq_encoder.FastaMultiline`
+
+        :class:`fseq.reading.seq_encoder.FastaSingleline`
+        
+    :class:`fseq.reading.seq_encoder.SeqFormatDetector`
+
+- :class:`fseq.reporting`
+
+    :class:`fseq.reporting.reports.ReportBase`
+
+        :class:`fseq.reporting.reports.HeatMap`
+
+        :class:`fseq.reporting.reports.LinePlot`
+
+    :class:`fseq.reporting.report_builder.ReportBuilderBase`
+
+        :class:`fseq.reporting.report_builder.ReportBuilderFFT`
+
+        :class:`fseq.reporting.report_builder.ReportBuilderPositionAverage`
