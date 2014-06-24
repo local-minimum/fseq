@@ -38,6 +38,8 @@ For merge requests, the code is expected to:
     - Git commits to in general be *informative* and have
       *one aspect changed per commit*
 
+    - Unit-tests to cover new functionality
+
 Reading
 -------
 
