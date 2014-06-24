@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""fSeQ is a toolbox for sequence analysis in the frequency domain.
+"""fSeq is a toolbox for sequence analysis in the frequency domain.
 
 The module is organized around two phases of work: *reading* and *reporting*.
 

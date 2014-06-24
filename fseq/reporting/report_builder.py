@@ -16,12 +16,28 @@ class ReportBuilderBase(object):
     Most prominently, the distill-method needs to be implemented in
     subclasses to make much sence in most use cases.
 
+    Parameters
+    ----------
+
+    outputRoot: str, optional
+        Path to the directory where all reports should be put
+
+        (Default: ``None``)
+
+    outputNamePrefix: str, optional
+        Partial name to be added to all reports done by the builder
+
+        (Default: ``None``)
+
+    *reports: objects, optional
+        Any number of reports to be added from start
+
     Attributes
     ----------
 
     outputRoot
     outputNamePrefix
-
+    DEFAULT_REPORTS
     """
 
     DEFAULT_REPORTS = tuple()
@@ -34,8 +50,12 @@ class ReportBuilderBase(object):
         outputRoot: str, optional
             Path to the directory where all reports should be put
 
+            (Default: ``None``)
+
         outputNamePrefix: str, optional
             Partial name to be added to all reports done by the builder
+
+            (Default: ``None``)
 
         *reports: objects, optional
             Any number of reports to be added from start
@@ -97,13 +117,13 @@ class ReportBuilderBase(object):
         -------
 
         fseq.ReportBuilderBase
-            Returns `self`
+            Returns ``self``
 
         Raises
         ------
 
         ValueError
-            If a report lacks a method named `distill` or can't be hashed
+            If a report lacks a method named ``distill`` or can't be hashed
         """
 
         for r in reports:
@@ -124,7 +144,7 @@ class ReportBuilderBase(object):
         it will send all arguments and keyword arguments to the individual
         reports.
 
-        If either `outputRoot` or `outputNamePrefix` are passed as kwargs,
+        If either ``outputRoot`` or ``outputNamePrefix`` are passed as kwargs,
         the corresponding values preset in the system will be added to the
         kwargs sent to the subreports.
 
@@ -132,7 +152,7 @@ class ReportBuilderBase(object):
         -------
 
         fseq.ReportBuilderBase
-            Returns `self`
+            Returns ``self``
         """
         for k in ('outputRoot', 'outputNamePrefix'):
             if k not in kwargs:
@@ -145,6 +165,35 @@ class ReportBuilderBase(object):
 
 class ReportBuilderFFT(ReportBuilderBase):
     """Samples part of data set and performs FFT-based analysis on it.
+
+    Parameters
+    ----------
+
+    outputRoot: str, optional
+        Path to the directory where all reports should be put
+
+        (Default: ``None``)
+
+    outputNamePrefix: str, optional
+        Partial name to be added to all reports done by the builder
+
+        (Default: ``None``)
+
+    sampleSize: int, optional
+        Size of sample to be randomly drawn
+        
+        (Default: 1000)
+
+    distanceMetric: str, optional
+        Name of distance metric to be used.
+        See ``METRICS``-attribute for allowed metrics.
+
+        (Default: 'correlation')
+
+    *reports: objects, optional
+        Any number of reports to be added from start
+
+        (Default: A fseq.HeatMap)
 
     Attributes
     ----------
@@ -175,19 +224,27 @@ class ReportBuilderFFT(ReportBuilderBase):
         outputRoot: str, optional
             Path to the directory where all reports should be put
 
+            (Default: ``None``)
+
         outputNamePrefix: str, optional
             Partial name to be added to all reports done by the builder
 
+            (Default: ``None``)
+
         sampleSize: int, optional
-            Size of sample to be randomly drawn (Default: 1000)
+            Size of sample to be randomly drawn
+            
+            (Default: 1000)
 
         distanceMetric: str, optional
             Name of distance metric to be used.
-            See `ReportBuilderFFT.METRICS` for allowed metrics.
+            See ``ReportBuilderFFT.METRICS``_ for allowed metrics.
+
             (Default: 'correlation')
 
         *reports: objects, optional
             Any number of reports to be added from start
+
             (Default: A fseq.HeatMap)
         """
 
@@ -204,7 +261,7 @@ class ReportBuilderFFT(ReportBuilderBase):
 
     @property
     def distanceMetric(self):
-
+        """The ReportBuilderFFT.METRIC used: str"""
         return self._distanceMetric
 
     @distanceMetric.setter
@@ -219,7 +276,7 @@ class ReportBuilderFFT(ReportBuilderBase):
 
     @property
     def sampleSize(self):
-
+        """Size of data subsample to analyze: int"""
         return self._sampleSize
 
     @sampleSize.setter
@@ -260,10 +317,13 @@ class ReportBuilderFFT(ReportBuilderBase):
 
         distanceMetric: str, optional
             A distance metric to overwrite the default one of the instance.
+
+            (Default: Value of ``self.distanceMetric``)
             
         clusterOnAbsOnly: bool, optional
             If clustering should be performed only on the amplitude (abs-values)
             or if amplitude and angle be clustered independently.
+
             (Default: Cluster only on amplitude)
         """
         if distanceMetric is None:
@@ -309,6 +369,30 @@ class ReportBuilderFFT(ReportBuilderBase):
 class ReportBuilderPositionAverage(ReportBuilderBase):
     """Per position analysis builder.
 
+    Parameters
+    ----------
+
+    outputRoot: str, optional
+        Path to the directory where all reports should be put
+
+        (Default: ``None``)
+
+    outputNamePrefix: str, optional
+        Partial name to be added to all reports done by the builder
+
+        (Default: ``None``)
+
+    undecidedValue: int, optional
+        The value for which undecided items were encoded (so it
+        can be omited and calculated separately for 2 of 3 graphs).
+
+        (Default: 0.5)
+
+    *reports: objects, optional
+        Any number of reports to be added from start
+
+        (Default: fseq.LinePlot) 
+
     Attributes
     ----------
 
@@ -331,16 +415,22 @@ class ReportBuilderPositionAverage(ReportBuilderBase):
         outputRoot: str, optional
             Path to the directory where all reports should be put
 
+            (Default: ``None``)
+
         outputNamePrefix: str, optional
             Partial name to be added to all reports done by the builder
+
+            (Default: ``None``)
 
         undecidedValue: int, optional
             The value for which undecided items were encoded (so it
             can be omited and calculated separately for 2 of 3 graphs).
+
             (Default: 0.5)
 
         *reports: objects, optional
             Any number of reports to be added from start
+
             (Default: fseq.LinePlot) 
         """
 
@@ -404,17 +494,18 @@ class ReportBuilderPositionAverage(ReportBuilderBase):
             (Default: 0.5)
 
         *args:
-            Any args will be passed to the `ReportBuilderBase.distill`
+            Any args will be passed to the ``ReportBuilderBase.distill``
 
         **kwargs:
-            Any kwargs will be passed to the `ReportBuilderBase.distill`
-            ..note:: `outputNamePrefix` will be overwritten/added
+            Any kwargs will be passed to the ``ReportBuilderBase.distill``
+
+            **Note:** ``outputNamePrefix`` will be overwritten/added
 
         Returns
         -------
 
         fseq.ReportBuilderPositionAverage
-            Returns `self`
+            Returns ``self``
         """
         
         if undecidedValue is None:
@@ -450,3 +541,4 @@ class ReportBuilderPositionAverage(ReportBuilderBase):
             outputNamePrefix='average.not-lacking.', *args, **kwargs)
 
         return self
+

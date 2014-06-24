@@ -8,8 +8,8 @@ import fseq
 
 
 def inheritDocFromSeqFormat(f):
-    """This decorator will copy the docstring from `SeqFormat` for the
-    matching function `f` if such exists and no docstring has been added
+    """This decorator will copy the docstring from ``SeqFormat`` for the
+    matching function ``f`` if such exists and no docstring has been added
     manually.
     """
     if f.__doc__ is None:
@@ -27,6 +27,31 @@ def inheritDocFromSeqFormat(f):
 
 
 class SeqEncoder(object):
+    """Base class for managing encoding of raw input data.
+
+    The encoder coordinates detection of raw data format and then
+    extracts the information that the encoder is tasked to extract, 
+    convering it into suitable encoding.
+
+    **Note:** The base class is not intended to be used directly, but
+    to be extended.
+
+    Attributes
+    ----------
+
+    format
+    initiated
+    itemSize
+    qualityEncoding
+    sequenceEncoding
+    useQuality
+    useSequence
+
+    See also
+    --------
+
+    SeqEncoderGC: GC encoder
+    """
 
     def __init__(self, expectedInputFormat=None, useSequence=True,
             useQuality=False, sequenceEncoding=None, qualityEncoding=None,
@@ -45,10 +70,10 @@ class SeqEncoder(object):
         useQuality: bool
             If encoder will be using the quality information
 
-        sequenceEncoding: dict or object implementing __getitem__
+        sequenceEncoding: dict or object implementing ``__getitem__``
             Translation map from input to output
 
-        qualityEncoding: dict or object implementing __getitem__
+        qualityEncoding: dict or object implementing ``__getitem__``
             Translation map from input to output
         """
 
@@ -83,7 +108,7 @@ class SeqEncoder(object):
 
         TypeError
             If attempting to set format with object not derived from
-            `SeqFormatDetector` or `SeqFormat`
+            ``SeqFormatDetector`` or ``SeqFormat``
         """
 
         return self._format
@@ -96,7 +121,7 @@ class SeqEncoder(object):
 
         if not isinstance(val, SeqFormatDetector):
 
-            raise TypeError("Format {0} is not a `SeqFormatDetector`".format(
+            raise TypeError("Format {0} is not a ``SeqFormatDetector``".format(
                 val))
 
         else:
@@ -200,7 +225,7 @@ class SeqEncoder(object):
         Returns
         -------
 
-        Object with key-lookup (implementing __getitem__)
+        Object with key-lookup (implementing ``__getitem__``)
 
         Raises
         ------
@@ -238,7 +263,7 @@ class SeqEncoder(object):
         Returns
         -------
 
-        Object with key-lookup (implementing __getitem__)
+        Object with key-lookup (implementing ``__getitem__``)
 
         Raises
         ------
@@ -315,7 +340,7 @@ class SeqEncoder(object):
         -------
 
         fseq.SeqEncoder
-            Returns `self`
+            Returns ``self``
         """
 
         self._detectFeed.append(line)
@@ -328,7 +353,7 @@ class SeqEncoder(object):
         -------
 
         fseq.SeqEncoder
-            Returns `self`
+            Returns ``self``
 
         Raises
         ------
@@ -388,7 +413,7 @@ class SeqEncoder(object):
         -------
 
         fseq.SeqEncoder
-            Returns `self`
+            Returns ``self``
 
         See also
         --------
@@ -414,15 +439,15 @@ class SeqEncoder(object):
         ----------
 
         lines: iterable of str
-            Iterable of length equal to `self.itemSize` containing the
+            Iterable of length equal to ``self.itemSize`` containing the
             raw data for one item
 
         out: numpy.ndarray
             Array that will have values written to it
 
         outIndex: object
-            Index for where the parse output should be written in the `out`
-            array such that `out[outIndex]` gives a sufficiently large array
+            Index for where the parse output should be written in the ``out``
+            array such that ``out[outIndex]`` gives a sufficiently large array
             that the result of parsing will fit in it.
 
         Raises
@@ -432,10 +457,28 @@ class SeqEncoder(object):
             If base class parse not overwritten or base class used directly
         """
 
-        raise NotImplementedError("`SeqEncoder.parse` should be overwritten")
+        raise NotImplementedError("``SeqEncoder.parse`` should be overwritten")
 
 
 class SeqEncoderGC(SeqEncoder):
+    """GC Encoder, but useful for any sequence to numerical value encoding.
+
+    The encoder uses the sequence information of the raw data and encodes
+    the data according to the following:
+
+    +-------+----------+
+    | Input | Encoding |
+    +=======+==========+
+    | G / C + 1.0      |
+    +-------+----------+
+    | A / T | 0.0      |
+    +-------+----------+
+    | N     | 0.5      |
+    +-------+----------+
+
+    To change this behaviour, simply submit a new mappable object such as
+    e.g. a ``dict`` as the ``sequenceEncoding``-parameter.
+    """
 
     def __init__(self, expectedInputFormat=None, sequenceEncoding=None):
         """
@@ -462,6 +505,31 @@ class SeqEncoderGC(SeqEncoder):
                             fseq.ReportBuilderPositionAverage))
 
     def parse(self, lines, out, outindex):
+        """Encoder of suitable aspects of ``lines`` into ``out``.
+
+        The sequence line of ``lines`` will be encoded onto the index
+        ``outindex`` of ``out``.
+        If the sequence line is shorter than the data structure of
+        ``out[outindex]``, the remainder of ``out[outindex]`` will be left
+        untouched.
+        If the line is longer, it will only encode up until the the length
+        of ``out[outindex]``.
+
+        Parameters
+        ----------
+
+        lines: iterable of str
+            Iterable of length equal to ``self.itemSize`` containing the
+            raw data for one item
+
+        out: numpy.ndarray
+            Array that will have values written to it
+
+        outIndex: object
+            Index for where the parse output should be written in the ``out``
+            array such that ``out[outIndex]`` gives a sufficiently large array
+            that the result of parsing will fit in it.
+        """
 
         e = self.sequenceEncoding
 
@@ -502,7 +570,7 @@ class SeqFormat(object):
 
     The attributes present in subclass should overwrite the
     parent properties. All subclasses must also overwrite the
-    `SeqFormat.expects(line)`.
+    ``SeqFormat.expects(line)``.
 
     Attributes
     ----------
@@ -512,12 +580,28 @@ class SeqFormat(object):
     hasSequence
     hasQuality
     qualityEncoding
+    MATCH_AA
+    MATCH_AA_S
+    MATCH_NT
+    MATCH_NT_S
+    HEADER_LINE
+    SEUENCE_LINE
+    QUALITY_LINE
+
     """
 
-    MATCH_NT = re.compile(r'^[ATCG]+$', re.IGNORECASE)
+    MATCH_NT = re.compile(r'^[ATCGN]+$', re.IGNORECASE)
+    """Matches any complete line of only A T C G or N"""
+
     MATCH_AA = re.compile(r'^[A-Z]+[*]?$', re.IGNORECASE)
+    """Matches any complete line of A-Z characters allowing for asterisc at
+    end."""
+
     MATCH_NT_S = re.compile(r'^[ATCG ]+$', re.IGNORECASE)
+    """Matches as ``MATCH_NT`` but extends to include space"""
+
     MATCH_AA_S = re.compile(r'^[A-Z ]+[*]?$', re.IGNORECASE)
+    """Matches as ``MATCH_AA_S`` but extends to include space"""
 
     HEADER_LINE = 0
     SEQUENCE_LINE = None
@@ -584,6 +668,12 @@ class SeqFormat(object):
     def expects(self, line):
         """Test for if line fits into required pattern for the format
 
+        Parameters
+        ----------
+
+        line: str
+            A line as read from file
+
         Returns
         -------
 
@@ -593,7 +683,7 @@ class SeqFormat(object):
         ------
         
         FormatImplementationError
-            If `SeqFormat.expects` (the base class method) is called.
+            If ``SeqFormat.expects`` (the base class method) is called.
         """
 
         raise FormatImplementationError("This method should be overwritten")
@@ -602,8 +692,15 @@ class SeqFormat(object):
 class FastaMultiline(SeqFormat):
     """Detector of multi-line FASTA
 
-    ..note:: This format is not supported in the current implementation
+    **Note:** This format is not supported in the current implementation
         as it has no predictable item-size.
+
+    Attributes
+    ----------
+
+    HEADER_LINE
+    SEUENCE_LINE
+    QUALITY_LINE
 
     Examples
     --------
@@ -692,6 +789,13 @@ class FastaMultiline(SeqFormat):
 class FastaSingleline(FastaMultiline):
     """Detector of single-line FASTA format.
 
+    Attributes
+    ----------
+
+    HEADER_LINE
+    SEUENCE_LINE
+    QUALITY_LINE
+
     Examples
     --------
 
@@ -745,8 +849,15 @@ class FastaSingleline(FastaMultiline):
 class FastQ(SeqFormat):
     """Detector of FASTQ format
 
-    ..note:: This class can be subclassed to detect the different
+    **Note:** This class can be subclassed to detect the different
         quality-encoding schemes in the future.
+
+    Attributes
+    ----------
+
+    HEADER_LINE
+    SEUENCE_LINE
+    QUALITY_LINE
 
     Examples
     --------
@@ -838,6 +949,11 @@ class FastQ(SeqFormat):
 class SeqFormatDetector(object):
     """Detection of data-format manager
 
+    Given a set of initially specified formats the detector feeds them lines
+    of data until only one remains ``True``.
+    It then further continues a little while to be more certain that it
+    was not a mere fluke.
+
     Attributes
     ----------
 
@@ -853,7 +969,14 @@ class SeqFormatDetector(object):
     headerLine
     sequenceLine
     qualityLine
+    FORMATS
+
+    See also
+    --------
+
+    SeqFormat: Base class for formats that can be detected.
     """
+
     FORMATS = [FastaSingleline, FastaMultiline, FastQ]
 
     def __init__(self, forceFormat=None):
@@ -869,8 +992,8 @@ class SeqFormatDetector(object):
         ------
 
         TypeError
-            If `forceFormat` is submitted and not a class derived from
-            `SeqFormat`
+            If ``forceFormat`` is submitted and not a class derived from
+            ``SeqFormat``
         """
 
         self._safetyCheck = None
@@ -887,7 +1010,7 @@ class SeqFormatDetector(object):
 
         if forceFormat:
             if not isinstance(forceFormat, SeqFormat):
-                raise TypeError("{0} not a `SeqFormat`".format(forceFormat))
+                raise TypeError("{0} not a ``SeqFormat``".format(forceFormat))
 
             self._possibleFormats = [forceFormat]
             self._setFormat()
@@ -1062,7 +1185,7 @@ class SeqFormatDetector(object):
         -------
 
         fseq.SeqEncoder
-            Returns `self`
+            Returns ``self``
 
         Raises
         ------

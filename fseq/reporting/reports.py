@@ -14,6 +14,24 @@ class ReportBase(object):
     Main purpose is to make a common interface for figure saving using
     matplotlib figures.
 
+    Parameters 
+    ----------
+
+    name: str, optional
+        A specific name of the report
+
+        (Default: ``None``)
+
+    saveArgs: tuple or list, optional
+        Any args to be passed to ``matplotlib.savefig`` after the figure
+
+        (Default: Empty ``tuple``)
+
+    saveKwargs: dict, optional
+        Any keyword args to be passed to ``matplotlib.savefig``
+
+        (Default: Empty ``dict``)
+
     Attributes
     ----------
 
@@ -24,17 +42,23 @@ class ReportBase(object):
 
     def __init__(self, name=None, saveArgs=tuple(), saveKwargs=dict()):
         """
-        Properties
+        Parameters
         ----------
 
         name: str, optional
             A specific name of the report
 
+            (Default: ``None``)
+
         saveArgs: tuple or list, optional
-            Any args to be passed to `matplotlib.savefig` after the figure
+            Any args to be passed to ``matplotlib.savefig`` after the figure
+
+            (Default: Empty ``tuple``)
 
         saveKwargs: dict, optional
-            Any keyword args to be passed to `matplotlib.savefig`
+            Any keyword args to be passed to ``matplotlib.savefig``
+
+            (Default: Empty ``dict``)
         """
 
         self.name = name
@@ -43,6 +67,7 @@ class ReportBase(object):
 
     @property
     def name(self):
+        """Name of the plot, used to name the file: str"""
         return self._name
 
     @name.setter
@@ -51,7 +76,7 @@ class ReportBase(object):
 
     @property
     def saveArgs(self):
-
+        """Save args passed to ``matplotlib.pyplot.figure.savefig``: tuple"""
         return self._saveArgs
 
     @saveArgs.setter
@@ -61,6 +86,9 @@ class ReportBase(object):
 
     @property
     def saveKwargs(self):
+        """Save keyword args passed to ``matplotlib.pyplot.figure.savefig``:
+        dict
+        """
 
         return self._saveKwargs
 
@@ -89,21 +117,25 @@ class ReportBase(object):
         name: str, optional
             A specific name for this figure-file.
             If none supplied the default name for the report will be used,
-            if no such has been set `ValueError` is raised.
+
+            (Default: Use the ``self.name`` of the instance)
+
+            **Note:** If none supplied and none set for instance,
+            ``ValueError`` is raised.
 
         *args:
-            Any arguments to be sent to `matplotlib.Figure.save`.
-            If none added the `ReportBase.saveArgs` will be used.
+            Any arguments to be sent to ``matplotlib.Figure.save``.
+            If none added the ``ReportBase.saveArgs`` will be used.
 
         **kwargs:
-            Any keyword arguments to be sent to `matplotlib.Figure.save`.
-            If notn addd the `ReportBase.saveKwargs` will be used.
+            Any keyword arguments to be sent to ``matplotlib.Figure.save``.
+            If notn addd the ``ReportBase.saveKwargs`` will be used.
 
         Returns
         -------
 
         ReportBase
-            Returns `self`
+            Returns ``self``
 
         Raises
         ------
@@ -151,22 +183,46 @@ class ReportBase(object):
 
 
 class HeatMap(ReportBase):
-    """Makes heatmaps from data"""
+    """Makes heatmaps from data
+
+    Parameters
+    ----------
+
+    name: str, optional
+        A specific name of the report
+
+        (Default: "heatmap.pdf")
+
+    saveArgs: tuple or list, optional
+        Any args to be passed to ``matplotlib.savefig`` after the figure
+
+        (Default: Empty tuple)
+
+    saveKwargs: dict, optional
+        Any keyword args to be passed to ``matplotlib.savefig``
+
+        (Default: Empty dict)
+    """
 
     def __init__(self, name='heatmap.pdf', saveArgs=tuple(), saveKwargs=dict()):
         """
-        Properties
+        Parameters
         ----------
 
         name: str, optional
             A specific name of the report
-            (Default: 'heatmap.pdf')
+
+            (Default: "heatmap.pdf")
 
         saveArgs: tuple or list, optional
-            Any args to be passed to `matplotlib.savefig` after the figure
+            Any args to be passed to ``matplotlib.savefig`` after the figure
+
+            (Default: Empty tuple)
 
         saveKwargs: dict, optional
-            Any keyword args to be passed to `matplotlib.savefig`
+            Any keyword args to be passed to ``matplotlib.savefig``
+
+            (Default: Empty dict)
         """
 
         super(HeatMap, self).__init__(name=name, saveArgs=saveArgs,
@@ -188,46 +244,76 @@ class HeatMap(ReportBase):
         name: str, optional
             If the default name of the HeatMap instance should be overwritten
 
+            (Default: Use the value of ``self.name``)
+
         outputRoot: str, optional
             The directory in which to place the report
 
+            (Default: ``None``)
+
         outputNamePrefix: str, optional
             A prefix to prepend the name when saving the output.
+            Typically set by the builder to indicate what post-processing
+            was done to the data shown in the report.
+
+            (Default: ``None``)
 
         title: str, optional
             A title to be put over the heatmap
+            (Default: ``None``, value automatically scaled by matplotlib)
+
+            (Default: ``None``)
 
         text: str, optional
             An explanatory text to put under the plot
 
+            (Default: ``None``)
+
+            **Note:** This feature has not been implemented yet.
+
         ylabel: str, optional
             A label for the y-axis
+
+            (Default: ``None``)
 
         xlabel: str, optional
             A label for the x-axis
 
+            (Default: ``None``)
+
         saveArgs: tuple or list, optional
             A set of arguments to overwrite the instance's default save args
+
+            (Default: empty tuple)
 
         saveKwargs: dict, optional
             A set of keyword arguments to overwrite the instanc's default
 
+            (Default: empty dict)
+
         vmin: number, optional
             To set a minimum color-scale number for the heatmap
+
+            (Default: ``None``, value automatically scaled by matplotlib)
 
         vmax: number, optional
             To set a maximum color-scale number for the heatmap
 
+            (Default: ``None``, value automatically scaled by matplotlib)
+
         aspect: str, optional
-            The aspect ratio of the blocks/pixels in the heatmap, default
-            is 'auto', which allows for rectangular pixels.
+            The aspect ratio of the blocks/pixels in the heatmap
+            
+            (Default: 'auto', which allows for rectangular pixels)
 
         axisOff: bool, optional
             If the axis of the plot should not be rendered
+
             (Default: True)
             
         cmap: matplotlib.cmap, optional
             A colormap to be used when plotting.
+
             (Default: Red -- Blue)
         """
 
@@ -262,21 +348,46 @@ class HeatMap(ReportBase):
 
 
 class LinePlot(ReportBase):
-    """Makes lines from data"""
+    """Makes lines from data
+
+    Parameters
+    ----------
+
+    name: str, optional
+        A specific name of the report
+
+        (Default: "line.pdf")
+
+    saveArgs: tuple or list, optional
+        Any args to be passed to ``matplotlib.savefig`` after the figure
+
+        (Default: Empty tuple)
+
+    saveKwargs: dict, optional
+        Any keyword args to be passed to ``matplotlib.savefig``
+
+        (Default: Empty dict)
+    """
 
     def __init__(self, name="line.pdf", saveArgs=tuple(), saveKwargs=dict()):
         """
-        Properties
+        Parameters
         ----------
 
         name: str, optional
             A specific name of the report
 
+            (Default: "line.pdf")
+
         saveArgs: tuple or list, optional
-            Any args to be passed to `matplotlib.savefig` after the figure
+            Any args to be passed to ``matplotlib.savefig`` after the figure
+
+            (Default: Empty tuple)
 
         saveKwargs: dict, optional
-            Any keyword args to be passed to `matplotlib.savefig`
+            Any keyword args to be passed to ``matplotlib.savefig``
+
+            (Default: Empty dict)
         """
 
         super(LinePlot, self).__init__(name=name, saveArgs=saveArgs,
@@ -299,44 +410,77 @@ class LinePlot(ReportBase):
         name: str, optional
             If the default name of the HeatMap instance should be overwritten
 
+            (Default: Use the value of ``self.name``)
+
         outputRoot: str, optional
             The directory in which to place the report
 
+            (Default: ``None``)
+
         outputNamePrefix: str, optional
             A prefix to prepend the name when saving the output.
+            Typically set by the builder to indicate what post-processing
+            was done to the data shown in the report.
+
+            (Default: ``None``)
 
         title: str, optional
             A title to be put over the heatmap
+            (Default: ``None``, value automatically scaled by matplotlib)
+
+            (Default: ``None``)
 
         text: str, optional
             An explanatory text to put under the plot
 
+            (Default: ``None``)
+
+            **Note:** This feature has not been implemented yet.
+
         ylabel: str, optional
             A label for the y-axis
+
+            (Default: ``None``)
 
         xlabel: str, optional
             A label for the x-axis
 
+            (Default: ``None``)
+
         saveArgs: tuple or list, optional
             A set of arguments to overwrite the instance's default save args
 
+            (Default: empty ``tuple``)
+
         saveKwargs: dict, optional
             A set of keyword arguments to overwrite the instanc's default
-        
+
+            (Default: empty ``dict``)
+
         logX: bool, optional
             If X-axis should be logged
+
+            (Default: ``False``)
 
         logY: bool, optional
             If Y-axis should be logged
 
+            (Default: ``False``)
+
         basex: number, optional
             To specify other then 10-base logging
+
+            (Default: ``None``, uses 10-base)
 
         basey: number, optional
             To specify other than 10-base logging
 
+            (Default: ``None``, uses 10-base)
+
         labels: str, optional
             To name the line plotted and thus add a legend to the plot.
+
+            (Default: ``None``)
         """
         if len(args):
             warnings.warn("Unused arguments: {0}".format(args))

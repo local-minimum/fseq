@@ -19,7 +19,7 @@ class SeqReader(object):
     processed.
 
     The entire stack of inputs can be processed in bulk by invoking
-    `SeqReader.run()` but the results of each encoding, omitting any
+    ``SeqReader.run()`` but the results of each encoding, omitting any
     report building can also be produced iteratively as shown in the examples.
 
     Attributes
@@ -40,16 +40,18 @@ class SeqReader(object):
     --------
 
     To invoke the reader it can either be run :
+
     >>> seqReader.run()
     <fseq.reading.seq_reader.SeqReader at 0x7faf6970fd10>
 
     or if more control is required, it can be iterated over:
+
     >>> for res in seqReader:
     ...    reportBuilder.distill(res, dirname=seqReader.reportDirectory)
 
     Both methods above yielding the same result with the difference that
-    the first may store results in `seqReader.results` depending on the
-    `seqReader.popEncodingResults` settings while the latter never keeps
+    the first may store results in ``seqReader.results`` depending on the
+    ``seqReader.popEncodingResults`` settings while the latter never keeps
     the results in the state of the instance.
     """
 
@@ -69,55 +71,69 @@ class SeqReader(object):
         seqEncoder : fseq.SeqEncoder, optional
             An instance of a sequence encoder that will be used to encode the
             input strings
-            (Default: GC-encoder) 
+            
+            (Default: ``fseq.SeqEncoderGC``) 
 
         dataSourcePaths: string or iterable object, optional
             Either a path string or a collection of paths to data files
+
             (Default: no input / added later)
 
         dataTargetPaths: string or iterable object, optional
             Either a relative path string or collection of relative paths.
             The path is relative to the respective data source.
+            
             (Default: will create a folder in the same directory as the 
-            data source with the same name as the input suffixed by `.reports`.)
-            ..note:: If supplied, must reflect equal number of outputs as
-                inputs in `dataSourcePaths` 
+            data source with the same name as the input suffixed by
+            ``.reports``.)
+
+            **Note:** If supplied, must reflect equal number of outputs as
+                inputs in ``dataSourcePaths`` 
 
         reportBuilders: fseq.ReportBuilder or tuple/list, optional
             If a report should be automatically be built upon encoding
             completion.
             If a list or tuple, it should only contain report builders.
+
             (Default: The report builders that the encoder requests or none)
 
         popDataSources: bool, optional
             If data sources should be removed from stack once encoded
-            (Default: `True`)
+
+            (Default: ``True``)
 
         resetSeqEncoder: bool, optional
             If sequence encoder should be reset between each source file or
             if the encoder should expect all sources to be the same format.
-            (Default: `True`)
+
+            (Default: ``True``)
 
         popEncodingResults: bool, optional
             If encoding results should be popped after they have been processed.
-            (Default: `False` if initiated with exactly one source,
-            else `True`)
+
+            (Default: ``False`` if initiated with exactly one source,
+            else ``True``)
 
         dataArrayConstructor: func, optional
-            The function used to create data storages, e.g. `np.zeros`,
-            `np.ones` or `np.empty`.
-            (Default: `np.zeros`)
+            The function used to create data storages, e.g. ``np.zeros``,
+            ``np.ones`` or ``np.empty``.
+
+            (Default: ``np.zeros``)
 
         dataWidth: int, optional
             Max length of sequences expected.
+
             (Default: 101)
 
         dataType: type, optional
             Data type for the data array.
-            (Default: np.float16)
+
+            (Default: ``np.float16``)
 
         verbose: bool, optional
             If running will emit some status messages
+
+            (Default: ``False``)
         """
 
         self._idData = -1
@@ -222,7 +238,7 @@ class SeqReader(object):
         """If sequence reader should remove data sources from list of sources
         when they have been read.
 
-        The general use case is to set this to `True`, but omitting popping
+        The general use case is to set this to ``True``, but omitting popping
         can be useful if data may be needed to be re-read with a different
         encoder.
         
@@ -245,7 +261,7 @@ class SeqReader(object):
         """If the outcome of an encoding should be remove from memory as soon
         as report as been produced or iteration completed.
 
-        ..note:: The process will require large amounts of memory if results
+        **Note:** The process will require large amounts of memory if results
         are not popped and several large files analysed.
 
         Returns
@@ -279,7 +295,7 @@ class SeqReader(object):
         See also
         --------
         
-        seqEncoder.clearResults
+        SeqEncoder.clearResults
             Clearing the list of results
         """
 
@@ -305,7 +321,7 @@ class SeqReader(object):
         ------
 
         TypeError
-            If trying to assign object that is not a `fseq.SeqEncoder`
+            If trying to assign object that is not a ``fseq.SeqEncoder``
         
         """
 
@@ -317,7 +333,7 @@ class SeqReader(object):
         if not isinstance(encoder, fseq.SeqEncoder):
 
             raise TypeError(
-                "Encoder {0} is not a `fseq.SeqEncoder`".format(encoder))
+                "Encoder {0} is not a ``fseq.SeqEncoder``".format(encoder))
         else:
 
             self._seqEncoder = encoder
@@ -345,7 +361,7 @@ class SeqReader(object):
         """The report builders associated with the reader.
 
         If any, the reports will be destilled automatically at the end of
-        `SeqReader.run()`.
+        ``SeqReader.run()``.
 
         Returns
         -------
@@ -356,7 +372,7 @@ class SeqReader(object):
         See also
         --------
 
-        fseq.ReportBuilder.distill
+        fseq.reporting.report_builder.ReportBuilder.distill
             Method for distilling encoded data.
         """
 
@@ -395,16 +411,19 @@ class SeqReader(object):
         targetPaths: string or iterable object, optional
             Either a relative path string or collection of relative paths.
             The path is relative to the respective data source.
+
             (Default: will create a folder in the same directory as the 
-            data source with the same name as the input suffixed by `.reports`.)
-            ..note:: If supplied, must reflect equal number of outputs as
-                inputs in `sourcePaths` 
+            data source with the same name as the input suffixed by
+            ``.reports``.)
+
+            **Note:** If supplied, must reflect equal number of outputs as
+                inputs in ``sourcePaths`` 
 
         Returns
         -------
 
-        fset.SeqReader
-            Returns `self`
+        fseq.SeqReader
+            Returns ``self``
 
         Raises
         ------
@@ -446,21 +465,22 @@ class SeqReader(object):
         Returns
         -------
 
-        fset.SeqReader
-            Returns `self`
+        fseq.SeqReader
+            Returns ``self``
 
         Raises
         ------
 
         TypeError
-            If an item in `reportBuilders` is not a valid `fseq.ReportBuilder`
+            If an item in ``reportBuilders`` is not a valid
+            ``fseq.ReportBuilder``
         """
 
         for reportBuilder in  reportBuilders:
             if not isinstance(reportBuilder, fseq.ReportBuilderBase):
 
                 raise TypeError(
-                    "Report Builder {0} is not a `fseq.ReportBuilder`".format(
+                    "Report Builder {0} is not a ``fseq.ReportBuilder``".format(
                         fseq.ReportBuilderBase))
 
             else:
@@ -475,8 +495,8 @@ class SeqReader(object):
         Returns
         -------
 
-        fset.SeqReader
-            Returns `self`
+        fseq.SeqReader
+            Returns ``self``
         """
 
         self._dataSourcePaths = []
@@ -490,8 +510,8 @@ class SeqReader(object):
         Returns
         -------
 
-        fset.SeqReader
-            Returns `self`
+        fseq.SeqReader
+            Returns ``self``
         """
 
         self._results = []
@@ -513,17 +533,19 @@ class SeqReader(object):
         Returns
         -------
 
-        fset.SeqReader
-            Returns `self`
+        fseq.SeqReader
+            Returns ``self``
 
         Examples
         --------
 
         If current instance has three builders:
+
         >>> tuple(seqEncoder.reportBuilders)
         (b1, b2, b3)
 
-        The `b2` and `b3` can be removed by:
+        The ``b2`` and ``b3`` can be removed by:
+
         >>> seqEncoder.removeReportBuilders(b2, b3)
         <fseq.reading.seq_reader.SeqReader at 0x7faf696e5810>
 
@@ -531,6 +553,7 @@ class SeqReader(object):
         (b1, )
 
         Alternatively all builders can be removed by:
+
         >>> seqEncoder.removeReportBuilders()
         <fseq.reading.seq_reader.SeqReader at 0x7faf696e5810>
 
@@ -550,8 +573,8 @@ class SeqReader(object):
         Returns
         -------
 
-        fset.SeqReader
-            Returns `self`
+        fseq.SeqReader
+            Returns ``self``
         """
 
         reporters = set()
