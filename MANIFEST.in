@@ -1,4 +1,6 @@
 include *.py
+recursive-include fseq *.py
+prune fseq/tests
 include scripts/*
 include CHANGELOG
 include LICENSE
