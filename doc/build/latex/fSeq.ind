@@ -1,0 +1,196 @@
+\begin{theindex}
+\def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
+
+  \bigletter A
+  \item addData() (fseq.reading.seq\_reader.SeqReader method), \hyperpage{13}
+  \item addReportBuilders() (fseq.reading.seq\_reader.SeqReader method), \hyperpage{13}
+  \item addReports() (fseq.reporting.report\_builder.ReportBuilderBase method), \hyperpage{17}
+
+  \indexspace
+  \bigletter C
+  \item clearJobQueue() (fseq.reading.seq\_reader.SeqReader method), \hyperpage{14}
+  \item clearResults() (fseq.reading.seq\_reader.SeqReader method), \hyperpage{14}
+  \item compatible() (fseq.reading.seq\_encoder.SeqFormatDetector method), \hyperpage{11}
+
+  \indexspace
+  \bigletter D
+  \item DATA\_INITIAL\_SIZE (fseq.reading.seq\_reader.SeqReader attribute), \hyperpage{13}
+  \item dataArrayConstructor (fseq.reading.seq\_reader.SeqReader attribute), \hyperpage{14}
+  \item dataType (fseq.reading.seq\_reader.SeqReader attribute), \hyperpage{14}
+  \item dataWidth (fseq.reading.seq\_reader.SeqReader attribute), \hyperpage{14}
+  \item DEBUG (fseq.reading.seq\_reader.SeqReader attribute), \hyperpage{13}
+  \item DEFAULT\_REPORTS (fseq.reporting.report\_builder.ReportBuilderBase attribute), 
+		\hyperpage{17}
+  \item DEFAULT\_REPORTS (fseq.reporting.report\_builder.ReportBuilderFFT attribute), 
+		\hyperpage{18}
+  \item DEFAULT\_REPORTS (fseq.reporting.report\_builder.ReportBuilderPositionAverage attribute), 
+		\hyperpage{19}
+  \item detectFormat() (fseq.reading.seq\_encoder.SeqEncoder method), \hyperpage{7}
+  \item detecting (fseq.reading.seq\_encoder.SeqFormatDetector attribute), \hyperpage{11}
+  \item distanceMetric (fseq.reporting.report\_builder.ReportBuilderFFT attribute), \hyperpage{18}
+  \item distill() (fseq.reporting.report\_builder.ReportBuilderBase method), \hyperpage{17}
+  \item distill() (fseq.reporting.report\_builder.ReportBuilderFFT method), \hyperpage{18}
+  \item distill() (fseq.reporting.report\_builder.ReportBuilderPositionAverage method), 
+		\hyperpage{19}
+  \item distill() (fseq.reporting.reports.HeatMap method), \hyperpage{20}
+  \item distill() (fseq.reporting.reports.LinePlot method), \hyperpage{22}
+  \item distill() (fseq.reporting.reports.ReportBase method), \hyperpage{24}
+
+  \indexspace
+  \bigletter E
+  \item expects() (fseq.reading.seq\_encoder.FastaMultiline method), \hyperpage{5}
+  \item expects() (fseq.reading.seq\_encoder.FastaSingleline method), \hyperpage{6}
+  \item expects() (fseq.reading.seq\_encoder.FastQ method), \hyperpage{4}
+  \item expects() (fseq.reading.seq\_encoder.SeqFormat method), \hyperpage{10}
+
+  \indexspace
+  \bigletter F
+  \item FastaMultiline (class in fseq.reading.seq\_encoder), \hyperpage{4}
+  \item FastaSingleline (class in fseq.reading.seq\_encoder), \hyperpage{5}
+  \item FastQ (class in fseq.reading.seq\_encoder), \hyperpage{3}
+  \item feed() (fseq.reading.seq\_encoder.SeqFormatDetector method), \hyperpage{11}
+  \item feedDetection() (fseq.reading.seq\_encoder.SeqEncoder method), \hyperpage{7}
+  \item format (fseq.reading.seq\_encoder.SeqEncoder attribute), \hyperpage{7}
+  \item format (fseq.reading.seq\_encoder.SeqFormatDetector attribute), \hyperpage{11}
+  \item FormatError, \hyperpage{6}
+  \item FormatImplementationError, \hyperpage{6}
+  \item FORMATS (fseq.reading.seq\_encoder.SeqFormatDetector attribute), \hyperpage{11}
+  \item FormatUnknown, \hyperpage{6}
+  \item fseq (module), \hyperpage{25}
+  \item fseq.reading (module), \hyperpage{16}
+  \item fseq.reading.seq\_encoder (module), \hyperpage{3}
+  \item fseq.reading.seq\_reader (module), \hyperpage{12}
+  \item fseq.reporting (module), \hyperpage{25}
+  \item fseq.reporting.report\_builder (module), \hyperpage{16}
+  \item fseq.reporting.reports (module), \hyperpage{20}
+
+  \indexspace
+  \bigletter G
+  \item givenUp (fseq.reading.seq\_encoder.SeqFormat attribute), \hyperpage{10}
+
+  \indexspace
+  \bigletter H
+  \item hasQuality (fseq.reading.seq\_encoder.FastaMultiline attribute), \hyperpage{5}
+  \item hasQuality (fseq.reading.seq\_encoder.FastQ attribute), \hyperpage{4}
+  \item hasQuality (fseq.reading.seq\_encoder.SeqFormat attribute), \hyperpage{10}
+  \item hasQuality (fseq.reading.seq\_encoder.SeqFormatDetector attribute), \hyperpage{11}
+  \item hasSequence (fseq.reading.seq\_encoder.FastaMultiline attribute), \hyperpage{5}
+  \item hasSequence (fseq.reading.seq\_encoder.FastQ attribute), \hyperpage{4}
+  \item hasSequence (fseq.reading.seq\_encoder.SeqFormat attribute), \hyperpage{10}
+  \item hasSequence (fseq.reading.seq\_encoder.SeqFormatDetector attribute), \hyperpage{11}
+  \item HEADER\_LINE (fseq.reading.seq\_encoder.FastaMultiline attribute), \hyperpage{5}
+  \item HEADER\_LINE (fseq.reading.seq\_encoder.FastaSingleline attribute), \hyperpage{5}
+  \item HEADER\_LINE (fseq.reading.seq\_encoder.FastQ attribute), \hyperpage{4}
+  \item HEADER\_LINE (fseq.reading.seq\_encoder.SeqFormat attribute), \hyperpage{9}
+  \item headerLine (fseq.reading.seq\_encoder.SeqFormatDetector attribute), \hyperpage{11}
+  \item HeatMap (class in fseq.reporting.reports), \hyperpage{20}
+
+  \indexspace
+  \bigletter I
+  \item inheritDocFromSeqFormat() (in module fseq.reading.seq\_encoder), \hyperpage{12}
+  \item initiated (fseq.reading.seq\_encoder.SeqEncoder attribute), \hyperpage{7}
+  \item itemSize (fseq.reading.seq\_encoder.FastaSingleline attribute), \hyperpage{6}
+  \item itemSize (fseq.reading.seq\_encoder.FastQ attribute), \hyperpage{4}
+  \item itemSize (fseq.reading.seq\_encoder.SeqEncoder attribute), \hyperpage{7}
+  \item itemSize (fseq.reading.seq\_encoder.SeqFormat attribute), \hyperpage{10}
+  \item itemSize (fseq.reading.seq\_encoder.SeqFormatDetector attribute), \hyperpage{12}
+
+  \indexspace
+  \bigletter J
+  \item jobQueue (fseq.reading.seq\_reader.SeqReader attribute), \hyperpage{14}
+
+  \indexspace
+  \bigletter L
+  \item LinePlot (class in fseq.reporting.reports), \hyperpage{21}
+
+  \indexspace
+  \bigletter M
+  \item MATCH\_AA (fseq.reading.seq\_encoder.SeqFormat attribute), \hyperpage{9}
+  \item MATCH\_AA\_S (fseq.reading.seq\_encoder.SeqFormat attribute), \hyperpage{9}
+  \item MATCH\_NT (fseq.reading.seq\_encoder.SeqFormat attribute), \hyperpage{9}
+  \item MATCH\_NT\_S (fseq.reading.seq\_encoder.SeqFormat attribute), \hyperpage{10}
+  \item METRICS (fseq.reporting.report\_builder.ReportBuilderFFT attribute), \hyperpage{18}
+
+  \indexspace
+  \bigletter N
+  \item name (fseq.reading.seq\_encoder.FastaMultiline attribute), \hyperpage{5}
+  \item name (fseq.reading.seq\_encoder.FastaSingleline attribute), \hyperpage{6}
+  \item name (fseq.reading.seq\_encoder.FastQ attribute), \hyperpage{4}
+  \item name (fseq.reading.seq\_encoder.SeqFormat attribute), \hyperpage{10}
+  \item name (fseq.reporting.reports.ReportBase attribute), \hyperpage{24}
+  \item next() (fseq.reading.seq\_reader.SeqReader method), \hyperpage{14}
+
+  \indexspace
+  \bigletter O
+  \item outputNamePrefix (fseq.reporting.report\_builder.ReportBuilderBase attribute), 
+		\hyperpage{17}
+  \item outputRoot (fseq.reporting.report\_builder.ReportBuilderBase attribute), \hyperpage{17}
+
+  \indexspace
+  \bigletter P
+  \item parse() (fseq.reading.seq\_encoder.SeqEncoder method), \hyperpage{7}
+  \item parse() (fseq.reading.seq\_encoder.SeqEncoderGC method), \hyperpage{9}
+  \item popDataSources (fseq.reading.seq\_reader.SeqReader attribute), \hyperpage{14}
+  \item popEncodingResults (fseq.reading.seq\_reader.SeqReader attribute), \hyperpage{14}
+
+  \indexspace
+  \bigletter Q
+  \item QUALITY\_LINE (fseq.reading.seq\_encoder.FastaMultiline attribute), \hyperpage{5}
+  \item QUALITY\_LINE (fseq.reading.seq\_encoder.FastaSingleline attribute), \hyperpage{6}
+  \item QUALITY\_LINE (fseq.reading.seq\_encoder.FastQ attribute), \hyperpage{4}
+  \item QUALITY\_LINE (fseq.reading.seq\_encoder.SeqFormat attribute), \hyperpage{10}
+  \item qualityEncoding (fseq.reading.seq\_encoder.SeqEncoder attribute), \hyperpage{8}
+  \item qualityEncoding (fseq.reading.seq\_encoder.SeqFormat attribute), \hyperpage{10}
+  \item qualityEncoding (fseq.reading.seq\_encoder.SeqFormatDetector attribute), \hyperpage{12}
+  \item qualityLine (fseq.reading.seq\_encoder.SeqFormatDetector attribute), \hyperpage{12}
+
+  \indexspace
+  \bigletter R
+  \item removeReportBuilders() (fseq.reading.seq\_reader.SeqReader method), \hyperpage{14}
+  \item ReportBase (class in fseq.reporting.reports), \hyperpage{23}
+  \item ReportBuilderBase (class in fseq.reporting.report\_builder), \hyperpage{16}
+  \item ReportBuilderFFT (class in fseq.reporting.report\_builder), \hyperpage{17}
+  \item ReportBuilderPositionAverage (class in fseq.reporting.report\_builder), \hyperpage{18}
+  \item reportBuilders (fseq.reading.seq\_reader.SeqReader attribute), \hyperpage{15}
+  \item reportDirectory (fseq.reading.seq\_reader.SeqReader attribute), \hyperpage{15}
+  \item requestReports (fseq.reading.seq\_encoder.SeqEncoder attribute), \hyperpage{8}
+  \item reset() (fseq.reading.seq\_encoder.SeqEncoder method), \hyperpage{8}
+  \item resetSeqEncoder (fseq.reading.seq\_reader.SeqReader attribute), \hyperpage{15}
+  \item results (fseq.reading.seq\_reader.SeqReader attribute), \hyperpage{15}
+  \item run() (fseq.reading.seq\_reader.SeqReader method), \hyperpage{16}
+
+  \indexspace
+  \bigletter S
+  \item sampleSize (fseq.reporting.report\_builder.ReportBuilderFFT attribute), \hyperpage{18}
+  \item saveArgs (fseq.reporting.reports.ReportBase attribute), \hyperpage{24}
+  \item saveFig() (fseq.reporting.reports.ReportBase method), \hyperpage{24}
+  \item saveKwargs (fseq.reporting.reports.ReportBase attribute), \hyperpage{24}
+  \item SeqEncoder (class in fseq.reading.seq\_encoder), \hyperpage{6}
+  \item seqEncoder (fseq.reading.seq\_reader.SeqReader attribute), \hyperpage{16}
+  \item SeqEncoderGC (class in fseq.reading.seq\_encoder), \hyperpage{8}
+  \item SeqFormat (class in fseq.reading.seq\_encoder), \hyperpage{9}
+  \item SeqFormatDetector (class in fseq.reading.seq\_encoder), \hyperpage{10}
+  \item SeqReader (class in fseq.reading.seq\_reader), \hyperpage{12}
+  \item SEQUENCE\_LINE (fseq.reading.seq\_encoder.FastaMultiline attribute), \hyperpage{5}
+  \item SEQUENCE\_LINE (fseq.reading.seq\_encoder.FastaSingleline attribute), \hyperpage{6}
+  \item SEQUENCE\_LINE (fseq.reading.seq\_encoder.FastQ attribute), \hyperpage{4}
+  \item SEQUENCE\_LINE (fseq.reading.seq\_encoder.SeqFormat attribute), \hyperpage{10}
+  \item sequenceEncoding (fseq.reading.seq\_encoder.SeqEncoder attribute), \hyperpage{8}
+  \item sequenceLine (fseq.reading.seq\_encoder.SeqFormatDetector attribute), \hyperpage{12}
+
+  \indexspace
+  \bigletter U
+  \item undecidedValue (fseq.reporting.report\_builder.ReportBuilderPositionAverage attribute), 
+		\hyperpage{19}
+  \item useQuality (fseq.reading.seq\_encoder.SeqEncoder attribute), \hyperpage{8}
+  \item useSequence (fseq.reading.seq\_encoder.SeqEncoder attribute), \hyperpage{8}
+
+  \indexspace
+  \bigletter V
+  \item verbose (fseq.reading.seq\_reader.SeqReader attribute), \hyperpage{16}
+
+  \indexspace
+  \bigletter W
+  \item WORKERS (fseq.reading.seq\_reader.SeqReader attribute), \hyperpage{13}
+
+\end{theindex}

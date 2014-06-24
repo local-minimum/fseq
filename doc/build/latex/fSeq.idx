@@ -45,7 +45,7 @@
 \indexentry{HEADER\_LINE (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{9}
 \indexentry{MATCH\_AA (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{9}
 \indexentry{MATCH\_AA\_S (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{9}
-\indexentry{MATCH\_NT (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{10}
+\indexentry{MATCH\_NT (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{9}
 \indexentry{MATCH\_NT\_S (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{10}
 \indexentry{QUALITY\_LINE (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{10}
 \indexentry{SEQUENCE\_LINE (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{10}
