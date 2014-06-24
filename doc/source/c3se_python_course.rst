@@ -298,7 +298,47 @@ in both is that the 1/34 frequency and its neighbours behave distinctively.
 Discussion
 ----------
 
-todo
+Package
+.......
+
+The general design of the project was maintained during development and the
+extension of functionality during worked as intened.
+The package therefore shows promise of being well structured and designed.
+
+The ``threading`` had some inherent issues with sleeping threads not appearing
+alive causing jumbled and random encodings initially until sufficiently slow
+implementation ensured threads are truely joined before reshaping of encoding
+array.
+There are some posibilities for further improving the performance of the
+``SeqReader`` by decoupling the data reading from the managing of the encoding
+threads as well as taking an active part in managing the number of the latter.
+Moving away from single processing should also be feasable and could be the
+target of further performance development.
+
+The use of unit tests worked well in assisting the development and as they were
+written in junction with the code they were not merely a *post-hoc* addition to
+prove the correctness of the implementation, but actively discovered issues
+previously unkown.
+
+In general, the timeplan was kept with the exception of documentation and
+report writing, for which much more time would have been needed to learn
+``sphinx`` and ``numpydoc`` sufficiently well to produce both this report
+and the general package documentation.
+
+Bioinformatics
+..............
+
+The analyses included in the package reproduces know result where comparison is
+applicable.
+For example, the uneven bias of GC initally due to faulty timming of adapters
+-- a known issue.
+More interestingly the implicated a recurring frequency on the amplitude
+analysis of clustered FFT data around 34/101.
+The implication of this needs to be further investigated.
+Potentially, protein coding regions in the sequence, for which triplicates of
+nucleotides form the information unit in translation of DNA to aminoacids of
+the protein, could be related as it implies the factor 3.
+However, *why* and if this information can be useful remains to be investigated.
 
 References
 ----------
