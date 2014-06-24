@@ -9,14 +9,15 @@ Some examples of suitable features to be included in the future:
 
     - **FastQ SeqFormat Subclasses**
 
-      Sub-classing ``fseq.FastQ`` to automatically detect which quality encoding
-      was used based on the range of values in the quality lines fed to the
-      ``SeqFormat``.
+      Sub-classing :class:`fseq.reading.seq_encoder.FastQ` to automatically
+      detect which quality encoding
+      was used based on the range of values in the quality lines fed to it.
 
     - **SeqEncoderQaulity SeqEncoder Subclass**
 
-      A subclass that encodes the quality line using the quality encoding
-      supplied by the ``SeqFormat`` detected.
+      Subclass :class:`fseq.reading.seq_encoder.SeqEncoder` such that it
+      encodes the quality line using the quality encoding
+      supplied by the :class:`fseq.reading.seq_encoder.SeqFormat` detected.
 
 Git
 ---
@@ -44,20 +45,24 @@ Reading
 -------
 
 To extend the functionality by adding further encoders, these encoders should
-be derived from ``fseq.SeqEncoder`` and as a minimal requirement need to
-overwrite the ``fseq.SeqEncoder.parse``-method.
+be derived from :class:`fseq.reading.seq_encoder.SeqEncoder` and as a minimal
+requirement need to overwrite the
+:func:`fseq.reading.seq_encoder.SeqEncoder.parse`-method.
 
 To extend the functionality by adding support for more input formats, classes
-should be derived from ``fseq.SeqFormat`` or any of the already implemented
+should be derived from
+:class:`fseq.reading.seq_encoder.SeqFormat` or any of the already implemented
 formats if they partially solve detection for the new format.
-Minimal requirement is overwriting the ``fseq.SeqFormat.expects``-method, but
+Minimal requirement is overwriting the
+:func:`fseq.reading.seq_encoder.SeqFormat.expects`-method, but
 typically many of the properties of the base class as well as the
 constructor needs replacing.
 
-``fseq.SeqEncoder.parse(self, lines, out, outindex)`` overwriting
-.................................................................
+``SeqEncoder.parse(self, lines, out, outindex)`` overwriting
+............................................................
 
-**Important 1:** The overwritten ``fseq.SeqEncoder.parse`` must have identical
+**Important 1:** The overwritten
+:func:`fseq.reading.seq_encoder.SeqEncoder.parse` must have identical
 parameter set. If further information is needed, this should be dealt with
 during initiation or by separate methods.
 
@@ -66,7 +71,7 @@ handle scenarios where the length of the information to be encoded mismatches
 the length of the corresponding slot of the ``out`` object.
 
 Example of how out the second important note can be achieved (adapted from
-``fseq.SeqEncoderGC.parse``)::
+:func:`fseq.reading.seq_encoder.SeqEncoderGC.parse`)::
 
     #Point to line of interes
     l = lines[self._sequence_line]
@@ -84,8 +89,8 @@ ensures the target slot of ``out`` is not too large, while the
 the state*.
 
 
-``fseq.SeqFormat`` sub-classing
-...............................
+``SeqFormat`` sub-classing
+..........................
 
 ** Important 1:** If a class is parent to further sub-classing such that the
 class will conform to all data that the more specific subclass will do
@@ -93,7 +98,8 @@ class will conform to all data that the more specific subclass will do
 a FastQ_Q33-subclass that detects fastq-files with encoding starting at 33),
 then:
 
-    - The *parent* should implement the ``fseq.SeqFormat._decay`` method similar
+    - The *parent* should implement the
+      :func:`fseq.reading.seq_encoder.SeqFormat._decay` method similar
       to the base class and have a suitable ``self._giveup`` set in its init.
 
     - The specific *child* should overwrite the ``_decay``-method so that it
@@ -104,24 +110,26 @@ The ``self.expect(line)`` should return a boolean if the line fits what was
 expected as the next line, this method doesn't need to continue 
 reporting ``False`` after its first occurrence.
 As soon as an ``expect``-method returns a ``False``, that ``SeqFormat`` is
-removed from possible formats by the ``SeqFormatDetector``.
+removed from possible formats by the
+:class:`fseq.reading.seq_encoder.SeqFormatDetector`.
 
 Reporting
 ---------
 
 To extend the available abstractions/analysis done to the encoded
-data, new derived ``ReportBuilderBase`` classes should be made.
+data, new derived :class:`fseq.reporting.report_builder.ReportBuilderBase`
+classes should be made.
 Typically the ``__init__`` and ``distill`` would be overwritten (but the super
 class methods called), and the ``DEFAULT_REPORTS`` attribute replaced.
 Potentially the interface extended by more relevant methods and properties
 needed for user customization of the post-processing.
 
 For creating new reports any object having a ``distill``-method will do, but
-using ``fseq.ReportBase`` will save some implementation by having implemented
-the common aspects of saving figures in ``matplotlib``.
+using :class:`fseq.reporting.reports.ReportBase` will save some implementation
+by having implemented the common aspects of saving figures in ``matplotlib``.
 
-``fseq.ReportBuilderBase`` sub-classing
-.......................................
+``ReportBuilderBase`` sub-classing
+..................................
 
 To maintain the constructor interface it is highly recommended that the init
 has the following structure::
@@ -138,15 +146,16 @@ has the following structure::
         self.someKey = kwargs.get('someKey', defaultValue)
 
 To push some data to all attached reports make a ``super`` call to
-``ReportBuilderBase.distill``.
+:func:`fseq.reporting.report_builder.ReportBuilderBase.distill`.
 
-``fseq.ReportBase`` sub-classing or not
-.......................................
+``ReportBase`` sub-classing or not
+..................................
 
 Using ``ReportBase`` to create new reports is entirely optional, but if the
 report is a ``matplotlib``-report, then it is probably useful.
 
-If sub-classing, then the ``ReportBase.distill`` must be overwritten and
+If sub-classing, then the 
+:func:`fseq.reporting.reports.ReportBase.distill` must be overwritten and
 subclass should use a call to the inherited ``saveFig``-method to do the
 actually saving once the figure has been setup within the ``distill`` method.
 
