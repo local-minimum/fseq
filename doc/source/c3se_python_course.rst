@@ -9,11 +9,11 @@ suitable existing project or code base.
 Therefor only part of the course content
 could be covered -- ``numpy``, ``scipy``, ``matplotlib``, ``unittest`` and
 ``sphinx`` being the most prominent.
-It is a versitile and efficient tool to build future sequence analyses into.
+It is a versatile and efficient tool to build future sequence analyses into.
 The package contains classes to do simple per base analysis of the data as is
-existing elsewere in e.g. [fastqc]_.
-However, it also extends sequence quality analysis with heatmaps of 
-clustered fourier data, which to the best of my knownledge, is novel to the
+existing elsewhere in e.g. [fastqc]_.
+However, it also extends sequence quality analysis with heat maps of 
+clustered Fourier data, which to the best of my knowledge, is novel to the
 field.
 These reflect previously identified issues of sequence data but also introduces
 new frequency features, which requires further investigation.
@@ -33,7 +33,7 @@ The task was split up into several well defined components:
   both encoders and format detectors on one side as well as post-processing
   classes on the other.
 
-  The class can do several parts in parallell:
+  The class can do several parts in parallel:
 
     - Reading data from file
 
@@ -100,29 +100,29 @@ The task was split up into several well defined components:
 General
 ^^^^^^^
 
-The default invokation of analysis should require a minimum of user input.
+The default invocation of analysis should require a minimum of user input.
 For each deviation for what is considered *default*, a new set of default
-behaviours should exist.
+behaviors should exist.
 
 The interdependence of the classes should be kept simple and clean such that 
-each class can be instatiated and as a maximum be needed as a parameter to
+each class can be instantiated and as a maximum be needed as a parameter to
 one other class.
 
 The complete setup and configuration of a class should be possible via its
 constructor and methods returning ``self`` such that all imaginable
 combinations of settings can be setup and run in a single line.
 
-Parallellism
-............
+Parallelism
+...........
 
-As described above, the main target for explicit coding of parallell computing
+As described above, the main target for explicit coding of parallel computing
 is the reader object.
 
 To be able to easily share the data storing ``numpy.ndarray``, ``treading`` was
 selected. Other considered modules were ``multiprocessing`` and ``pycuda``,
 however due to limitations in implementation time the former was used.
 
-Still parallellism poses several issues, the size of the array cannot be
+Still parallelism poses several issues, the size of the array cannot be
 changed without creating a new object, while the needed size cannot be known
 before the contents of the file has been read.
 If the whole file is scanned, reading is impossible due to the large amount of
@@ -132,18 +132,18 @@ Therefore, a design was opted for where the main thread creates a large array
 and several threads are used to fill that array up from data read from the
 source file.
 When the array is full, the main thread must pause, reading data and wait for
-all live theads to finnish, after which the array can be extended. 
+all live threads to finish, after which the array can be extended. 
 Then, reading and threading can start again.
 
 Unittesting
 ...........
 
 Test driven development [tdd]_ was considered, but as development and 
-especially design time was exteremely limited, testing was decided to:
+especially design time was extremely limited, testing was decided to:
 
-- Verify all isolated behaviours
+- Verify all isolated behaviors
 
-- Verify all interdependent behaviours that don't require running the
+- Verify all interdependent behaviors that don't require running the
   entire analysis nor would produce files on the hard drive.
 
 The tests were decided to be placed inside the package but not be part
@@ -178,11 +178,11 @@ The relevant folder tree for the package was devised as follows:
     - doc (sphinx-documentation)
 
 The `setup.py` file was structured so that the scripts in the script folder
-were installed as executionables so that the package can be run as a stand
+were installed as executables so that the package can be run as a stand
 alone command line program. 
 
 A `MANIFEST.in` was created in accordance with ``distutil``'s recommendations
-[distutil]_ to allow for distrubution of packages via the `setup.py` file.
+[distutil]_ to allow for distribution of packages via the `setup.py` file.
 The tests in the `testing` folder were purposely kept out of packaging as they
 were not considered part of the deployment code, but rather the development
 source code.
@@ -204,11 +204,11 @@ following basic types:
   different formats are supported ``FastaSingleline``, ``FastaMultiline``,
   and ``FastQ``
 
-- ``SeqFormatDetector`` to select which format an imput stream is.
+- ``SeqFormatDetector`` to select which format an input stream is.
 
 - ``ReportBuilderBase`` the post-processing coordinator, for which two
   specific post-processors were created to allow ``fseq`` to produce usable
-  fourier reports: ``ReportBuilderFFT`` and ``ReportBuilderPositionAverage``.
+  Fourier reports: ``ReportBuilderFFT`` and ``ReportBuilderPositionAverage``.
 
 - ``ReportBase`` conforms with output producer, for which two specific
   graph producers (``LinePlot`` and ``HeatMap``) were created.
@@ -216,12 +216,12 @@ following basic types:
 To comply with the general design criteria, all relevant classes are imported
 into the package root such that the user only needs to use ``import fseq``.
 
-Default behaviour is simple as the following is sufficient::
+Default behavior is simple as the following is sufficient::
 
     >>> fseq.SeqReader(dataSourcePaths="some/path/to/file.fastq").run()
 
 Further, full customization can be performed and expressed in a single line.
-The expression can also be split to severao lines increase readability.
+The expression can also be split to several lines increase readability.
 
 Unittests
 .........
@@ -229,7 +229,7 @@ Unittests
 In total 78 different tests were created in four different files.
 Each file corresponding to one of the four modules in the package.
 A test exclusively tested one aspect of the functionality, but many of the tests
-asserted more than one behaviour for that aspect.
+asserted more than one behavior for that aspect.
 
 For example, ``TestSeqFormatDetector.test_FormatUnknown`` that ascertains that
 an exception is raised for when the detector runs out of available formats both
@@ -252,16 +252,16 @@ RAM and a 2TB HDD. Typically more than 100% CPU was used, though during
 resizing of the array, a dipping of CPU was clear due to main thread waiting
 for all threads to join. The memory usage peaked around 75% when using 16-bit
 float point precision, in `numpy`.
-With default settings, five report pdf:s were created for each file analysed.
+With default settings, five report pdf:s were created for each file analyzed.
 
-The unittests typically ran for a fraction of a second and succeded in reporting
-previously undetected errors as well as allerting to inconsistencies caused by
+The unit tests typically ran for a fraction of a second and succeeded in reporting
+previously undetected errors as well as alerting to inconsistencies caused by
 minor changes of interfaces during development.
 
 Analysis of two files
 .....................
 
-Two real data files were analysed `Mysc_24_ATCACG_L008_R1_001.fastq` and
+Two real data files were analyzed `Mysc_24_ATCACG_L008_R1_001.fastq` and
 `Mysc_74_GTTTCG_L008_R1_001.fastq`.
 The two files were multiplexed in the same Illumina MiSeq lane, but are two
 distinct species.
@@ -269,12 +269,12 @@ Therefore, technical aspects of the sequencing can possibly be seen as
 recurring features in the two, while aspects pertaining to the DNA in each
 sample should be private.
 
-As an example, the occurancy of undecided nucleotides is highly concurrent in
+As an example, the occurrence of undecided nucleotides is highly concurrent in
 both data files:
 :download:`Mysc 24 <Mysc_24_ATCACG_L008_R1_001.fastq.reports/average.lacking.line.pdf>`
 :download:`Mysc 74 <Mysc_74_GTTTCG_L008_R1_001.fastq.reports/average.lacking.line.pdf>`
 
-While the GC bias over the two files are distictly different:
+While the GC bias over the two files are distinctly different:
 :download:`Mysc 24 <Mysc_24_ATCACG_L008_R1_001.fastq.reports/average.not-lacking.line.pdf>`
 :download:`Mysc 74 <Mysc_74_GTTTCG_L008_R1_001.fastq.reports/average.not-lacking.line.pdf>`
 
@@ -290,7 +290,7 @@ While the corresponding amplitudes for the same 1000 reads share two clear
 features. First, for the 0-frequency, an obvious large spread in overall GC
 bias is evident with a small subset of around 90% GC a majority around 40-50
 and another smaller cluster close to 0%. The second feature, which shows clearly
-in both is that the 1/34 frequency and its neighbours behave distinctively.
+in both is that the 1/34 frequency and its neighbors behave distinctively.
 
 :download:`Mysc 24 <Mysc_24_ATCACG_L008_R1_001.fastq.reports/fft-sample.abs.heatmap.pdf>`
 :download:`Mysc 74 <Mysc_74_GTTTCG_L008_R1_001.fastq.reports/fft-sample.abs.heatmap.pdf>`
@@ -302,25 +302,25 @@ Package
 .......
 
 The general design of the project was maintained during development and the
-extension of functionality during worked as intened.
+extension of functionality during worked as intended.
 The package therefore shows promise of being well structured and designed.
 
 The ``threading`` had some inherent issues with sleeping threads not appearing
 alive causing jumbled and random encodings initially until sufficiently slow
-implementation ensured threads are truely joined before reshaping of encoding
+implementation ensured threads are truly joined before reshaping of encoding
 array.
-There are some posibilities for further improving the performance of the
+There are some possibilities for further improving the performance of the
 ``SeqReader`` by decoupling the data reading from the managing of the encoding
 threads as well as taking an active part in managing the number of the latter.
-Moving away from single processing should also be feasable and could be the
+Moving away from single processing should also be feasible and could be the
 target of further performance development.
 
 The use of unit tests worked well in assisting the development and as they were
 written in junction with the code they were not merely a *post-hoc* addition to
 prove the correctness of the implementation, but actively discovered issues
-previously unkown.
+previously unknown.
 
-In general, the timeplan was kept with the exception of documentation and
+In general, the time plan was kept with the exception of documentation and
 report writing, for which much more time would have been needed to learn
 ``sphinx`` and ``numpydoc`` sufficiently well to produce both this report
 and the general package documentation.
@@ -330,13 +330,13 @@ Bioinformatics
 
 The analyses included in the package reproduces know result where comparison is
 applicable.
-For example, the uneven bias of GC initally due to faulty timming of adapters
+For example, the uneven bias of GC initially due to faulty timing of adapters
 -- a known issue.
 More interestingly the implicated a recurring frequency on the amplitude
 analysis of clustered FFT data around 34/101.
 The implication of this needs to be further investigated.
 Potentially, protein coding regions in the sequence, for which triplicates of
-nucleotides form the information unit in translation of DNA to aminoacids of
+nucleotides form the information unit in translation of DNA to amino acids of
 the protein, could be related as it implies the factor 3.
 However, *why* and if this information can be useful remains to be investigated.
 

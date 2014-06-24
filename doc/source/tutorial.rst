@@ -12,11 +12,11 @@ Or for all users by running::
 
     $ sudo python setup.py install
 
-The following dependencies needs to be installed seperately::
+The following dependencies needs to be installed separately::
 
     numpy, scipy, matplotlib
 
-On debian systems copy::
+On Debian systems copy::
 
     $ sudo apt-get update && sudo apt-get install python-numpy python-scipy python-matplotlib
 
@@ -48,12 +48,12 @@ The following example runs default analysis on two different files::
     Saving -> /home/martin/Data/Mysc_74_GTTTCG_L008_R1_001.fastq.reports/average.not-lacking.line.pdf
     14-06-23 18:03 SeqReader    INFO     All jobs complete`
 
-**Note:** Running above consumes quite a lot of memory and cpu and takes about
+**Note:** Running above consumes quite a lot of memory and CPU and takes about
 10 minutes.
 
 **Note:** If ``fseq`` is not found on your system, it usually is due to the 
 default target of scripts for user install is not in your PATH.
-To ammend this, check where install copied the file `scripts/fseq` and append
+To amend this, check where install copied the file `scripts/fseq` and append
 that to your current PATH.
 
 Python Use
@@ -91,6 +91,6 @@ To run encoding and produce results, simply:
 
 >>> r.run()
 
-Note that this will take some time and consume quite a lot of resoursece.
+Note that this will take some time and consume quite a lot of resources.
 It took about 10 minutes on a standard desktop for the two files in the 
 command line example, and the python use is no different.
