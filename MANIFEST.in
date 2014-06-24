@@ -1,0 +1,6 @@
+include *.py
+include scripts/*
+include CHANGELOG
+include LICENSE
+include INSTALL
+include README

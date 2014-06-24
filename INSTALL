@@ -1,0 +1,22 @@
+Install by writing
+
+    python setup.py install --user
+
+or, if for all users (might require special privileges):
+
+    python setup.py install
+
+Note that the run-script is might not end up in path if
+installing only for user. In such case refer to documentation for
+how to add it.
+
+These non-standard modules are required:
+
+    numpy
+    scipy
+    matplotlib
+
+For building documentation etc, also required
+
+    sphinx
+    numpydoc
