@@ -1,0 +1,74 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Contents}{3}{chapter.1}
+\contentsline {section}{\numberline {1.1}fseq}{3}{section.1.1}
+\contentsline {subsection}{\numberline {1.1.1}fseq package}{3}{subsection.1.1.1}
+\contentsline {subsubsection}{Subpackages}{3}{subsubsection*.3}
+\contentsline {paragraph}{fseq.reading package}{3}{paragraph*.4}
+\contentsline {subparagraph}{Submodules}{3}{subparagraph*.5}
+\contentsline {subparagraph}{fseq.reading.seq\_encoder module}{3}{subparagraph*.6}
+\contentsline {paragraph}{Examples}{3}{paragraph*.8}
+\contentsline {paragraph}{Attributes}{4}{paragraph*.9}
+\contentsline {paragraph}{Examples}{4}{paragraph*.19}
+\contentsline {paragraph}{Attributes}{5}{paragraph*.20}
+\contentsline {paragraph}{Examples}{5}{paragraph*.29}
+\contentsline {paragraph}{Attributes}{5}{paragraph*.30}
+\contentsline {paragraph}{Attributes}{6}{paragraph*.41}
+\contentsline {paragraph}{Attributes}{9}{paragraph*.57}
+\contentsline {paragraph}{Attributes}{11}{paragraph*.73}
+\contentsline {subparagraph}{fseq.reading.seq\_reader module}{12}{subparagraph*.87}
+\contentsline {paragraph}{Examples}{12}{paragraph*.89}
+\contentsline {paragraph}{Attributes}{13}{paragraph*.90}
+\contentsline {paragraph}{Examples}{15}{paragraph*.106}
+\contentsline {subparagraph}{Module contents}{16}{subparagraph*.114}
+\contentsline {paragraph}{fseq.reporting package}{16}{paragraph*.115}
+\contentsline {subparagraph}{Submodules}{16}{subparagraph*.116}
+\contentsline {subparagraph}{fseq.reporting.report\_builder module}{16}{subparagraph*.117}
+\contentsline {paragraph}{Attributes}{17}{paragraph*.119}
+\contentsline {paragraph}{Attributes}{18}{paragraph*.126}
+\contentsline {paragraph}{Attributes}{19}{paragraph*.133}
+\contentsline {subparagraph}{fseq.reporting.reports module}{20}{subparagraph*.137}
+\contentsline {paragraph}{Attributes}{23}{paragraph*.143}
+\contentsline {subparagraph}{Module contents}{25}{subparagraph*.149}
+\contentsline {subsubsection}{Module contents}{25}{subsubsection*.150}
+\contentsline {paragraph}{Reading}{25}{paragraph*.151}
+\contentsline {paragraph}{Reporting}{25}{paragraph*.152}
+\contentsline {paragraph}{Exceptions}{26}{paragraph*.153}
+\contentsline {section}{\numberline {1.2}Tutorial}{26}{section.1.2}
+\contentsline {subsection}{\numberline {1.2.1}Installing}{26}{subsection.1.2.1}
+\contentsline {subsection}{\numberline {1.2.2}Command Line Use}{26}{subsection.1.2.2}
+\contentsline {subsection}{\numberline {1.2.3}Python Use}{27}{subsection.1.2.3}
+\contentsline {section}{\numberline {1.3}Developers}{27}{section.1.3}
+\contentsline {subsection}{\numberline {1.3.1}Git}{28}{subsection.1.3.1}
+\contentsline {subsection}{\numberline {1.3.2}Reading}{28}{subsection.1.3.2}
+\contentsline {subsubsection}{\texttt {SeqEncoder.parse(self, lines, out, outindex)} overwriting}{28}{subsubsection*.154}
+\contentsline {subsubsection}{\texttt {SeqFormat} sub-classing}{29}{subsubsection*.155}
+\contentsline {subsection}{\numberline {1.3.3}Reporting}{29}{subsection.1.3.3}
+\contentsline {subsubsection}{\texttt {ReportBuilderBase} sub-classing}{29}{subsubsection*.156}
+\contentsline {subsubsection}{\texttt {ReportBase} sub-classing or not}{29}{subsubsection*.157}
+\contentsline {section}{\numberline {1.4}fSeq Project Report for C3SE Graduate Course: Python and High Performance Computing 2014}{30}{section.1.4}
+\contentsline {subsection}{\numberline {1.4.1}Abstract}{30}{subsection.1.4.1}
+\contentsline {subsection}{\numberline {1.4.2}Solution Method}{30}{subsection.1.4.2}
+\contentsline {subsubsection}{Design Analysis}{30}{subsubsection*.158}
+\contentsline {paragraph}{General}{31}{paragraph*.159}
+\contentsline {subsubsection}{Parallelism}{31}{subsubsection*.160}
+\contentsline {subsubsection}{Unittesting}{31}{subsubsection*.161}
+\contentsline {subsubsection}{Documentation}{32}{subsubsection*.162}
+\contentsline {subsection}{\numberline {1.4.3}Implementation}{32}{subsection.1.4.3}
+\contentsline {subsubsection}{Package structure}{32}{subsubsection*.163}
+\contentsline {subsubsection}{Design}{32}{subsubsection*.164}
+\contentsline {subsubsection}{Unittests}{33}{subsubsection*.165}
+\contentsline {subsubsection}{Documentation}{33}{subsubsection*.166}
+\contentsline {subsection}{\numberline {1.4.4}Results}{33}{subsection.1.4.4}
+\contentsline {subsubsection}{Technical results}{33}{subsubsection*.167}
+\contentsline {subsubsection}{Analysis of two files}{33}{subsubsection*.168}
+\contentsline {subsection}{\numberline {1.4.5}Discussion}{34}{subsection.1.4.5}
+\contentsline {subsubsection}{Package}{34}{subsubsection*.169}
+\contentsline {subsubsection}{Bioinformatics}{34}{subsubsection*.170}
+\contentsline {subsection}{\numberline {1.4.6}References}{34}{subsection.1.4.6}
+\contentsline {subsection}{\numberline {1.4.7}Appendix A: Project Plan}{34}{subsection.1.4.7}
+\contentsline {subsection}{\numberline {1.4.8}Appendix B: Code}{34}{subsection.1.4.8}
+\contentsline {section}{\numberline {1.5}License}{35}{section.1.5}
+\contentsline {chapter}{\numberline {2}Indices}{37}{chapter.2}
+\contentsline {chapter}{\numberline {3}Contact}{39}{chapter.3}
+\contentsline {chapter}{Bibliography}{41}{chapter*.172}
+\contentsline {chapter}{Python Module Index}{43}{section*.180}

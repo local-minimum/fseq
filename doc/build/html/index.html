@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="fSeq 1.0.0a documentation" href="#" />
-    <link rel="next" title="Tutorial" href="tutorial.html" /> 
+    <link rel="next" title="fseq" href="modules.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,7 +37,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="tutorial.html" title="Tutorial"
+          <a href="modules.html" title="fseq"
              accesskey="N">next</a> |</li>
         <li><a href="#">fSeq 1.0.0a documentation</a> &raquo;</li> 
       </ul>
@@ -62,6 +62,14 @@ have equally been designed to allow fast development of further capabilities.</p
 <h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Package API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fseq.html">fseq package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="fseq.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fseq.html#module-fseq">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorial.html#installing">Installing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial.html#command-line-use">Command Line Use</a></li>
@@ -70,16 +78,44 @@ have equally been designed to allow fast development of further capabilities.</p
 </li>
 <li class="toctree-l1"><a class="reference internal" href="developers.html">Developers</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="developers.html#git">Git</a></li>
-<li class="toctree-l2"><a class="reference internal" href="developers.html#reading">Reading</a></li>
-<li class="toctree-l2"><a class="reference internal" href="developers.html#reporting">Reporting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers.html#reading">Reading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="developers.html#seqencoder-parse-self-lines-out-outindex-overwriting"><tt class="docutils literal"><span class="pre">SeqEncoder.parse(self,</span> <span class="pre">lines,</span> <span class="pre">out,</span> <span class="pre">outindex)</span></tt> overwriting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developers.html#seqformat-sub-classing"><tt class="docutils literal"><span class="pre">SeqFormat</span></tt> sub-classing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="developers.html#reporting">Reporting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="developers.html#reportbuilderbase-sub-classing"><tt class="docutils literal"><span class="pre">ReportBuilderBase</span></tt> sub-classing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developers.html#reportbase-sub-classing-or-not"><tt class="docutils literal"><span class="pre">ReportBase</span></tt> sub-classing or not</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="c3se_python_course.html">fSeq Project Report for C3SE Graduate Course: Python and High Performance Computing 2014</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="c3se_python_course.html#abstract">Abstract</a></li>
-<li class="toctree-l2"><a class="reference internal" href="c3se_python_course.html#solution-method">Solution Method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="c3se_python_course.html#implementation">Implementation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="c3se_python_course.html#results">Results</a></li>
-<li class="toctree-l2"><a class="reference internal" href="c3se_python_course.html#discussion">Discussion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="c3se_python_course.html#solution-method">Solution Method</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="c3se_python_course.html#design-analysis">Design Analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c3se_python_course.html#parallelism">Parallelism</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c3se_python_course.html#unittesting">Unittesting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c3se_python_course.html#documentation">Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="c3se_python_course.html#implementation">Implementation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="c3se_python_course.html#package-structure">Package structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c3se_python_course.html#design">Design</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c3se_python_course.html#unittests">Unittests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c3se_python_course.html#id8">Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="c3se_python_course.html#results">Results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="c3se_python_course.html#technical-results">Technical results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c3se_python_course.html#analysis-of-two-files">Analysis of two files</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="c3se_python_course.html#discussion">Discussion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="c3se_python_course.html#package">Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c3se_python_course.html#bioinformatics">Bioinformatics</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="c3se_python_course.html#references">References</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c3se_python_course.html#appendix-a-project-plan">Appendix A: Project Plan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="c3se_python_course.html#appendix-b-code">Appendix B: Code</a></li>
@@ -99,7 +135,8 @@ have equally been designed to allow fast development of further capabilities.</p
 <div class="section" id="contact">
 <h2>Contact<a class="headerlink" href="#contact" title="Permalink to this headline">¶</a></h2>
 <p>The package was written and is maintained by Martin Zackrisson.</p>
-<p>Developers, please use <em>Gitorious</em>  (see <a href="#id1"><span class="problematic" id="id2">Develoers_</span></a>)</p>
+<p>Developers, look at <a class="reference internal" href="developers.html"><em>Developers</em></a> about Git and use <em>Gitorious</em> as
+mode of contact.</p>
 <p>For end-users, questions can be addressed to the e-mail:</p>
 <blockquote>
 <div>martin[dot]zackrisson[at]gu[dot]se</div></blockquote>
@@ -123,8 +160,8 @@ have equally been designed to allow fast development of further capabilities.</p
 </ul>
 
   <h4>Next topic</h4>
-  <p class="topless"><a href="tutorial.html"
-                        title="next chapter">Tutorial</a></p>
+  <p class="topless"><a href="modules.html"
+                        title="next chapter">fseq</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/index.txt"
@@ -157,7 +194,7 @@ have equally been designed to allow fast development of further capabilities.</p
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="tutorial.html" title="Tutorial"
+          <a href="modules.html" title="fseq"
              >next</a> |</li>
         <li><a href="#">fSeq 1.0.0a documentation</a> &raquo;</li> 
       </ul>

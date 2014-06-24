@@ -1,0 +1,127 @@
+\indexentry{fseq.reading.seq\_encoder (module)|hyperpage}{3}
+\indexentry{FastQ (class in fseq.reading.seq\_encoder)|hyperpage}{3}
+\indexentry{HEADER\_LINE (fseq.reading.seq\_encoder.FastQ attribute)|hyperpage}{4}
+\indexentry{QUALITY\_LINE (fseq.reading.seq\_encoder.FastQ attribute)|hyperpage}{4}
+\indexentry{SEQUENCE\_LINE (fseq.reading.seq\_encoder.FastQ attribute)|hyperpage}{4}
+\indexentry{expects() (fseq.reading.seq\_encoder.FastQ method)|hyperpage}{4}
+\indexentry{hasQuality (fseq.reading.seq\_encoder.FastQ attribute)|hyperpage}{4}
+\indexentry{hasSequence (fseq.reading.seq\_encoder.FastQ attribute)|hyperpage}{4}
+\indexentry{itemSize (fseq.reading.seq\_encoder.FastQ attribute)|hyperpage}{4}
+\indexentry{name (fseq.reading.seq\_encoder.FastQ attribute)|hyperpage}{4}
+\indexentry{FastaMultiline (class in fseq.reading.seq\_encoder)|hyperpage}{4}
+\indexentry{HEADER\_LINE (fseq.reading.seq\_encoder.FastaMultiline attribute)|hyperpage}{5}
+\indexentry{QUALITY\_LINE (fseq.reading.seq\_encoder.FastaMultiline attribute)|hyperpage}{5}
+\indexentry{SEQUENCE\_LINE (fseq.reading.seq\_encoder.FastaMultiline attribute)|hyperpage}{5}
+\indexentry{expects() (fseq.reading.seq\_encoder.FastaMultiline method)|hyperpage}{5}
+\indexentry{hasQuality (fseq.reading.seq\_encoder.FastaMultiline attribute)|hyperpage}{5}
+\indexentry{hasSequence (fseq.reading.seq\_encoder.FastaMultiline attribute)|hyperpage}{5}
+\indexentry{name (fseq.reading.seq\_encoder.FastaMultiline attribute)|hyperpage}{5}
+\indexentry{FastaSingleline (class in fseq.reading.seq\_encoder)|hyperpage}{5}
+\indexentry{HEADER\_LINE (fseq.reading.seq\_encoder.FastaSingleline attribute)|hyperpage}{5}
+\indexentry{QUALITY\_LINE (fseq.reading.seq\_encoder.FastaSingleline attribute)|hyperpage}{6}
+\indexentry{SEQUENCE\_LINE (fseq.reading.seq\_encoder.FastaSingleline attribute)|hyperpage}{6}
+\indexentry{expects() (fseq.reading.seq\_encoder.FastaSingleline method)|hyperpage}{6}
+\indexentry{itemSize (fseq.reading.seq\_encoder.FastaSingleline attribute)|hyperpage}{6}
+\indexentry{name (fseq.reading.seq\_encoder.FastaSingleline attribute)|hyperpage}{6}
+\indexentry{FormatError|hyperpage}{6}
+\indexentry{FormatImplementationError|hyperpage}{6}
+\indexentry{FormatUnknown|hyperpage}{6}
+\indexentry{SeqEncoder (class in fseq.reading.seq\_encoder)|hyperpage}{6}
+\indexentry{detectFormat() (fseq.reading.seq\_encoder.SeqEncoder method)|hyperpage}{7}
+\indexentry{feedDetection() (fseq.reading.seq\_encoder.SeqEncoder method)|hyperpage}{7}
+\indexentry{format (fseq.reading.seq\_encoder.SeqEncoder attribute)|hyperpage}{7}
+\indexentry{initiated (fseq.reading.seq\_encoder.SeqEncoder attribute)|hyperpage}{7}
+\indexentry{itemSize (fseq.reading.seq\_encoder.SeqEncoder attribute)|hyperpage}{7}
+\indexentry{parse() (fseq.reading.seq\_encoder.SeqEncoder method)|hyperpage}{7}
+\indexentry{qualityEncoding (fseq.reading.seq\_encoder.SeqEncoder attribute)|hyperpage}{8}
+\indexentry{requestReports (fseq.reading.seq\_encoder.SeqEncoder attribute)|hyperpage}{8}
+\indexentry{reset() (fseq.reading.seq\_encoder.SeqEncoder method)|hyperpage}{8}
+\indexentry{sequenceEncoding (fseq.reading.seq\_encoder.SeqEncoder attribute)|hyperpage}{8}
+\indexentry{useQuality (fseq.reading.seq\_encoder.SeqEncoder attribute)|hyperpage}{8}
+\indexentry{useSequence (fseq.reading.seq\_encoder.SeqEncoder attribute)|hyperpage}{8}
+\indexentry{SeqEncoderGC (class in fseq.reading.seq\_encoder)|hyperpage}{8}
+\indexentry{parse() (fseq.reading.seq\_encoder.SeqEncoderGC method)|hyperpage}{9}
+\indexentry{SeqFormat (class in fseq.reading.seq\_encoder)|hyperpage}{9}
+\indexentry{HEADER\_LINE (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{9}
+\indexentry{MATCH\_AA (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{9}
+\indexentry{MATCH\_AA\_S (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{9}
+\indexentry{MATCH\_NT (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{10}
+\indexentry{MATCH\_NT\_S (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{10}
+\indexentry{QUALITY\_LINE (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{10}
+\indexentry{SEQUENCE\_LINE (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{10}
+\indexentry{expects() (fseq.reading.seq\_encoder.SeqFormat method)|hyperpage}{10}
+\indexentry{givenUp (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{10}
+\indexentry{hasQuality (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{10}
+\indexentry{hasSequence (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{10}
+\indexentry{itemSize (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{10}
+\indexentry{name (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{10}
+\indexentry{qualityEncoding (fseq.reading.seq\_encoder.SeqFormat attribute)|hyperpage}{10}
+\indexentry{SeqFormatDetector (class in fseq.reading.seq\_encoder)|hyperpage}{10}
+\indexentry{FORMATS (fseq.reading.seq\_encoder.SeqFormatDetector attribute)|hyperpage}{11}
+\indexentry{compatible() (fseq.reading.seq\_encoder.SeqFormatDetector method)|hyperpage}{11}
+\indexentry{detecting (fseq.reading.seq\_encoder.SeqFormatDetector attribute)|hyperpage}{11}
+\indexentry{feed() (fseq.reading.seq\_encoder.SeqFormatDetector method)|hyperpage}{11}
+\indexentry{format (fseq.reading.seq\_encoder.SeqFormatDetector attribute)|hyperpage}{11}
+\indexentry{hasQuality (fseq.reading.seq\_encoder.SeqFormatDetector attribute)|hyperpage}{11}
+\indexentry{hasSequence (fseq.reading.seq\_encoder.SeqFormatDetector attribute)|hyperpage}{11}
+\indexentry{headerLine (fseq.reading.seq\_encoder.SeqFormatDetector attribute)|hyperpage}{11}
+\indexentry{itemSize (fseq.reading.seq\_encoder.SeqFormatDetector attribute)|hyperpage}{12}
+\indexentry{qualityEncoding (fseq.reading.seq\_encoder.SeqFormatDetector attribute)|hyperpage}{12}
+\indexentry{qualityLine (fseq.reading.seq\_encoder.SeqFormatDetector attribute)|hyperpage}{12}
+\indexentry{sequenceLine (fseq.reading.seq\_encoder.SeqFormatDetector attribute)|hyperpage}{12}
+\indexentry{inheritDocFromSeqFormat() (in module fseq.reading.seq\_encoder)|hyperpage}{12}
+\indexentry{fseq.reading.seq\_reader (module)|hyperpage}{12}
+\indexentry{SeqReader (class in fseq.reading.seq\_reader)|hyperpage}{12}
+\indexentry{DATA\_INITIAL\_SIZE (fseq.reading.seq\_reader.SeqReader attribute)|hyperpage}{13}
+\indexentry{DEBUG (fseq.reading.seq\_reader.SeqReader attribute)|hyperpage}{13}
+\indexentry{WORKERS (fseq.reading.seq\_reader.SeqReader attribute)|hyperpage}{13}
+\indexentry{addData() (fseq.reading.seq\_reader.SeqReader method)|hyperpage}{13}
+\indexentry{addReportBuilders() (fseq.reading.seq\_reader.SeqReader method)|hyperpage}{13}
+\indexentry{clearJobQueue() (fseq.reading.seq\_reader.SeqReader method)|hyperpage}{14}
+\indexentry{clearResults() (fseq.reading.seq\_reader.SeqReader method)|hyperpage}{14}
+\indexentry{dataArrayConstructor (fseq.reading.seq\_reader.SeqReader attribute)|hyperpage}{14}
+\indexentry{dataType (fseq.reading.seq\_reader.SeqReader attribute)|hyperpage}{14}
+\indexentry{dataWidth (fseq.reading.seq\_reader.SeqReader attribute)|hyperpage}{14}
+\indexentry{jobQueue (fseq.reading.seq\_reader.SeqReader attribute)|hyperpage}{14}
+\indexentry{next() (fseq.reading.seq\_reader.SeqReader method)|hyperpage}{14}
+\indexentry{popDataSources (fseq.reading.seq\_reader.SeqReader attribute)|hyperpage}{14}
+\indexentry{popEncodingResults (fseq.reading.seq\_reader.SeqReader attribute)|hyperpage}{14}
+\indexentry{removeReportBuilders() (fseq.reading.seq\_reader.SeqReader method)|hyperpage}{14}
+\indexentry{reportBuilders (fseq.reading.seq\_reader.SeqReader attribute)|hyperpage}{15}
+\indexentry{reportDirectory (fseq.reading.seq\_reader.SeqReader attribute)|hyperpage}{15}
+\indexentry{resetSeqEncoder (fseq.reading.seq\_reader.SeqReader attribute)|hyperpage}{15}
+\indexentry{results (fseq.reading.seq\_reader.SeqReader attribute)|hyperpage}{15}
+\indexentry{run() (fseq.reading.seq\_reader.SeqReader method)|hyperpage}{16}
+\indexentry{seqEncoder (fseq.reading.seq\_reader.SeqReader attribute)|hyperpage}{16}
+\indexentry{verbose (fseq.reading.seq\_reader.SeqReader attribute)|hyperpage}{16}
+\indexentry{fseq.reading (module)|hyperpage}{16}
+\indexentry{fseq.reporting.report\_builder (module)|hyperpage}{16}
+\indexentry{ReportBuilderBase (class in fseq.reporting.report\_builder)|hyperpage}{16}
+\indexentry{DEFAULT\_REPORTS (fseq.reporting.report\_builder.ReportBuilderBase attribute)|hyperpage}{17}
+\indexentry{addReports() (fseq.reporting.report\_builder.ReportBuilderBase method)|hyperpage}{17}
+\indexentry{distill() (fseq.reporting.report\_builder.ReportBuilderBase method)|hyperpage}{17}
+\indexentry{outputNamePrefix (fseq.reporting.report\_builder.ReportBuilderBase attribute)|hyperpage}{17}
+\indexentry{outputRoot (fseq.reporting.report\_builder.ReportBuilderBase attribute)|hyperpage}{17}
+\indexentry{ReportBuilderFFT (class in fseq.reporting.report\_builder)|hyperpage}{17}
+\indexentry{DEFAULT\_REPORTS (fseq.reporting.report\_builder.ReportBuilderFFT attribute)|hyperpage}{18}
+\indexentry{METRICS (fseq.reporting.report\_builder.ReportBuilderFFT attribute)|hyperpage}{18}
+\indexentry{distanceMetric (fseq.reporting.report\_builder.ReportBuilderFFT attribute)|hyperpage}{18}
+\indexentry{distill() (fseq.reporting.report\_builder.ReportBuilderFFT method)|hyperpage}{18}
+\indexentry{sampleSize (fseq.reporting.report\_builder.ReportBuilderFFT attribute)|hyperpage}{18}
+\indexentry{ReportBuilderPositionAverage (class in fseq.reporting.report\_builder)|hyperpage}{18}
+\indexentry{DEFAULT\_REPORTS (fseq.reporting.report\_builder.ReportBuilderPositionAverage attribute)|hyperpage}{19}
+\indexentry{distill() (fseq.reporting.report\_builder.ReportBuilderPositionAverage method)|hyperpage}{19}
+\indexentry{undecidedValue (fseq.reporting.report\_builder.ReportBuilderPositionAverage attribute)|hyperpage}{19}
+\indexentry{fseq.reporting.reports (module)|hyperpage}{20}
+\indexentry{HeatMap (class in fseq.reporting.reports)|hyperpage}{20}
+\indexentry{distill() (fseq.reporting.reports.HeatMap method)|hyperpage}{20}
+\indexentry{LinePlot (class in fseq.reporting.reports)|hyperpage}{21}
+\indexentry{distill() (fseq.reporting.reports.LinePlot method)|hyperpage}{22}
+\indexentry{ReportBase (class in fseq.reporting.reports)|hyperpage}{23}
+\indexentry{distill() (fseq.reporting.reports.ReportBase method)|hyperpage}{24}
+\indexentry{name (fseq.reporting.reports.ReportBase attribute)|hyperpage}{24}
+\indexentry{saveArgs (fseq.reporting.reports.ReportBase attribute)|hyperpage}{24}
+\indexentry{saveFig() (fseq.reporting.reports.ReportBase method)|hyperpage}{24}
+\indexentry{saveKwargs (fseq.reporting.reports.ReportBase attribute)|hyperpage}{24}
+\indexentry{fseq.reporting (module)|hyperpage}{25}
+\indexentry{fseq (module)|hyperpage}{25}

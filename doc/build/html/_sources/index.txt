@@ -20,8 +20,9 @@ Contents
 --------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
+   Package API <modules>
    tutorial
    developers
    c3se_python_course
@@ -39,7 +40,8 @@ Contact
 
 The package was written and is maintained by Martin Zackrisson.
 
-Developers, please use *Gitorious*  (see Develoers_)
+Developers, look at :doc:`developers` about Git and use *Gitorious* as
+mode of contact.
 
 For end-users, questions can be addressed to the e-mail:
 

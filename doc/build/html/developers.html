@@ -61,13 +61,14 @@ highly extensible.</p>
 <blockquote>
 <div><ul>
 <li><p class="first"><strong>FastQ SeqFormat Subclasses</strong></p>
-<p>Subclassing <tt class="docutils literal"><span class="pre">fseq.FastQ</span></tt> to automatically detect which quality encoding
-was used based on the range of values in the quality lines fed to the
-<tt class="docutils literal"><span class="pre">SeqFormat</span></tt>.</p>
+<p>Sub-classing <a class="reference internal" href="fseq.reading.html#fseq.reading.seq_encoder.FastQ" title="fseq.reading.seq_encoder.FastQ"><tt class="xref py py-class docutils literal"><span class="pre">fseq.reading.seq_encoder.FastQ</span></tt></a> to automatically
+detect which quality encoding
+was used based on the range of values in the quality lines fed to it.</p>
 </li>
 <li><p class="first"><strong>SeqEncoderQaulity SeqEncoder Subclass</strong></p>
-<p>A subclass that encodes the qaulity line using the quality encoding
-supplied by the <tt class="docutils literal"><span class="pre">SeqFormat</span></tt> detected.</p>
+<p>Subclass <a class="reference internal" href="fseq.reading.html#fseq.reading.seq_encoder.SeqEncoder" title="fseq.reading.seq_encoder.SeqEncoder"><tt class="xref py py-class docutils literal"><span class="pre">fseq.reading.seq_encoder.SeqEncoder</span></tt></a> such that it
+encodes the quality line using the quality encoding
+supplied by the <a class="reference internal" href="fseq.reading.html#fseq.reading.seq_encoder.SeqFormat" title="fseq.reading.seq_encoder.SeqFormat"><tt class="xref py py-class docutils literal"><span class="pre">fseq.reading.seq_encoder.SeqFormat</span></tt></a> detected.</p>
 </li>
 </ul>
 </div></blockquote>
@@ -85,30 +86,35 @@ supplied by the <tt class="docutils literal"><span class="pre">SeqFormat</span><
 <li>Coding style in general to follow the style established in <cite>fseq</cite></li>
 <li>Git commits to in general be <em>informative</em> and have
 <em>one aspect changed per commit</em></li>
+<li>Unit-tests to cover new functionality</li>
 </ul>
 </div></blockquote>
 </div>
 <div class="section" id="reading">
 <h2>Reading<a class="headerlink" href="#reading" title="Permalink to this headline">¶</a></h2>
-<p>To extend the funcitonality by adding further encoders, these encoders should
-be derived from <tt class="docutils literal"><span class="pre">fseq.SeqEncoder</span></tt> and as a minimal requirement need to
-overwrite the <tt class="docutils literal"><span class="pre">fseq.SeqEncoder.parse</span></tt>-method.</p>
+<p>To extend the functionality by adding further encoders, these encoders should
+be derived from <a class="reference internal" href="fseq.reading.html#fseq.reading.seq_encoder.SeqEncoder" title="fseq.reading.seq_encoder.SeqEncoder"><tt class="xref py py-class docutils literal"><span class="pre">fseq.reading.seq_encoder.SeqEncoder</span></tt></a> and as a minimal
+requirement need to overwrite the
+<a class="reference internal" href="fseq.reading.html#fseq.reading.seq_encoder.SeqEncoder.parse" title="fseq.reading.seq_encoder.SeqEncoder.parse"><tt class="xref py py-func docutils literal"><span class="pre">fseq.reading.seq_encoder.SeqEncoder.parse()</span></tt></a>-method.</p>
 <p>To extend the functionality by adding support for more input formats, classes
-should be derived from <tt class="docutils literal"><span class="pre">fseq.SeqFormat</span></tt> or any of the already implemented
+should be derived from
+<a class="reference internal" href="fseq.reading.html#fseq.reading.seq_encoder.SeqFormat" title="fseq.reading.seq_encoder.SeqFormat"><tt class="xref py py-class docutils literal"><span class="pre">fseq.reading.seq_encoder.SeqFormat</span></tt></a> or any of the already implemented
 formats if they partially solve detection for the new format.
-Minimal requirement is overwriting the <tt class="docutils literal"><span class="pre">fseq.SeqFormat.expects</span></tt>-method, but
+Minimal requirement is overwriting the
+<a class="reference internal" href="fseq.reading.html#fseq.reading.seq_encoder.SeqFormat.expects" title="fseq.reading.seq_encoder.SeqFormat.expects"><tt class="xref py py-func docutils literal"><span class="pre">fseq.reading.seq_encoder.SeqFormat.expects()</span></tt></a>-method, but
 typically many of the properties of the base class as well as the
 constructor needs replacing.</p>
-<div class="section" id="fseq-seqencoder-parse-self-lines-out-outindex-overwriting">
-<h3><tt class="docutils literal"><span class="pre">fseq.SeqEncoder.parse(self,</span> <span class="pre">lines,</span> <span class="pre">out,</span> <span class="pre">outindex)</span></tt> overwriting<a class="headerlink" href="#fseq-seqencoder-parse-self-lines-out-outindex-overwriting" title="Permalink to this headline">¶</a></h3>
-<p><strong>Important 1:</strong> The overwritten <tt class="docutils literal"><span class="pre">fseq.SeqEncoder.parse</span></tt> must have identical
+<div class="section" id="seqencoder-parse-self-lines-out-outindex-overwriting">
+<h3><tt class="docutils literal"><span class="pre">SeqEncoder.parse(self,</span> <span class="pre">lines,</span> <span class="pre">out,</span> <span class="pre">outindex)</span></tt> overwriting<a class="headerlink" href="#seqencoder-parse-self-lines-out-outindex-overwriting" title="Permalink to this headline">¶</a></h3>
+<p><strong>Important 1:</strong> The overwritten
+<a class="reference internal" href="fseq.reading.html#fseq.reading.seq_encoder.SeqEncoder.parse" title="fseq.reading.seq_encoder.SeqEncoder.parse"><tt class="xref py py-func docutils literal"><span class="pre">fseq.reading.seq_encoder.SeqEncoder.parse()</span></tt></a> must have identical
 parameter set. If further information is needed, this should be dealt with
-during initiation or by seperate methods.</p>
+during initiation or by separate methods.</p>
 <p><strong>Important 2:</strong> The overwritten method may not throw any errors and should silently
 handle scenarios where the length of the information to be encoded mismatches
-the lenght of the corresponing slot of the <tt class="docutils literal"><span class="pre">out</span></tt> object.</p>
-<p>Example of how out the second important note can be achivied (adapted from
-<tt class="docutils literal"><span class="pre">fseq.SeqEncoderGC.parse</span></tt>):</p>
+the length of the corresponding slot of the <tt class="docutils literal"><span class="pre">out</span></tt> object.</p>
+<p>Example of how out the second important note can be achieved (adapted from
+<a class="reference internal" href="fseq.reading.html#fseq.reading.seq_encoder.SeqEncoderGC.parse" title="fseq.reading.seq_encoder.SeqEncoderGC.parse"><tt class="xref py py-func docutils literal"><span class="pre">fseq.reading.seq_encoder.SeqEncoderGC.parse()</span></tt></a>):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c">#Point to line of interes</span>
 <span class="n">l</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_sequence_line</span><span class="p">]</span>
 
@@ -119,47 +125,50 @@ the lenght of the corresponing slot of the <tt class="docutils literal"><span cl
 <p>The above example is quite useless as an encoder as it doesn&#8217;t translate
 the contents of the input in any way, but the <tt class="docutils literal"><span class="pre">[:len(l)]</span></tt> on <tt class="docutils literal"><span class="pre">out</span></tt>
 ensures the target slot of <tt class="docutils literal"><span class="pre">out</span></tt> is not too large, while the
-<tt class="docutils literal"><span class="pre">[:out.shape(1)]</span></tt> ensures that <cite>l</cite> is not loo large for the slot in <tt class="docutils literal"><span class="pre">out</span></tt>.</p>
+<tt class="docutils literal"><span class="pre">[:out.shape(1)]</span></tt> ensures that <cite>l</cite> is not too large for the slot in <tt class="docutils literal"><span class="pre">out</span></tt>.</p>
 <p><strong>Important 3:</strong> The <tt class="docutils literal"><span class="pre">parse</span></tt>-method may use the state of the class instance
 (as in the above example), but due to concurrency issues, <em>it should not alter
 the state</em>.</p>
 </div>
-<div class="section" id="fseq-seqformat-subclassing">
-<h3><tt class="docutils literal"><span class="pre">fseq.SeqFormat</span></tt> subclassing<a class="headerlink" href="#fseq-seqformat-subclassing" title="Permalink to this headline">¶</a></h3>
-<p>** Important 1:** If a class is parent to further subclassings such that the
+<div class="section" id="seqformat-sub-classing">
+<h3><tt class="docutils literal"><span class="pre">SeqFormat</span></tt> sub-classing<a class="headerlink" href="#seqformat-sub-classing" title="Permalink to this headline">¶</a></h3>
+<p>** Important 1:** If a class is parent to further sub-classing such that the
 class will conform to all data that the more specific subclass will do
 (e.g. FastQ will be expect all lines/return <tt class="docutils literal"><span class="pre">True</span></tt> for all scenarios that
 a FastQ_Q33-subclass that detects fastq-files with encoding starting at 33),
 then:</p>
 <blockquote>
 <div><ul class="simple">
-<li>The <em>parent</em> should implement the <tt class="docutils literal"><span class="pre">fseq.SeqFormat._decay</span></tt> method similar
+<li>The <em>parent</em> should implement the
+<tt class="xref py py-func docutils literal"><span class="pre">fseq.reading.seq_encoder.SeqFormat._decay()</span></tt> method similar
 to the base class and have a suitable <tt class="docutils literal"><span class="pre">self._giveup</span></tt> set in its init.</li>
-<li>The specific <em>child</em> should overwrite the <tt class="docutils literal"><span class="pre">_decay</span></tt>-method so thta it
+<li>The specific <em>child</em> should overwrite the <tt class="docutils literal"><span class="pre">_decay</span></tt>-method so that it
 never gives up <em>or alternatively</em> takes longer before it gives up by
 having ha higher number set to <tt class="docutils literal"><span class="pre">self._giveup</span></tt> in init.</li>
 </ul>
 </div></blockquote>
 <p>The <tt class="docutils literal"><span class="pre">self.expect(line)</span></tt> should return a boolean if the line fits what was
 expected as the next line, this method doesn&#8217;t need to continue
-reporting <tt class="docutils literal"><span class="pre">False</span></tt> after its first occurance.
+reporting <tt class="docutils literal"><span class="pre">False</span></tt> after its first occurrence.
 As soon as an <tt class="docutils literal"><span class="pre">expect</span></tt>-method returns a <tt class="docutils literal"><span class="pre">False</span></tt>, that <tt class="docutils literal"><span class="pre">SeqFormat</span></tt> is
-removed from possible formats by the <tt class="docutils literal"><span class="pre">SeqFormatDetector</span></tt>.</p>
+removed from possible formats by the
+<a class="reference internal" href="fseq.reading.html#fseq.reading.seq_encoder.SeqFormatDetector" title="fseq.reading.seq_encoder.SeqFormatDetector"><tt class="xref py py-class docutils literal"><span class="pre">fseq.reading.seq_encoder.SeqFormatDetector</span></tt></a>.</p>
 </div>
 </div>
 <div class="section" id="reporting">
 <h2>Reporting<a class="headerlink" href="#reporting" title="Permalink to this headline">¶</a></h2>
-<p>To extend the reportoar of available abstractions/analysis done to the encoded
-data, new derived <tt class="docutils literal"><span class="pre">ReportBuilderBase</span></tt> classes should be made.
+<p>To extend the available abstractions/analysis done to the encoded
+data, new derived <a class="reference internal" href="fseq.reporting.html#fseq.reporting.report_builder.ReportBuilderBase" title="fseq.reporting.report_builder.ReportBuilderBase"><tt class="xref py py-class docutils literal"><span class="pre">fseq.reporting.report_builder.ReportBuilderBase</span></tt></a>
+classes should be made.
 Typically the <tt class="docutils literal"><span class="pre">__init__</span></tt> and <tt class="docutils literal"><span class="pre">distill</span></tt> would be overwritten (but the super
 class methods called), and the <tt class="docutils literal"><span class="pre">DEFAULT_REPORTS</span></tt> attribute replaced.
-Potentailly the interface extended by more relevant methods and properties
+Potentially the interface extended by more relevant methods and properties
 needed for user customization of the post-processing.</p>
 <p>For creating new reports any object having a <tt class="docutils literal"><span class="pre">distill</span></tt>-method will do, but
-using <tt class="docutils literal"><span class="pre">fseq.ReportBase</span></tt> will save some implementation by having implemented
-the common aspects of saving figures in <tt class="docutils literal"><span class="pre">matplotlib</span></tt>.</p>
-<div class="section" id="fseq-reportbuilderbase-subclassing">
-<h3><tt class="docutils literal"><span class="pre">fseq.ReportBuilderBase</span></tt> subclassing<a class="headerlink" href="#fseq-reportbuilderbase-subclassing" title="Permalink to this headline">¶</a></h3>
+using <a class="reference internal" href="fseq.reporting.html#fseq.reporting.reports.ReportBase" title="fseq.reporting.reports.ReportBase"><tt class="xref py py-class docutils literal"><span class="pre">fseq.reporting.reports.ReportBase</span></tt></a> will save some implementation
+by having implemented the common aspects of saving figures in <tt class="docutils literal"><span class="pre">matplotlib</span></tt>.</p>
+<div class="section" id="reportbuilderbase-sub-classing">
+<h3><tt class="docutils literal"><span class="pre">ReportBuilderBase</span></tt> sub-classing<a class="headerlink" href="#reportbuilderbase-sub-classing" title="Permalink to this headline">¶</a></h3>
 <p>To maintain the constructor interface it is highly recommended that the init
 has the following structure:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">reports</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -175,16 +184,17 @@ has the following structure:</p>
 </pre></div>
 </div>
 <p>To push some data to all attached reports make a <tt class="docutils literal"><span class="pre">super</span></tt> call to
-<tt class="docutils literal"><span class="pre">ReportBuilderBase.distill</span></tt>.</p>
+<a class="reference internal" href="fseq.reporting.html#fseq.reporting.report_builder.ReportBuilderBase.distill" title="fseq.reporting.report_builder.ReportBuilderBase.distill"><tt class="xref py py-func docutils literal"><span class="pre">fseq.reporting.report_builder.ReportBuilderBase.distill()</span></tt></a>.</p>
 </div>
-<div class="section" id="fseq-reportbase-subclassing-or-not">
-<h3><tt class="docutils literal"><span class="pre">fseq.ReportBase</span></tt> subclassing or not<a class="headerlink" href="#fseq-reportbase-subclassing-or-not" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="reportbase-sub-classing-or-not">
+<h3><tt class="docutils literal"><span class="pre">ReportBase</span></tt> sub-classing or not<a class="headerlink" href="#reportbase-sub-classing-or-not" title="Permalink to this headline">¶</a></h3>
 <p>Using <tt class="docutils literal"><span class="pre">ReportBase</span></tt> to create new reports is entirely optional, but if the
-report is a matplotlib-report, then it is probably useful.</p>
-<p>If subclassing, then the <tt class="docutils literal"><span class="pre">ReportBase.distill</span></tt> must be overwritten and
+report is a <tt class="docutils literal"><span class="pre">matplotlib</span></tt>-report, then it is probably useful.</p>
+<p>If sub-classing, then the
+<a class="reference internal" href="fseq.reporting.html#fseq.reporting.reports.ReportBase.distill" title="fseq.reporting.reports.ReportBase.distill"><tt class="xref py py-func docutils literal"><span class="pre">fseq.reporting.reports.ReportBase.distill()</span></tt></a> must be overwritten and
 subclass should use a call to the inherited <tt class="docutils literal"><span class="pre">saveFig</span></tt>-method to do the
 actually saving once the figure has been setup within the <tt class="docutils literal"><span class="pre">distill</span></tt> method.</p>
-<p>If using other modules than <tt class="docutils literal"><span class="pre">matplotlib</span></tt> and thereby not subclassing
+<p>If using other modules than <tt class="docutils literal"><span class="pre">matplotlib</span></tt> and thereby not sub-classing
 <tt class="docutils literal"><span class="pre">ReportBase</span></tt>, the report should as a minimal requirement have a
 <tt class="docutils literal"><span class="pre">distill</span></tt> method that takes the main data as the first argument and that
 accepts any number of argument and keyword arguments by having something like
@@ -204,13 +214,13 @@ accepts any number of argument and keyword arguments by having something like
 <li><a class="reference internal" href="#">Developers</a><ul>
 <li><a class="reference internal" href="#git">Git</a></li>
 <li><a class="reference internal" href="#reading">Reading</a><ul>
-<li><a class="reference internal" href="#fseq-seqencoder-parse-self-lines-out-outindex-overwriting"><tt class="docutils literal"><span class="pre">fseq.SeqEncoder.parse(self,</span> <span class="pre">lines,</span> <span class="pre">out,</span> <span class="pre">outindex)</span></tt> overwriting</a></li>
-<li><a class="reference internal" href="#fseq-seqformat-subclassing"><tt class="docutils literal"><span class="pre">fseq.SeqFormat</span></tt> subclassing</a></li>
+<li><a class="reference internal" href="#seqencoder-parse-self-lines-out-outindex-overwriting"><tt class="docutils literal"><span class="pre">SeqEncoder.parse(self,</span> <span class="pre">lines,</span> <span class="pre">out,</span> <span class="pre">outindex)</span></tt> overwriting</a></li>
+<li><a class="reference internal" href="#seqformat-sub-classing"><tt class="docutils literal"><span class="pre">SeqFormat</span></tt> sub-classing</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#reporting">Reporting</a><ul>
-<li><a class="reference internal" href="#fseq-reportbuilderbase-subclassing"><tt class="docutils literal"><span class="pre">fseq.ReportBuilderBase</span></tt> subclassing</a></li>
-<li><a class="reference internal" href="#fseq-reportbase-subclassing-or-not"><tt class="docutils literal"><span class="pre">fseq.ReportBase</span></tt> subclassing or not</a></li>
+<li><a class="reference internal" href="#reportbuilderbase-sub-classing"><tt class="docutils literal"><span class="pre">ReportBuilderBase</span></tt> sub-classing</a></li>
+<li><a class="reference internal" href="#reportbase-sub-classing-or-not"><tt class="docutils literal"><span class="pre">ReportBase</span></tt> sub-classing or not</a></li>
 </ul>
 </li>
 </ul>
